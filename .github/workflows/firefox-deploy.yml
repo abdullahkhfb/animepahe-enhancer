@@ -1,0 +1,23 @@
+name: Global Extension Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Extension Zip
+        run: zip -r extension.zip . -x "*.git*" ".github/*" "README.md" ".gitignore"
+
+      - name: Upload to Firefox
+        uses: mozilla/add-on-upload-tool@v1
+        with:
+          addon-id: "animepahe-enhancer@abdullahkhfb.github.io"
+          jwt-issuer: ${{ secrets.AMO_JWT_ISSUER }}
+          jwt-secret: ${{ secrets.AMO_JWT_SECRET }}
+          xpi-path: extension.zip
