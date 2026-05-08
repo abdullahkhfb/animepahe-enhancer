@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a34"/>
+      <stop offset="100%" stop-color="#0b0b1c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="16" height="16" rx="4" fill="url(#bgGrad)"/>
+  
+  <circle cx="5" cy="4" r="1.5" fill="#d92558" />
+  
+  <g fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round">
+    <circle cx="5" cy="10" r="1.5" />
+    <path d="M 6.5 8.5 L 6.5 11.5" />
+  </g>
+  
+  <g>
+    <path d="M 9 7 L 9 14" stroke="#d92558" stroke-width="2" stroke-linecap="round" />
+    <path d="M 11.5 7.5 A 2.5 2.5 0 1 1 11.5 12.5 A 2.5 2.5 0 1 1 11.5 7.5 Z M 10.5 8.5 L 10.5 11.5 L 13 10 Z" fill="#d92558" fill-rule="evenodd" />
+  </g>
+  
+  <polygon points="13,2 14,4 15,2 14,0" fill="#e8710a" />
+</svg>

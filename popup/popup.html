@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>animepahe Enhancer</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-brand">
+        <svg
+          class="logo"
+          viewBox="0 0 128 128"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="128" height="128" rx="28" fill="url(#grad)" />
+          <circle cx="38" cy="38" r="6" fill="#fff" />
+          <g
+            stroke="#ffffff"
+            stroke-width="6"
+            stroke-linecap="round"
+            fill="none"
+          >
+            <circle cx="38" cy="74" r="14" />
+            <path d="M 52 60 L 52 88" />
+          </g>
+          <g fill="#fff">
+            <path
+              d="M 68 56 L 68 106"
+              stroke="#fff"
+              stroke-width="14"
+              stroke-linecap="round"
+            />
+            <path
+              d="M 88 54 A 20 20 0 1 1 88 94 A 20 20 0 1 1 88 54 Z M 81 65 L 81 83 L 96 74 Z"
+              fill-rule="evenodd"
+            />
+          </g>
+          <path
+            d="M 102 24 Q 102 36 90 36 Q 102 36 102 48 Q 102 36 114 36 Q 102 36 102 24"
+            fill="#e8710a"
+          />
+          <defs>
+            <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#e8710a" />
+              <stop offset="100%" stop-color="#d92558" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <div class="brand-name">animepahe Enhancer</div>
+          <div class="brand-sub">by abdullahkhfb</div>
+        </div>
+      </div>
+      <span class="version-badge" id="version-badge">v1.0.0</span>
+    </header>
+
+    <!-- ── Features ───────────────────────────────────────── -->
+    <main class="main">
+      <p class="section-label">FEATURES</p>
+
+      <!-- Continue Watching -->
+      <div class="feature-card" id="cw-card">
+        <div class="feature-header">
+          <div class="feature-icon cw-icon" style="background: transparent;">
+          <svg viewBox="0 0 256 256" style="width: 28px; height: 28px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="cw_base_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#e8710a;stop-opacity:1" /> 
+                <stop offset="100%" style="stop-color:#c86108;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="cw_badge_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#d92558;stop-opacity:1" /> 
+                <stop offset="100%" style="stop-color:#b0194a;stop-opacity:1" />
+              </linearGradient>
+              <filter id="cw_shadow" x="-5%" y="-5%" width="110%" height="110%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                <feOffset dx="2" dy="4" result="offsetblur" />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <circle cx="128" cy="128" r="120" fill="url(#cw_base_grad)" stroke="#fff" stroke-width="4"/>
+
+            <path d="M100 70 L180 128 L100 186 Z" fill="#fff" filter="url(#cw_shadow)"/> 
+            
+            <circle cx="126" cy="128" r="18" fill="none" stroke="#c86108" stroke-width="5"/>
+            <path d="M 126 116 L 126 128 L 134 134" fill="none" stroke="#c86108" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+            <rect x="140" y="160" width="100" height="60" rx="8" fill="url(#cw_badge_grad)" filter="url(#cw_shadow)"/> 
+            
+            <rect x="152" y="180" width="76" height="20" rx="10" fill="#ffffff" fill-opacity="0.3"/>
+            <rect x="152" y="180" width="45" height="20" rx="10" fill="#ffffff"/>
+          </svg>
+        </div>
+          <div class="feature-text">
+            <span class="feature-name">Continue Watching</span>
+            <span class="feature-desc"
+              >Resume episodes with progress tracking</span
+            >
+          </div>
+          <label class="toggle" aria-label="Toggle Continue Watching">
+            <input type="checkbox" id="toggle-cw" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+        <div class="feature-stats" id="cw-stats">
+          <span class="stat-chip" id="cw-count">— items</span>
+          <button
+            class="action-btn danger"
+            id="cw-clear"
+            title="Clear Continue Watching list"
+          >
+            Clear List
+          </button>
+        </div>
+      </div>
+
+      <!-- DUB Detector -->
+      <div class="feature-card" id="dub-card">
+      <div class="feature-header">
+        
+        <div class="feature-icon dub-icon" style="background: transparent;">
+          <svg viewBox="0 0 256 256" style="width: 28px; height: 28px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="background_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#d92558;stop-opacity:1" /> 
+                <stop offset="100%" style="stop-color:#b0194a;stop-opacity:1" />
+              </linearGradient>
+              <linearGradient id="dub_badge_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#e8710a;stop-opacity:1" /> 
+                <stop offset="100%" style="stop-color:#c86108;stop-opacity:1" />
+              </linearGradient>
+              <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                <feOffset dx="2" dy="4" result="offsetblur" />
+                <feMerge>
+                  <feMergeNode />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <circle cx="128" cy="128" r="120" fill="url(#background_grad)" stroke="#fff" stroke-width="4"/>
+
+            <path d="M100 70 L180 128 L100 186 Z" fill="#fff" filter="url(#shadow)"/> 
+            <path d="M115 110 A15 15 0 0 1 141 110 L141 135 A15 15 0 0 1 115 135 Z" fill="#b0194a" />
+            <rect x="123" y="145" width="10" height="15" fill="#b0194a"/>
+            <path d="M110 135 A18 18 0 0 0 146 135" stroke="#b0194a" stroke-width="3" fill="none"/>
+
+            <rect x="140" y="160" width="100" height="60" rx="8" fill="url(#dub_badge_grad)" filter="url(#shadow)"/> 
+            <text x="190" y="200" font-family="sans-serif" font-weight="700" font-size="34px" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">DUB</text>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <span class="feature-name">DUB Detector</span>
+          <span class="feature-desc">Badges dubbed episodes automatically</span>
+        </div>
+        <label class="toggle" aria-label="Toggle DUB Detector">
+          <input type="checkbox" id="toggle-dub">
+          <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        </label>
+      </div>
+      <div class="feature-stats" id="dub-stats">
+        <span class="stat-chip" id="dub-cache-count">— cached</span>
+        <button class="action-btn" id="dub-clear-cache" title="Clear DUB detection cache">
+          Clear Cache
+        </button>
+      </div>
+    </div>
+
+      <!-- Status notice -->
+      <div class="notice" id="reload-notice" hidden>
+        <svg
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 5Zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"
+          />
+        </svg>
+        Reload the page for changes to take effect.
+      </div>
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer class="footer">
+      <a
+        class="footer-link"
+        href="https://github.com/abdullahkhfb"
+        target="_blank"
+        rel="noopener"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.014-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.154-1.11-1.461-1.11-1.461-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0 1 12 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.934.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10Z"
+          />
+        </svg>
+        GitHub
+      </a>
+     <a class="footer-link" href="https://animepahe.pw" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+        <rect x="9.5" y="8" width="2" height="8" rx="0.5" />
+        <path d="M17 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+        <rect x="12.5" y="8" width="2" height="11" rx="0.5" />
+        <circle cx="10.5" cy="4.5" r="1.5" />
+      </svg>
+      animepahe
+    </a>
+      </a>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

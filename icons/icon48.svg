@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a34"/>
+      <stop offset="100%" stop-color="#0b0b1c"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="48" height="48" rx="10" fill="url(#bgGrad)"/>
+  
+  <circle cx="14" cy="14" r="2.5" fill="#d92558" />
+  
+  <g fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round">
+    <circle cx="14" cy="28" r="5" />
+    <path d="M 19 23 L 19 33" />
+  </g>
+  
+  <g>
+    <path d="M 26 21 L 26 40" stroke="#d92558" stroke-width="5.5" stroke-linecap="round" />
+    <path d="M 33 20 A 7.5 7.5 0 1 1 33 35 A 7.5 7.5 0 1 1 33 20 Z M 30 24.5 L 30 30.5 L 36 27.5 Z" fill="#d92558" fill-rule="evenodd" />
+  </g>
+  
+  <path d="M 39 8 Q 39 13 34 13 Q 39 13 39 18 Q 39 13 44 13 Q 39 13 39 8" fill="#e8710a" />
+</svg>
