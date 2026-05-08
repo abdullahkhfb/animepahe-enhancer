@@ -968,6 +968,14 @@
           border-color: transparent;
         }
 
+        /* ── Grid Layout ── */
+        .ape-cw-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          gap: 16px;
+          align-items: start;
+        }
+
         /* ── Grid Toggle Logic ── */
         .ape-cw-grid.collapsed {
           max-height: 320px; /* Adjust based on your card height */
