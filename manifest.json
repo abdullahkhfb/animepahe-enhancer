@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AnimePahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Continue Watching with video progress tracking + DUB episode detection for AnimePahe.",
 
   "browser_specific_settings": {
