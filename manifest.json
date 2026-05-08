@@ -5,6 +5,13 @@
   "version": "1.0.0",
   "description": "Continue Watching with video progress tracking + DUB episode detection for AnimePahe.",
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "animepahe-enhancer@abdullahkhfb.github.io",
+      "strict_min_version": "109.0"
+    }
+  },
+
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
