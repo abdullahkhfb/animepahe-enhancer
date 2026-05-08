@@ -810,7 +810,7 @@
             <button id="ape-cw-clear" class="ape-cw-util-btn danger" title="Clear all history">Clear All</button>
           </div>
         </div>
-        <div class="ape-cw-grid collapsed" id="ape-cw-grid"></div>
+        <div class="ape-cw-grid ${needsToggle ? "collapsed" : ""}" id="ape-cw-grid"></div>
       `;
 
       const grid = section.querySelector("#ape-cw-grid");
@@ -980,7 +980,6 @@
         .ape-cw-grid.collapsed {
           max-height: 320px; /* Adjust based on your card height */
           overflow: hidden;
-          mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
         }
 
         .ape-cw-controls {
@@ -1108,7 +1107,7 @@
         .ape-cw-title {
           display: block;
           font-size: 11.5px;
-          color: #a8a8c0;
+          color: #e8e8f8
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
