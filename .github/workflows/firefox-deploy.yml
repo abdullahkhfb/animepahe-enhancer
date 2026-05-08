@@ -21,3 +21,4 @@ jobs:
           addon-path: extension.zip
           auth-api-issuer: ${{ secrets.AMO_JWT_ISSUER }}
           auth-api-secret: ${{ secrets.AMO_JWT_SECRET }}
+          release-note: ${{ github.event.release.body }}
