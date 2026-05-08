@@ -12,13 +12,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create Extension Zip
-        run: zip -r extension.zip . -x "*.git*" ".github/*" "README.md" ".gitignore"
+        run: zip -r Animepahe-Enhancer.zip . -x "*.git*" ".github/*" "README.md" ".gitignore"
 
       - name: Upload to Firefox (AMO)
         uses: browser-actions/release-firefox-addon@v0.2.1
         with:
           addon-id: "animepahe-enhancer@abdullahkhfb.github.io"
-          addon-path: extension.zip
+          addon-path: Animepahe-Enhancer.zip
           auth-api-issuer: ${{ secrets.AMO_JWT_ISSUER }}
           auth-api-secret: ${{ secrets.AMO_JWT_SECRET }}
           release-note: ${{ github.event.release.body }}
+
+      - name: Upload Zip to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Animepahe-Enhancer.zip
