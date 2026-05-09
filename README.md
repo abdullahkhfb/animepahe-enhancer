@@ -12,7 +12,7 @@
   </a>
   <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.1-blue" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.2-blue" />
 </p>
 
 ---
@@ -45,6 +45,7 @@
 ## Features
 
 ### ▶ Continue Watching
+
 Never lose your place again. animepahe Enhancer tracks your exact playback position for every episode you watch and surfaces a **Continue Watching** row directly on the animepahe home page.
 
 - Automatically saves your progress every 2 seconds while the video plays
@@ -56,15 +57,17 @@ Never lose your place again. animepahe Enhancer tracks your exact playback posit
 - Works across all official animepahe mirror domains
 
 ### 🎙 DUB Detector
+
 Instantly know which episodes are available in English dub without opening them. The DUB Detector automatically scans anime listings, episode pages, and the home feed and overlays colour-coded badges:
 
-| Location | Badge colour | Example |
-|----------|-------------|---------|
-| Episode list | Orange `DUB` badge | A single dubbed episode |
-| Home page cards | Pink `N/total` badge | `12/24` dubbed out of 24 total |
-| Player page | Inline `DUB` badge on the title | Confirmation when watching a dubbed episode |
+| Location        | Badge colour                    | Example                                     |
+| --------------- | ------------------------------- | ------------------------------------------- |
+| Episode list    | Orange `DUB` badge              | A single dubbed episode                     |
+| Home page cards | Pink `N/total` badge            | `12/24` dubbed out of 24 total              |
+| Player page     | Inline `DUB` badge on the title | Confirmation when watching a dubbed episode |
 
 Detection uses a two-method strategy with a 12-hour local cache to minimise network requests:
+
 1. **Lightweight JSON API check** — hits animepahe's `/api?m=links` endpoint
 2. **HTML page fallback** — parses the play page if the API check is inconclusive
 
@@ -123,17 +126,20 @@ When you watch an episode on animepahe:
 The DUB Detector runs automatically in the background on three page types:
 
 **Anime episode list page (`/anime/{session}`):**
+
 - All visible episode cards are scanned (in batches) when the page loads.
 - Dubbed episodes receive an orange **DUB** badge in the top-right corner of their card.
 - A status pill appears in the bottom-right of the screen with real-time scan progress (e.g., `🎙 DUB: 12 episodes dubbed ✓`).
 - The scan re-runs automatically when the episode list is paginated or updated via AJAX.
 
 **Player page (`/play/{animeSession}/{epSession}`):**
+
 - A quick check runs on load.
 - If the episode is dubbed, a **DUB** badge is appended inline to the episode title (`<h1>`).
 - The status pill shows `🎙 DUB: Dubbed ✓` or `🎙 DUB: Sub only`.
 
 **Home page (latest releases grid):**
+
 - Every anime card in the latest release feed is scanned.
 - Cards with dubbed episodes receive a pink badge showing `dubbed/total` episodes (e.g., `12/24`).
 - Scanning is batched (3 at a time) to avoid rate-limiting.
@@ -211,11 +217,11 @@ animepahe embeds the actual video player in a sandboxed `<iframe>` served from a
 
 **Message types:**
 
-| Type | Direction | Payload | Description |
-|------|-----------|---------|-------------|
-| `AP_CW_REQUEST_TIME` | iframe → parent | — | Iframe asks parent for saved timestamp |
-| `AP_CW_RESTORE_TIME` | parent → iframe | `{ time: number }` | Parent sends saved position; iframe seeks |
-| `AP_CW_UPDATE_TIME` | iframe → parent | `{ time, duration }` | Iframe reports current playback position |
+| Type                 | Direction       | Payload              | Description                               |
+| -------------------- | --------------- | -------------------- | ----------------------------------------- |
+| `AP_CW_REQUEST_TIME` | iframe → parent | —                    | Iframe asks parent for saved timestamp    |
+| `AP_CW_RESTORE_TIME` | parent → iframe | `{ time: number }`   | Parent sends saved position; iframe seeks |
+| `AP_CW_UPDATE_TIME`  | iframe → parent | `{ time, duration }` | Iframe reports current playback position  |
 
 #### DUB Detector — Binary Search
 
@@ -246,12 +252,12 @@ isEpisodeDubbed(animeSession, epSession)
 
 All data is stored in `chrome.storage.local` (no external servers, no tracking):
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `ape_settings` | `object` | `{ cwEnabled: boolean, dubEnabled: boolean }` |
-| `ape_cw_v1` | `string` (JSON array) | Continue Watching list, up to 24 entries |
-| `d2_{epSession}` | `string` | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"` |
-| `h2_{animeSession}` | `string` | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"` |
+| Key                 | Type                  | Description                                                               |
+| ------------------- | --------------------- | ------------------------------------------------------------------------- |
+| `ape_settings`      | `object`              | `{ cwEnabled: boolean, dubEnabled: boolean }`                             |
+| `ape_cw_v1`         | `string` (JSON array) | Continue Watching list, up to 24 entries                                  |
+| `d2_{epSession}`    | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"` |
+| `h2_{animeSession}` | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`   |
 
 Cache entries prefixed `d2_` and `h2_` expire after 12 hours and are garbage-collected on each page load.
 
@@ -261,11 +267,11 @@ Cache entries prefixed `d2_` and `h2_` expire after 12 hours and are garbage-col
 
 The extension requests the minimum permissions necessary:
 
-| Permission | Reason |
-|------------|--------|
-| `storage` | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
-| Host permissions for `*.animepahe.{pw,org,com,ru}` | Inject the main content script into animepahe pages |
-| Host permissions for `*.kwik.{cx,sh,si,bz}` and `*.yaneura.{top,com}` | Inject the iframe player script into the embedded Kwik video player |
+| Permission                                                            | Reason                                                                            |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `storage`                                                             | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
+| Host permissions for `*.animepahe.{pw,org,com,ru}`                    | Inject the main content script into animepahe pages                               |
+| Host permissions for `*.kwik.{cx,sh,si,bz}` and `*.yaneura.{top,com}` | Inject the iframe player script into the embedded Kwik video player               |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
 
@@ -274,12 +280,14 @@ The extension requests the minimum permissions necessary:
 ## Supported Domains
 
 **animepahe (main content script):**
+
 - `animepahe.pw`
 - `animepahe.org`
 - `animepahe.com`
 - `animepahe.ru`
 
 **Kwik video player (iframe script):**
+
 - `kwik.cx`
 - `kwik.sh`
 - `kwik.si`
@@ -305,6 +313,7 @@ That's it — the directory is the extension.
 ### Loading the Extension Locally
 
 **Firefox:**
+
 1. Navigate to `about:debugging#/runtime/this-firefox`
 2. Click **Load Temporary Add-on…**
 3. Select the `manifest.json` file inside the cloned directory.
@@ -312,6 +321,7 @@ That's it — the directory is the extension.
 The extension will be active until Firefox is restarted. To persist it across restarts, use a [Firefox developer profile](https://extensionworkshop.com/documentation/develop/debugging/).
 
 **Chrome / Edge:**
+
 1. Navigate to `chrome://extensions` or `edge://extensions`
 2. Enable **Developer mode**
 3. Click **Load unpacked** and select the cloned directory
@@ -330,10 +340,10 @@ The release pipeline is fully automated via GitHub Actions:
 
 **Required repository secrets:**
 
-| Secret | Description |
-|--------|-------------|
+| Secret           | Description                                                  |
+| ---------------- | ------------------------------------------------------------ |
 | `AMO_JWT_ISSUER` | AMO API key issuer (from addons.mozilla.org API credentials) |
-| `AMO_JWT_SECRET` | AMO API key secret |
+| `AMO_JWT_SECRET` | AMO API key secret                                           |
 
 ---
 
