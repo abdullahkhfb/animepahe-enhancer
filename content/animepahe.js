@@ -746,12 +746,10 @@
           const idx = list.findIndex((it) => it.animeSession === animeSession);
 
           if (idx !== -1) {
-            // 2A. We found the anime. Is it the exact SAME episode?
             if (list[idx].episodeSession === episodeSession) {
               list[idx].progress = e.data.time;
               list[idx].duration = e.data.duration;
 
-              // Move to the front of the list only once per page load
               if (!sessionUpserted) {
                 const [item] = list.splice(idx, 1);
                 item.timestamp = Date.now();
@@ -781,7 +779,6 @@
               sessionUpserted = true;
             }
           } else {
-            // 3. First time playing ANY episode of this anime! Add it.
             const newItem = {
               playUrl: window.location.href,
               animeSession,
