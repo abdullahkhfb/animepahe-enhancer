@@ -742,25 +742,46 @@
           // Iframe reporting current playback position (VIDEO IS PLAYING)
         } else if (e.data.type === "AP_CW_UPDATE_TIME") {
           const list = await getList();
-          const idx = list.findIndex(
-            (it) => it.playUrl === window.location.href,
-          );
+
+          const idx = list.findIndex((it) => it.animeSession === animeSession);
 
           if (idx !== -1) {
-            // It's already in the list, update progress
-            list[idx].progress = e.data.time;
-            list[idx].duration = e.data.duration;
+            // 2A. We found the anime. Is it the exact SAME episode?
+            if (list[idx].episodeSession === episodeSession) {
+              list[idx].progress = e.data.time;
+              list[idx].duration = e.data.duration;
 
-            // Move to the front of the list only once per page load
-            if (!sessionUpserted) {
-              const [item] = list.splice(idx, 1);
-              item.timestamp = Date.now();
-              list.unshift(item);
+              // Move to the front of the list only once per page load
+              if (!sessionUpserted) {
+                const [item] = list.splice(idx, 1);
+                item.timestamp = Date.now();
+                list.unshift(item);
+                sessionUpserted = true;
+              }
+              await saveList(list);
+            } else {
+              const newItem = {
+                playUrl: window.location.href,
+                animeSession,
+                episodeSession,
+                animeName,
+                animeHref,
+                episodeNum,
+                poster,
+                timestamp: Date.now(),
+                progress: e.data.time,
+                duration: e.data.duration,
+              };
+
+              list.splice(idx, 1);
+              list.unshift(newItem);
+
+              if (list.length > MAX_ITEMS) list.length = MAX_ITEMS;
+              await saveList(list);
               sessionUpserted = true;
             }
-            await saveList(list);
           } else {
-            // First time playing! Add it to the list.
+            // 3. First time playing ANY episode of this anime! Add it.
             const newItem = {
               playUrl: window.location.href,
               animeSession,
