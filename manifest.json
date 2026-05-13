@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AnimePahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Continue Watching with video progress tracking + DUB episode detection for AnimePahe.",
 
   "browser_specific_settings": {
@@ -12,7 +12,8 @@
       "data_collection_permissions": {
         "required": ["none"]
       }
-    }
+    },
+    "gecko_android": {}
   },
 
   "icons": {
@@ -30,9 +31,7 @@
     "*://*.kwik.cx/*",
     "*://*.kwik.sh/*",
     "*://*.kwik.si/*",
-    "*://*.kwik.bz/*",
-    "*://*.yaneura.top/*",
-    "*://*.yaneura.com/*"
+    "*://*.kwik.bz/*"
   ],
 
   "content_scripts": [
@@ -51,9 +50,7 @@
         "*://*.kwik.cx/*",
         "*://*.kwik.sh/*",
         "*://*.kwik.si/*",
-        "*://*.kwik.bz/*",
-        "*://*.yaneura.top/*",
-        "*://*.yaneura.com/*"
+        "*://*.kwik.bz/*"
       ],
       "js": ["content/iframe-player.js"],
       "run_at": "document_end",
