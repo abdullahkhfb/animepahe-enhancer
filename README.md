@@ -76,8 +76,12 @@ A smart **binary search** algorithm is used on episode lists, since dubbed episo
 ---
 
 ## Screenshots
-
-> _Coming soon — screenshots of the home Continue Watching row, episode list badges, and the popup._
+<img width="1416" height="1121" alt="image" src="https://github.com/user-attachments/assets/8329fb6c-3d18-4c39-a859-f4199703f0dc" />
+<img width="1500" height="515" alt="image" src="https://github.com/user-attachments/assets/d9726d72-0eb6-4434-85c1-8203f5988e24" />
+<img width="1920" height="998" alt="image" src="https://github.com/user-attachments/assets/001e014b-6e9e-472c-a6f5-6efac4c60804" />
+<img width="1390" height="585" alt="image" src="https://github.com/user-attachments/assets/91bbcd03-33bd-4ddb-90f5-449776b0aea2" />
+<img width="1375" height="112" alt="image" src="https://github.com/user-attachments/assets/799950cc-a656-404a-9f32-d33688074a13" />
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/6902d90e-ea4a-4e9a-82d3-64aca52ec57c" />
 
 ---
 
@@ -292,8 +296,6 @@ The extension requests the minimum permissions necessary:
 - `kwik.sh`
 - `kwik.si`
 - `kwik.bz`
-- `yaneura.top`
-- `yaneura.com`
 
 ---
 
