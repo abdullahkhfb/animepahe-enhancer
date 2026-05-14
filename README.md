@@ -353,7 +353,7 @@ The release pipeline is fully automated via GitHub Actions:
 
 Contributions, bug reports, and feature suggestions are welcome!
 
-1. [Open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) to discuss what you'd like to change.
+1. [Open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues/new) to discuss what you'd like to change.
 2. Fork the repository and create your branch from `main`.
 3. Make your changes — keep the code style consistent (single-file content scripts, no build step).
 4. Open a Pull Request with a clear description of the change and the problem it solves.
