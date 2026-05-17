@@ -542,6 +542,13 @@
         )) {
           if (a.closest("#ape-cw-section")) continue;
 
+          if (
+            a.closest(
+              ".ui-autocomplete, .search-results, header, .top-header, form",
+            )
+          )
+            continue;
+
           if (a.dataset.apeDubDone) continue;
           const href = a.getAttribute("href") || "";
           const m = href.match(/(?:\/anime\/|\/play\/)([^/?#]+)/);
