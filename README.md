@@ -19,7 +19,6 @@
 - [Installation](#installation)
   - [Firefox](#firefox)
   - [Microsoft Edge (Desktop)](#microsoft-edge-desktop)
-  - [Microsoft Edge (Mobile / Android)](#microsoft-edge-mobile--android)
   - [Other Chromium Browsers (Manual)](#other-chromium-browsers-manual)
 - [Usage](#usage)
   - [Continue Watching](#continue-watching)
