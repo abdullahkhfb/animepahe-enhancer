@@ -7,15 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
-    <img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" />
-  </a>
-  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
-    <img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" />
-  </a>
-  <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
-  <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Version" src="https://img.shields.io/badge/version-0.0.7-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.5-blue" />
 </p>
 
 ---
