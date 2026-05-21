@@ -2,12 +2,21 @@
 
 > A lightweight browser extension that supercharges your animepahe experience — featuring automatic DUB detection and seamless Continue Watching with per-episode progress tracking.
 
-![animepahe Enhancer logo](icons/icon128.png)
+<p align="center">
+  <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
+</p>
 
-[![Firefox Add-on](https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)
-[![Manifest Version](https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white)](#)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.5-blue)](#)
+<p align="center">
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
+    <img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" />
+  </a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
+    <img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" />
+  </a>
+  <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
+  <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.0.7-blue" />
+</p>
 
 ---
 
@@ -16,8 +25,10 @@
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
-  - [Firefox (Recommended)](#firefox-recommended)
-  - [Chromium-based Browsers (Manual)](#chromium-based-browsers-manual)
+  - [Firefox](#firefox)
+  - [Microsoft Edge (Desktop)](#microsoft-edge-desktop)
+  - [Microsoft Edge (Mobile / Android)](#microsoft-edge-mobile--android)
+  - [Other Chromium Browsers (Manual)](#other-chromium-browsers-manual)
 - [Usage](#usage)
   - [Continue Watching](#continue-watching)
   - [DUB Detector](#dub-detector)
@@ -69,29 +80,38 @@ A smart **binary search** algorithm is used on episode lists, since dubbed episo
 
 ## Screenshots
 
-> _Coming soon — screenshots of the home Continue Watching row, episode list badges, and the popup._
+<img width="1416" height="1121" alt="image" src="https://github.com/user-attachments/assets/8329fb6c-3d18-4c39-a859-f4199703f0dc" />
+<img width="1500" height="515" alt="image" src="https://github.com/user-attachments/assets/d9726d72-0eb6-4434-85c1-8203f5988e24" />
+<img width="1920" height="998" alt="image" src="https://github.com/user-attachments/assets/001e014b-6e9e-472c-a6f5-6efac4c60804" />
+<img width="1388" height="852" alt="image" src="https://github.com/user-attachments/assets/3228f406-223f-4bd6-82a0-25a7b7db33ae" />
+<img width="1375" height="112" alt="image" src="https://github.com/user-attachments/assets/799950cc-a656-404a-9f32-d33688074a13" />
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/6902d90e-ea4a-4e9a-82d3-64aca52ec57c" />
 
 ---
 
 ## Installation
 
-### Firefox (Recommended)
+### Firefox
 
 Install directly from the **Firefox Add-ons store**:
 
 👉 [**animepahe Enhancer on AMO**](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)
 
-The extension requires **Firefox 109.0 or later**.
+Requires **Firefox 109.0 or later**.
 
-### Chromium-based Browsers (Manual)
+### Microsoft Edge (Desktop)
 
-> **Note:** Automated publishing to the Microsoft Edge Add-ons store is planned. For now, install manually — the code is standard Manifest V3 and works without modification.
+Install directly from the **Microsoft Edge Add-ons store**:
 
-1. Download the latest release zip from the [Releases page](https://github.com/abdullahkhfb/animepahe-enhancer/releases).
-2. Unzip the archive to a permanent folder on your machine.
-3. Open `chrome://extensions` (Chrome) or `edge://extensions` (Edge).
-4. Enable **Developer mode** (top-right toggle).
-5. Click **Load unpacked** and select the unzipped folder.
+👉 [**animepahe Enhancer on Edge Add-ons**](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd)
+
+### Other Chromium Browsers (Manual)
+
+1. Download the latest compiled production bundle `Animepahe-Enhancer.zip` from the [Releases page](https://github.com/abdullahkhfb/animepahe-enhancer/releases).
+2. Unzip the archive to a permanent directory on your machine.
+3. Navigate to `chrome://extensions` (or your browser's extensions dashboard).
+4. Toggle **Developer mode** to active (top-right switch).
+5. Click **Load unpacked** and select the unzipped directory.
 
 ---
 
@@ -163,7 +183,7 @@ animepahe-enhancer/
 │
 ├── content/
 │   ├── main.js                    # Entry point — loads settings, detects page,
-│   │                              #   dynamically imports and initializes features
+│   │                              # dynamically imports and initializes features
 │   ├── iframe-player.js           # Kwik iframe script — postMessage bridge
 │   │
 │   ├── features/                  # One file per feature
@@ -187,7 +207,7 @@ animepahe-enhancer/
 │
 └── .github/
     └── workflows/
-        └── firefox-deploy.yml     # CI/CD: auto-publish to Firefox AMO on release
+        └── deploy.yml             # CI/CD: Unified production deployment engine
 ```
 
 ### How It Works
@@ -198,17 +218,17 @@ animepahe-enhancer/
 
 ```
 manifest.json
-  └─ content_scripts → content/main.js
-                           │
-                           ├─ import(helpers/storage.js)
-                           ├─ import(helpers/router.js)
-                           ├─ import(helpers/cache.js)
-                           │
-                           ├─ [cwEnabled]  → import(features/continue-watching.js)
-                           │                    new ContinueWatching(storage).init(pageType)
-                           │
-                           └─ [dubEnabled] → import(features/dub-detector.js)
-                                                new DubDetector(storage).init(pageType)
+└─ content_scripts → content/main.js
+   │
+   ├─ import(helpers/storage.js)
+   ├─ import(helpers/router.js)
+   ├─ import(helpers/cache.js)
+   │
+   ├─ [cwEnabled]  → import(features/continue-watching.js)
+   │                    new ContinueWatching(storage).init(pageType)
+   │
+   └─ [dubEnabled] → import(features/dub-detector.js)
+                        new DubDetector(storage).init(pageType)
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules.
@@ -258,16 +278,16 @@ Detection itself uses two methods tried in sequence:
 
 ```
 isEpisodeDubbed(animeSession, epSession)
-  │
-  ├─ 1. Cache hit?  →  Return cached result immediately
-  │
-  ├─ 2. Method A: GET /api?m=links&id=…&session=…&p=kwik
-  │       Parse JSON for "eng" / "english" / "dub" strings
-  │       ✓ Fast, minimal data transfer
-  │
-  └─ 3. Method B (fallback): GET /play/{animeSession}/{epSession}
-          Parse HTML — check title, download section, inline <script> tags
-          ✓ More thorough, handles edge cases
+│
+├─ 1. Cache hit?  →  Return cached result immediately
+│
+├─ 2. Method A: GET /api?m=links&id=…&session=…&p=kwik
+│       Parse JSON for "eng" / "english" / "dub" strings
+│       ✓ Fast, minimal data transfer
+│
+└─ 3. Method B (fallback): GET /play/{animeSession}/{epSession}
+        Parse HTML — check title, download section, inline <script> tags
+        ✓ More thorough, handles edge cases
 ```
 
 #### Storage Schema
@@ -329,11 +349,11 @@ That's it — no other files need to change.
 
 The extension requests the minimum permissions necessary:
 
-| Permission                                      | Reason                                                                            |
-| ----------------------------------------------- | --------------------------------------------------------------------------------- |
-| `storage`                                       | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
-| Host permissions for `*.animepahe.{pw,org,com}` | Inject the main content script into animepahe pages                               |
-| Host permissions for `*.kwik.{cx,sh,si,bz}`     | Inject the iframe player script into the embedded Kwik video player               |
+| Permission                                                            | Reason                                                                            |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `storage`                                                             | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
+| Host permissions for `*.animepahe.{pw,org,com,ru}`                    | Inject the main content script into animepahe pages                               |
+| Host permissions for `*.kwik.{cx,sh,si,bz}` and `*.yaneura.{top,com}` | Inject the iframe player script into the embedded Kwik video player               |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
 
@@ -350,7 +370,8 @@ The extension requests the minimum permissions necessary:
 
 **Kwik video player (iframe script):**
 
-- `kwik.cx`
+- `kwik.cx` / `kwik.sh` / `kwik.si` / `kwik.bz`
+- `yaneura.top` / `yaneura.com`
 
 ---
 
@@ -388,19 +409,21 @@ The extension will be active until Firefox is restarted. To persist it across re
 The release pipeline is fully automated via GitHub Actions:
 
 1. Bump the `version` field in `manifest.json`.
-2. Create and publish a new **GitHub Release** (tag it `v1.x.x`).
-3. The [`firefox-deploy.yml`](.github/workflows/firefox-deploy.yml) workflow triggers automatically:
-   - Packages the extension into `extension.zip` (excluding `.git`, `.github`, `README.md`, `.gitignore`)
-   - Uploads the zip to the [Firefox Add-on Store (AMO)](https://addons.mozilla.org/) using the `browser-actions/release-firefox-addon` action
-
-> **Planned:** Automated publishing to the Microsoft Edge Add-ons store is on the roadmap.
+2. Create and publish a new **GitHub Release** (tag it `v0.x.x`).
+3. The [`deploy.yml`](.github/workflows/deploy.yml) workflow triggers automatically:
+   - Packages the extension into `Animepahe-Enhancer.zip` and attaches it to the release.
+   - Pushes to the Firefox AMO queue and the Microsoft Edge Add-ons dashboard simultaneously.
 
 **Required repository secrets:**
 
-| Secret           | Description                                                  |
-| ---------------- | ------------------------------------------------------------ |
-| `AMO_JWT_ISSUER` | AMO API key issuer (from addons.mozilla.org API credentials) |
-| `AMO_JWT_SECRET` | AMO API key secret                                           |
+| Secret                  | Description                                              |
+| ----------------------- | -------------------------------------------------------- |
+| `AMO_JWT_ISSUER`        | AMO API key issuer (from addons.mozilla.org credentials) |
+| `AMO_JWT_SECRET`        | AMO API key secret                                       |
+| `EDGE_PRODUCT_ID`       | Microsoft Partner Center Application UUID                |
+| `EDGE_CLIENT_ID`        | Microsoft Partner Center App API Client ID               |
+| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |
+| `EDGE_ACCESS_TOKEN_URL` | Microsoft OAuth2 token endpoint URL                      |
 
 ---
 
