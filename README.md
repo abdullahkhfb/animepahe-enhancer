@@ -71,8 +71,8 @@ A smart **binary search** algorithm is used on episode lists, since dubbed episo
 
 ## Screenshots
 
-<img width="1416" height="1121" alt="image" src="https://github.com/user-attachments/assets/8329fb6c-3d18-4c39-a859-f4199703f0dc" />
-<img width="1500" height="515" alt="image" src="https://github.com/user-attachments/assets/d9726d72-0eb6-4434-85c1-8203f5988e24" />
+<img width="1380" height="1227" alt="image" src="https://github.com/user-attachments/assets/a22b74f3-a0eb-4453-96e3-e027f352c853" />
+<img width="1500" height="395" alt="image" src="https://github.com/user-attachments/assets/7ae473e9-d98f-4692-9509-ddb2235f9589" />
 <img width="1920" height="998" alt="image" src="https://github.com/user-attachments/assets/001e014b-6e9e-472c-a6f5-6efac4c60804" />
 <img width="1388" height="852" alt="image" src="https://github.com/user-attachments/assets/3228f406-223f-4bd6-82a0-25a7b7db33ae" />
 <img width="1375" height="112" alt="image" src="https://github.com/user-attachments/assets/799950cc-a656-404a-9f32-d33688074a13" />
