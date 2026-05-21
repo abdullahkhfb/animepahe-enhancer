@@ -5,12 +5,12 @@
 <p align="center">
   <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
 </p>
-
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.5-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.6-blue" />
 </p>
 
----
+> [!WARNING]
+> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.6**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
@@ -19,7 +19,6 @@
 - [Installation](#installation)
   - [Firefox](#firefox)
   - [Microsoft Edge (Desktop)](#microsoft-edge-desktop)
-  - [Microsoft Edge (Mobile / Android)](#microsoft-edge-mobile--android)
   - [Other Chromium Browsers (Manual)](#other-chromium-browsers-manual)
 - [Usage](#usage)
   - [Continue Watching](#continue-watching)
@@ -57,7 +56,7 @@ Instantly know which episodes are available in English dub without opening them.
 
 | Location        | Badge colour                    | Example                                     |
 | --------------- | ------------------------------- | ------------------------------------------- |
-| Episode list    | Orange `DUB` badge              | A single dubbed episode                     |
+| Episode list    | Pink `DUB` badge              | A single dubbed episode                     |
 | Home page cards | Pink `N/total` badge            | `12/24` dubbed out of 24 total              |
 | Player page     | Inline `DUB` badge on the title | Confirmation when watching a dubbed episode |
 
@@ -345,7 +344,7 @@ The extension requests the minimum permissions necessary:
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | `storage`                                                             | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
 | Host permissions for `*.animepahe.{pw,org,com,ru}`                    | Inject the main content script into animepahe pages                               |
-| Host permissions for `*.kwik.{cx,sh,si,bz}` and `*.yaneura.{top,com}` | Inject the iframe player script into the embedded Kwik video player               |
+| Host permissions for `*.kwik.{cx}` | Inject the iframe player script into the embedded Kwik video player               |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
 
@@ -362,9 +361,7 @@ The extension requests the minimum permissions necessary:
 
 **Kwik video player (iframe script):**
 
-- `kwik.cx` / `kwik.sh` / `kwik.si` / `kwik.bz`
-- `yaneura.top` / `yaneura.com`
-
+- `kwik.cx`
 ---
 
 ## Development
@@ -414,8 +411,7 @@ The release pipeline is fully automated via GitHub Actions:
 | `AMO_JWT_SECRET`        | AMO API key secret                                       |
 | `EDGE_PRODUCT_ID`       | Microsoft Partner Center Application UUID                |
 | `EDGE_CLIENT_ID`        | Microsoft Partner Center App API Client ID               |
-| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |
-| `EDGE_ACCESS_TOKEN_URL` | Microsoft OAuth2 token endpoint URL                      |
+| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |                      |
 
 ---
 
@@ -423,7 +419,7 @@ The release pipeline is fully automated via GitHub Actions:
 
 Contributions, bug reports, and feature suggestions are welcome!
 
-1. [Open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) to discuss what you'd like to change.
+1. [Open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues/new) to discuss what you'd like to change.
 2. Fork the repository and create your branch from `main`.
 3. Make your changes — keep the code style consistent (ES2020+, no build step).
 4. Open a Pull Request with a clear description of the change and the problem it solves.
