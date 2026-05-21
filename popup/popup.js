@@ -1,9 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // Storage Keys (must match what is in animepahe.js)
   const SETTINGS_KEY = "ape_settings";
   const CW_KEY = "ape_cw_v1";
 
-  // DOM Elements
   const toggleCw = document.getElementById("toggle-cw");
   const toggleDub = document.getElementById("toggle-dub");
   const cwCount = document.getElementById("cw-count");
@@ -15,27 +13,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   const dubCard = document.getElementById("dub-card");
   const versionBadge = document.getElementById("version-badge");
 
-  // Auto-fill version from manifest
   const manifest = chrome.runtime.getManifest();
   versionBadge.textContent = `v${manifest.version}`;
 
-  // Default settings
   let settings = { cwEnabled: true, dubEnabled: true };
-
-  // 1. Load Initial State
   const data = await chrome.storage.local.get([SETTINGS_KEY, CW_KEY]);
   if (data[SETTINGS_KEY]) {
     settings = { ...settings, ...data[SETTINGS_KEY] };
   }
 
-  // Initialize UI state
   toggleCw.checked = settings.cwEnabled;
   toggleDub.checked = settings.dubEnabled;
   updateCardStyles();
   updateCwStats(data[CW_KEY]);
   updateDubStats();
 
-  // 2. Toggle Listeners
   toggleCw.addEventListener("change", () => {
     settings.cwEnabled = toggleCw.checked;
     saveSettings();
@@ -49,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function saveSettings() {
     chrome.storage.local.set({ [SETTINGS_KEY]: settings });
     updateCardStyles();
-    reloadNotice.hidden = false; // Prompt user to reload animepahe
+    reloadNotice.hidden = false;
   }
 
   function updateCardStyles() {
@@ -57,7 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     dubCard.classList.toggle("disabled", !settings.dubEnabled);
   }
 
-  // 3. Clear Buttons Logic
   btnClearCw.addEventListener("click", async () => {
     await animateButton(btnClearCw, async () => {
       await chrome.storage.local.remove(CW_KEY);
@@ -76,7 +67,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  // 4. Stat Updaters
   function updateCwStats(cwRaw) {
     try {
       const list = typeof cwRaw === "string" ? JSON.parse(cwRaw) : [];

@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "AnimePahe Enhancer",
+  "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.0.4",
-  "description": "Continue Watching with video progress tracking + DUB episode detection for AnimePahe.",
+  "version": "0.0.5",
+  "description": "Continue Watching with video progress tracking + DUB episode detection for animepahe.",
 
   "browser_specific_settings": {
     "gecko": {
@@ -28,10 +28,7 @@
     "*://*.animepahe.pw/*",
     "*://*.animepahe.org/*",
     "*://*.animepahe.com/*",
-    "*://*.kwik.cx/*",
-    "*://*.kwik.sh/*",
-    "*://*.kwik.si/*",
-    "*://*.kwik.bz/*"
+    "*://*.kwik.cx/*"
   ],
 
   "content_scripts": [
@@ -42,25 +39,32 @@
         "*://*.animepahe.com/*",
         "*://*.animepahe.ru/*"
       ],
-      "js": ["content/animepahe.js"],
+      "js": ["content/main.js"],
       "run_at": "document_idle"
     },
     {
-      "matches": [
-        "*://*.kwik.cx/*",
-        "*://*.kwik.sh/*",
-        "*://*.kwik.si/*",
-        "*://*.kwik.bz/*"
-      ],
+      "matches": ["*://*.kwik.cx/*"],
       "js": ["content/iframe-player.js"],
       "run_at": "document_end",
       "all_frames": true
     }
   ],
 
+  "web_accessible_resources": [
+    {
+      "resources": ["content/features/*.js", "content/helpers/*.js"],
+      "matches": [
+        "*://*.animepahe.pw/*",
+        "*://*.animepahe.org/*",
+        "*://*.animepahe.com/*",
+        "*://*.animepahe.ru/*"
+      ]
+    }
+  ],
+
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "AnimePahe Enhancer",
+    "default_title": "animepahe Enhancer",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
