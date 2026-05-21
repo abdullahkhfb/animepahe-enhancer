@@ -329,7 +329,7 @@ export class DubDetector {
     if (!dubs || el.querySelector(".ape-dub-badge-home")) return;
     const badge = document.createElement("span");
     badge.className = "ape-dub-badge ape-dub-badge-home";
-    badge.textContent = `${dubs}/${total}`;
+    badge.textContent = `🎙 ${dubs}/${total}`;
     if (getComputedStyle(el).position === "static")
       el.style.setProperty("position", "relative", "important");
     el.appendChild(badge);
