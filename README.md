@@ -56,7 +56,7 @@ Instantly know which episodes are available in English dub without opening them.
 
 | Location        | Badge colour                    | Example                                     |
 | --------------- | ------------------------------- | ------------------------------------------- |
-| Episode list    | Orange `DUB` badge              | A single dubbed episode                     |
+| Episode list    | Pink `DUB` badge              | A single dubbed episode                     |
 | Home page cards | Pink `N/total` badge            | `12/24` dubbed out of 24 total              |
 | Player page     | Inline `DUB` badge on the title | Confirmation when watching a dubbed episode |
 
@@ -344,7 +344,7 @@ The extension requests the minimum permissions necessary:
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | `storage`                                                             | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
 | Host permissions for `*.animepahe.{pw,org,com,ru}`                    | Inject the main content script into animepahe pages                               |
-| Host permissions for `*.kwik.{cx,sh,si,bz}` and `*.yaneura.{top,com}` | Inject the iframe player script into the embedded Kwik video player               |
+| Host permissions for `*.kwik.{cx}` | Inject the iframe player script into the embedded Kwik video player               |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
 
@@ -361,9 +361,7 @@ The extension requests the minimum permissions necessary:
 
 **Kwik video player (iframe script):**
 
-- `kwik.cx` / `kwik.sh` / `kwik.si` / `kwik.bz`
-- `yaneura.top` / `yaneura.com`
-
+- `kwik.cx`
 ---
 
 ## Development
@@ -413,8 +411,7 @@ The release pipeline is fully automated via GitHub Actions:
 | `AMO_JWT_SECRET`        | AMO API key secret                                       |
 | `EDGE_PRODUCT_ID`       | Microsoft Partner Center Application UUID                |
 | `EDGE_CLIENT_ID`        | Microsoft Partner Center App API Client ID               |
-| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |
-| `EDGE_ACCESS_TOKEN_URL` | Microsoft OAuth2 token endpoint URL                      |
+| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |                      |
 
 ---
 
