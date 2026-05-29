@@ -32,6 +32,7 @@
 - [Supported Domains](#supported-domains)
 - [Development](#development)
 - [Contributing](#contributing)
+- [Privacy](#privacy)
 - [License](#license)
 
 ---
@@ -423,6 +424,12 @@ Contributions, bug reports, and feature suggestions are welcome!
 2. Fork the repository and create your branch from `main`.
 3. Make your changes — keep the code style consistent (ES2020+, no build step).
 4. Open a Pull Request with a clear description of the change and the problem it solves.
+
+---
+
+## Privacy
+
+All data is stored locally in your browser — nothing is ever sent to an external server. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
 ---
 
