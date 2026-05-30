@@ -1,3 +1,5 @@
+<a name="top"></a>
+
 # animepahe Enhancer
 
 > A lightweight browser extension that supercharges your animepahe experience — featuring automatic DUB detection and seamless Continue Watching with per-episode progress tracking.
@@ -14,26 +16,12 @@
 
 ## Table of Contents
 
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Installation](#installation)
-  - [Firefox](#firefox)
-  - [Microsoft Edge (Desktop)](#microsoft-edge-desktop)
-  - [Other Chromium Browsers (Manual)](#other-chromium-browsers-manual)
-- [Usage](#usage)
-  - [Continue Watching](#continue-watching)
-  - [DUB Detector](#dub-detector)
-  - [Popup Settings Panel](#popup-settings-panel)
-- [Architecture](#architecture)
-  - [File Structure](#file-structure)
-  - [How It Works](#how-it-works)
-  - [Adding a New Feature](#adding-a-new-feature)
-- [Permissions](#permissions)
-- [Supported Domains](#supported-domains)
-- [Development](#development)
-- [Contributing](#contributing)
-- [Privacy](#privacy)
-- [License](#license)
+| | | |
+|:---|:---|:---|
+| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) | 📸 **[Screenshots](#screenshots)** | 📦 **[Installation](#installation)** |
+| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)** |
+| 🌐 **[Supported Domains](#supported-domains)** | 💻 **[Development](#development)** | 🤝 **[Contributing](#contributing)** |
+| 🔏 **[Privacy](#privacy)** | 📄 **[License](#license)** | |
 
 ---
 
@@ -68,6 +56,8 @@ Detection uses a two-method strategy with a 12-hour local cache to minimise netw
 
 A smart **binary search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. This cuts the number of network requests from O(n) to O(log n).
 
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## Screenshots
@@ -79,29 +69,19 @@ A smart **binary search** algorithm is used on episode lists, since dubbed episo
 <img width="1375" height="112" alt="image" src="https://github.com/user-attachments/assets/799950cc-a656-404a-9f32-d33688074a13" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/6902d90e-ea4a-4e9a-82d3-64aca52ec57c" />
 
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## Installation
 
-### <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="20" height="20" valign="middle" alt="Firefox logo"> Firefox
+| Browser | Store | Notes |
+|---|---|---|
+| <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="16" height="16" valign="middle"> **Firefox** | [Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/) | Requires Firefox 109.0+ |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="16" height="16" valign="middle"> **Microsoft Edge** | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Desktop only |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" width="16" height="16" valign="middle"> **Other Chromium** | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) | Manual install via Developer Mode — download `Animepahe-Enhancer.zip`, unzip, go to `chrome://extensions`, enable **Developer mode**, click **Load unpacked** |
 
-Install directly from the **Firefox Add-ons store**:
-👉 [**animepahe Enhancer on AMO**](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)
-Requires **Firefox 109.0 or later**.
-
-### <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="20" height="20" valign="middle" alt="Edge logo"> Microsoft Edge (Desktop)
-
-Install directly from the **Microsoft Edge Add-ons store**:
-👉 [**animepahe Enhancer on Edge Add-ons**](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd)
-
-
-### Other Chromium Browsers (Manual)
-
-1. Download the latest compiled production bundle `Animepahe-Enhancer.zip` from the [Releases page](https://github.com/abdullahkhfb/animepahe-enhancer/releases).
-2. Unzip the archive to a permanent directory on your machine.
-3. Navigate to `chrome://extensions` (or your browser's extensions dashboard).
-4. Toggle **Developer mode** to active (top-right switch).
-5. Click **Load unpacked** and select the unzipped directory.
+<p align="right"><a href="#top">↑ Back to top</a></p>
 
 ---
 
@@ -161,6 +141,8 @@ Click the extension icon in the browser toolbar to open the settings popup. From
 
 > After toggling a feature, reload the animepahe page for changes to take effect. The popup will show a reminder notice automatically.
 
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## Architecture
@@ -168,36 +150,36 @@ Click the extension icon in the browser toolbar to open the settings popup. From
 ### File Structure
 
 ```
-animepahe-enhancer/
-├── manifest.json                  # Extension manifest (Manifest V3)
+📦 animepahe-enhancer/
+├── ⚙️  manifest.json              # Extension manifest (Manifest V3)
 │
-├── content/
-│   ├── main.js                    # Entry point — loads settings, detects page,
-│   │                              # dynamically imports and initializes features
-│   ├── iframe-player.js           # Kwik iframe script — postMessage bridge
+├── 📁 content/
+│   ├── 📄 main.js                 # Entry point — loads settings, detects page,
+│   │                              #   dynamically imports and initializes features
+│   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge
 │   │
-│   ├── features/                  # One file per feature
-│   │   ├── continue-watching.js   # Continue Watching — home row + player bridge
-│   │   └── dub-detector.js        # DUB Detector — badges, binary search, cache
+│   ├── 📁 features/               # One file per feature
+│   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
+│   │   └── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
 │   │
-│   └── helpers/                   # Shared helpers imported by any feature
-│       ├── storage.js             # chrome.storage.local wrapper + key constants
-│       ├── router.js              # Page-type detection from the current URL
-│       └── cache.js               # DUB cache read/write/GC
+│   └── 📁 helpers/                # Shared helpers imported by any feature
+│       ├── 📄 storage.js          # chrome.storage.local wrapper + key constants
+│       ├── 📄 router.js           # Page-type detection from the current URL
+│       └── 📄 cache.js            # DUB cache read/write/GC
 │
-├── popup/
-│   ├── popup.html                 # Settings popup UI
-│   ├── popup.css                  # Popup styles
-│   └── popup.js                   # Popup logic (settings, stats, clear actions)
+├── 📁 popup/
+│   ├── 🌐 popup.html              # Settings popup UI
+│   ├── 🎨 popup.css               # Popup styles
+│   └── 📄 popup.js                # Popup logic (settings, stats, clear actions)
 │
-├── icons/
-│   ├── icon16.{png,svg}
-│   ├── icon48.{png,svg}
-│   └── icon128.{png,svg}
+├── 📁 icons/
+│   ├── 🖼️  icon16.{png,svg}
+│   ├── 🖼️  icon48.{png,svg}
+│   └── 🖼️  icon128.{png,svg}
 │
-└── .github/
-    └── workflows/
-        └── deploy.yml             # CI/CD: Unified production deployment engine
+└── 📁 .github/
+    └── 📁 workflows/
+        └── ⚙️  deploy.yml         # CI/CD: Unified production deployment engine
 ```
 
 ### How It Works
@@ -206,19 +188,16 @@ animepahe-enhancer/
 
 `content/main.js` is the sole entry point registered in `manifest.json`. It uses the browser's native dynamic `import()` with `chrome.runtime.getURL()` to load feature and utility modules at runtime:
 
-```
-manifest.json
-└─ content_scripts → content/main.js
-   │
-   ├─ import(helpers/storage.js)
-   ├─ import(helpers/router.js)
-   ├─ import(helpers/cache.js)
-   │
-   ├─ [cwEnabled]  → import(features/continue-watching.js)
-   │                    new ContinueWatching(storage).init(pageType)
-   │
-   └─ [dubEnabled] → import(features/dub-detector.js)
-                        new DubDetector(storage).init(pageType)
+```mermaid
+flowchart TD
+    MF["📄 manifest.json"] --> CM["content/main.js\n(entry point)"]
+    CM --> HS["helpers/storage.js"]
+    CM --> HR["helpers/router.js"]
+    CM --> HC["helpers/cache.js"]
+    CM -->|cwEnabled| CW["features/continue-watching.js"]
+    CM -->|dubEnabled| DD["features/dub-detector.js"]
+    CW --> CWI["new ContinueWatching(storage).init(pageType)"]
+    DD --> DDI["new DubDetector(storage).init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules.
@@ -227,25 +206,19 @@ Feature files are listed in `web_accessible_resources` so the extension runtime 
 
 animepahe embeds the actual video player in a sandboxed `<iframe>` served from a separate domain (Kwik). Because the iframe and the parent page are on different origins, direct DOM access is impossible. The extension solves this with a **`postMessage` bridge**:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  animepahe page (features/continue-watching.js)             │
-│                                                             │
-│  • Listens for messages from the iframe                     │
-│  • Saves/loads progress via chrome.storage.local            │
-│  • Renders the Continue Watching section on the home page   │
-└──────────────────────────┬──────────────────────────────────┘
-                           │  window.postMessage
-                    ┌──────▼───────────────────┐
-                    │  Kwik iframe              │
-                    │  (iframe-player.js)       │
-                    │                           │
-                    │  • Finds the <video> el   │
-                    │  • Requests saved time    │
-                    │  • Reports timeupdate     │
-                    │    every 2 s              │
-                    │  • Seeks on restore       │
-                    └───────────────────────────┘
+```mermaid
+sequenceDiagram
+    participant P as animepahe page (continue-watching.js)
+    participant K as Kwik iframe (iframe-player.js)
+
+    K->>P: AP_CW_REQUEST_TIME
+    Note over K,P: Iframe asks parent for saved timestamp
+    P->>K: AP_CW_RESTORE_TIME { time }
+    Note over K,P: Parent sends saved position — iframe seeks
+    loop Every 2 seconds
+        K->>P: AP_CW_UPDATE_TIME { time, duration }
+        Note over P: Progress saved to chrome.storage.local
+    end
 ```
 
 **Message types:**
@@ -266,18 +239,14 @@ Dubbed episodes on animepahe always occupy a **contiguous leading block** (episo
 
 Detection itself uses two methods tried in sequence:
 
-```
-isEpisodeDubbed(animeSession, epSession)
-│
-├─ 1. Cache hit?  →  Return cached result immediately
-│
-├─ 2. Method A: GET /api?m=links&id=…&session=…&p=kwik
-│       Parse JSON for "eng" / "english" / "dub" strings
-│       ✓ Fast, minimal data transfer
-│
-└─ 3. Method B (fallback): GET /play/{animeSession}/{epSession}
-        Parse HTML — check title, download section, inline <script> tags
-        ✓ More thorough, handles edge cases
+```mermaid
+flowchart TD
+    A["isEpisodeDubbed(animeSession, epSession)"] --> B{Cache hit?}
+    B -->|Yes| C["✓ Return cached result immediately"]
+    B -->|No| D["Method A\nGET /api?m=links&id=…&session=…&p=kwik\nParse JSON for 'eng' / 'english' / 'dub'\n✓ Fast, minimal data transfer"]
+    D -->|Conclusive| E["✓ Return & cache result"]
+    D -->|Inconclusive| F["Method B — fallback\nGET /play/{animeSession}/{epSession}\nParse HTML: title, download section, scripts\n✓ More thorough, handles edge cases"]
+    F --> G["✓ Return & cache result"]
 ```
 
 #### Storage Schema
@@ -333,6 +302,8 @@ const FEATURES = [
 
 That's it — no other files need to change.
 
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## Permissions
@@ -343,9 +314,11 @@ The extension requests the minimum permissions necessary:
 | --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | `storage`                                                             | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
 | Host permissions for `*.animepahe.{pw,org,com,ru}`                    | Inject the main content script into animepahe pages                               |
-| Host permissions for `*.kwik.{cx}` | Inject the iframe player script into the embedded Kwik video player               |
+| Host permissions for `*.kwik.{cx}`                                    | Inject the iframe player script into the embedded Kwik video player               |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
 
 ---
 
@@ -361,6 +334,9 @@ The extension requests the minimum permissions necessary:
 **Kwik video player (iframe script):**
 
 - `kwik.cx`
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## Development
@@ -410,7 +386,9 @@ The release pipeline is fully automated via GitHub Actions:
 | `AMO_JWT_SECRET`        | AMO API key secret                                       |
 | `EDGE_PRODUCT_ID`       | Microsoft Partner Center Application UUID                |
 | `EDGE_CLIENT_ID`        | Microsoft Partner Center App API Client ID               |
-| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |                      |
+| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
 
 ---
 
@@ -423,14 +401,20 @@ Contributions, bug reports, and feature suggestions are welcome!
 3. Make your changes — keep the code style consistent (ES2020+, no build step).
 4. Open a Pull Request with a clear description of the change and the problem it solves.
 
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## Privacy
 
 All data is stored locally in your browser — nothing is ever sent to an external server. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ---
 
 ## License
 
 [MIT](LICENSE) © [abdullahkhfb](https://github.com/abdullahkhfb)
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
