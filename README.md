@@ -83,19 +83,17 @@ A smart **binary search** algorithm is used on episode lists, since dubbed episo
 
 ## Installation
 
-### Firefox
+### <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="20" height="20" valign="middle" alt="Firefox logo"> Firefox
 
 Install directly from the **Firefox Add-ons store**:
-
 👉 [**animepahe Enhancer on AMO**](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)
-
 Requires **Firefox 109.0 or later**.
 
-### Microsoft Edge (Desktop)
+### <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="20" height="20" valign="middle" alt="Edge logo"> Microsoft Edge (Desktop)
 
 Install directly from the **Microsoft Edge Add-ons store**:
-
 👉 [**animepahe Enhancer on Edge Add-ons**](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd)
+
 
 ### Other Chromium Browsers (Manual)
 
