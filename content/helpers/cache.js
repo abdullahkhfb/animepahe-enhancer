@@ -1,6 +1,6 @@
 import { storage } from "./storage.js";
 
-export const CACHE_TTL = 12 * 60 * 60 * 1_000;
+export const CACHE_TTL = 24 * 60 * 60 * 1_000;
 export const EP_PREFIX = "d2_";
 export const HOME_PREFIX = "h2_";
 

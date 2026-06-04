@@ -5,8 +5,8 @@ import {
   epCacheKey,
   homeCacheKey,
 } from "../helpers/cache.js";
+import { throttler } from "../helpers/throttler.js";
 
-const HOME_BATCH_SIZE = 3;
 const PILL_ID = "ape-dub-pill";
 
 export class DubDetector {
@@ -15,6 +15,15 @@ export class DubDetector {
     this._episodeListObserver = null;
     this._homeObserver = null;
     this._homeBusy = false;
+
+    this._scanStart = 0;
+    this._reqCompleted = 0;
+    this._etaInterval = null;
+    this._pillBaseText = "";
+    this._activeSearches = new Map();
+    this._searchIdCounter = 0;
+    this._maxTotalReqs = 0;
+    this._parallelProbes = 8;
   }
 
   async init(initialPageType) {
@@ -61,6 +70,52 @@ export class DubDetector {
     return anchor;
   }
 
+  /**
+   * @param {string} baseText  Text prefix for the pill, e.g. "🎙 DUB: Scanning"
+   */
+  _startEta(baseText) {
+    this._stopEta();
+    this._scanStart = Date.now();
+    this._reqCompleted = 0;
+    this._maxTotalReqs = 0;
+    this._pillBaseText = baseText;
+    this._tickEta();
+    this._etaInterval = setInterval(() => this._tickEta(), 50);
+  }
+
+  _stopEta() {
+    if (this._etaInterval) {
+      clearInterval(this._etaInterval);
+      this._etaInterval = null;
+    }
+  }
+
+  _tickEta() {
+    let searchPending = 0;
+    for (const size of this._activeSearches.values()) {
+      if (size > 1) {
+        const depth = Math.ceil(
+          Math.log(size) / Math.log(this._parallelProbes),
+        );
+        searchPending += depth * (this._parallelProbes - 1);
+      }
+    }
+
+    const pending = throttler.pendingCount + searchPending;
+    const currentTotal = this._reqCompleted + pending;
+    this._maxTotalReqs = Math.max(this._maxTotalReqs, currentTotal);
+
+    let pctStr = "";
+    if (this._maxTotalReqs > 0) {
+      let pct = Math.floor((this._reqCompleted / this._maxTotalReqs) * 100);
+      pct = Math.max(0, Math.min(100, pct));
+      if (pending === 0 && this._reqCompleted > 0) pct = 100;
+      pctStr = `  ·  ${pct}%`;
+    }
+
+    this._showPill(`${this._pillBaseText}${pctStr}`, 0, true);
+  }
+
   async _initEpisodeList() {
     const sessions = getPageSessions();
     if (!sessions) return;
@@ -77,7 +132,7 @@ export class DubDetector {
           const currentSessions = getPageSessions();
           if (currentSessions)
             this._scanEpisodeList(currentSessions.animeSession);
-        }, 500);
+        }, 100);
       });
       this._episodeListObserver.observe(document.body, {
         childList: true,
@@ -119,7 +174,11 @@ export class DubDetector {
     if (!episodes.length) return;
 
     episodes.reverse();
+    this._startEta("🎙 DUB: Scanning");
+
     const dubCount = await this._binarySearchAndBadge(animeSession, episodes);
+
+    this._stopEta();
     this._showPill(
       dubCount > 0
         ? `🎙 DUB: ${dubCount} episode${dubCount === 1 ? "" : "s"} dubbed ✓`
@@ -129,27 +188,16 @@ export class DubDetector {
   }
 
   async _binarySearchAndBadge(animeSession, episodes) {
-    const isDubbed = (ep) => this._isEpisodeDubbed(animeSession, ep.epSession);
-    if (!(await isDubbed(episodes[0]))) return 0;
+    const boundaryCount = await this._findBoundaryConcurrent(
+      animeSession,
+      episodes,
+      (ep) => ep.epSession,
+    );
 
-    let boundary;
-    if (await isDubbed(episodes[episodes.length - 1])) {
-      boundary = episodes.length - 1;
-    } else {
-      let lo = 0,
-        hi = episodes.length - 1;
-      while (lo < hi - 1) {
-        const mid = (lo + hi) >> 1;
-        if (await isDubbed(episodes[mid])) lo = mid;
-        else hi = mid;
-      }
-      boundary = lo;
-    }
-
-    for (let i = 0; i <= boundary; i++) {
+    for (let i = 0; i < boundaryCount; i++) {
       this._addEpBadge(episodes[i].el);
     }
-    return boundary + 1;
+    return boundaryCount;
   }
 
   async _initPlayer() {
@@ -159,11 +207,12 @@ export class DubDetector {
     const oldBadge = document.querySelector(".ape-dub-inline");
     if (oldBadge) oldBadge.remove();
 
-    this._showPill("🎙 DUB: Checking…");
+    this._startEta("🎙 DUB: Checking");
     const dubbed = await this._isEpisodeDubbed(
       sessions.animeSession,
       sessions.epSession,
     );
+    this._stopEta();
 
     if (dubbed) {
       this._addPlayerBadge();
@@ -224,11 +273,9 @@ export class DubDetector {
       }
 
       if (work.length > 0) {
-        this._showPill("🎙 DUB: scanning home…");
-        for (let i = 0; i < work.length; i += HOME_BATCH_SIZE) {
-          const batch = work.slice(i, i + HOME_BATCH_SIZE);
-          await Promise.all(batch.map((item) => this._scanHomeCard(item)));
-        }
+        this._startEta("🎙 DUB: Scanning home");
+        await Promise.all(work.map((item) => this._scanHomeCard(item)));
+        this._stopEta();
         this._showPill("🎙 DUB: scan complete ✓", 4000);
       }
       this._homeBusy = false;
@@ -240,7 +287,7 @@ export class DubDetector {
       this._homeObserver = new MutationObserver(() => {
         if (!this._homeBusy) {
           clearTimeout(debounce);
-          debounce = setTimeout(scanHomeCards, 600);
+          debounce = setTimeout(scanHomeCards, 100);
         }
       });
       this._homeObserver.observe(document.body, {
@@ -272,11 +319,16 @@ export class DubDetector {
   }
 
   async _fetchAnimeStats(animeSession) {
-    const res = await fetch(
-      `/api?m=release&id=${animeSession}&sort=episode_asc&page=1`,
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
+    let data;
+    try {
+      data = await this._apiFetch(
+        `/api?m=release&id=${animeSession}&sort=episode_asc&page=1`,
+        true,
+      );
+    } catch (e) {
+      return null;
+    }
+
     const total = data.total ?? data.data?.length ?? 0;
     if (!total) return null;
 
@@ -289,30 +341,71 @@ export class DubDetector {
     return { dubs, total };
   }
 
-  async _findDubCountBinary(animeSession, eps) {
+  async _findBoundaryConcurrent(animeSession, eps, sessionExtractor) {
     if (!eps.length) return 0;
-    const sess = (ep) => ep.session || ep.anime_session;
 
-    const firstDubbed = await this._isEpisodeDubbed(animeSession, sess(eps[0]));
+    const check = (idx) =>
+      this._isEpisodeDubbed(animeSession, sessionExtractor(eps[idx]));
+
+    if (eps.length === 1) {
+      return (await check(0)) ? 1 : 0;
+    }
+
+    const [firstDubbed, lastDubbed] = await Promise.all([
+      check(0),
+      check(eps.length - 1),
+    ]);
+
     if (!firstDubbed) return 0;
-
-    const lastDubbed = await this._isEpisodeDubbed(
-      animeSession,
-      sess(eps[eps.length - 1]),
-    );
     if (lastDubbed) return eps.length;
 
-    let lo = 0,
-      hi = eps.length - 1,
-      best = 0;
-    while (lo <= hi) {
-      const mid = (lo + hi) >> 1;
-      if (await this._isEpisodeDubbed(animeSession, sess(eps[mid]))) {
-        best = mid;
-        lo = mid + 1;
-      } else hi = mid - 1;
+    const searchId = ++this._searchIdCounter;
+    let left = 0;
+    let right = eps.length - 1;
+
+    while (left < right - 1) {
+      this._activeSearches.set(searchId, right - left);
+      this._tickEta();
+
+      const step = (right - left) / this._parallelProbes;
+      const probeIndices = [];
+
+      for (let i = 1; i < this._parallelProbes; i++) {
+        const mid = Math.floor(left + step * i);
+        if (mid > left && mid < right && !probeIndices.includes(mid)) {
+          probeIndices.push(mid);
+        }
+      }
+
+      if (probeIndices.length === 0) break;
+
+      const results = await Promise.all(probeIndices.map(check));
+      let lastTrueIdx = -1;
+      for (let i = 0; i < results.length; i++) {
+        if (results[i]) lastTrueIdx = i;
+        else break;
+      }
+      if (lastTrueIdx === -1) {
+        right = probeIndices[0];
+      } else if (lastTrueIdx === probeIndices.length - 1) {
+        left = probeIndices[lastTrueIdx];
+      } else {
+        left = probeIndices[lastTrueIdx];
+        right = probeIndices[lastTrueIdx + 1];
+      }
     }
-    return best + 1;
+
+    this._activeSearches.delete(searchId);
+    this._tickEta();
+    return left + 1;
+  }
+
+  async _findDubCountBinary(animeSession, eps) {
+    return this._findBoundaryConcurrent(
+      animeSession,
+      eps,
+      (ep) => ep.session || ep.anime_session,
+    );
   }
 
   _addEpBadge(el) {
@@ -365,20 +458,26 @@ export class DubDetector {
         borderRadius: "20px",
         pointerEvents: "none",
         transition: "opacity 0.45s",
-        maxWidth: "300px",
+        maxWidth: "360px",
         textAlign: "right",
         border: "1px solid rgba(255,255,255,0.08)",
         backdropFilter: "blur(6px)",
         opacity: "0",
+        fontVariantNumeric: "tabular-nums",
       });
       document.body.appendChild(pill);
     }
     return pill;
   }
 
-  _showPill(text, autohideMs = 0) {
+  /**
+   * @param {string}  text        Content to show in the pill
+   * @param {number}  autohideMs  If > 0, fade out after this many ms
+   * @param {boolean} live        If true, skip clearing the autohide timer
+   */
+  _showPill(text, autohideMs = 0, live = false) {
     const pill = this._getOrCreatePill();
-    clearTimeout(this._pillTimer);
+    if (!live) clearTimeout(this._pillTimer);
     pill.textContent = text;
     pill.style.opacity = "1";
     if (autohideMs > 0)
@@ -389,16 +488,10 @@ export class DubDetector {
   }
 
   async _apiFetch(url, wantJson = true) {
-    await new Promise((r) => setTimeout(r, 150));
-    const res = await fetch(url, {
-      credentials: "include",
-      headers: {
-        Accept: wantJson ? "application/json" : "text/html,*/*",
-        "X-Requested-With": "XMLHttpRequest",
-      },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return wantJson ? res.json() : res.text();
+    const result = await throttler.fetch(url, wantJson);
+    this._reqCompleted++;
+    this._tickEta();
+    return result;
   }
 
   async _isEpisodeDubbed(animeSession, epSession) {
@@ -408,8 +501,7 @@ export class DubDetector {
     let dubbed = false;
     try {
       dubbed = await this._checkDubViaApi(animeSession, epSession);
-    } catch {}
-    if (!dubbed) {
+    } catch {
       try {
         dubbed = await this._checkDubViaHtml(animeSession, epSession);
       } catch {}
@@ -446,7 +538,7 @@ export class DubDetector {
 
     for (const s of doc.querySelectorAll("script:not([src])")) {
       const t = s.textContent || "";
-      if (t.includes("audio") && /['"](eng|english|dub)['"]/i.test(t))
+      if (t.includes("audio") && /['\"](eng|english|dub)['\"]/.test(t))
         return true;
     }
 

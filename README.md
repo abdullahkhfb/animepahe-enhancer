@@ -16,12 +16,12 @@
 
 ## Table of Contents
 
-| | | |
-|:---|:---|:---|
-| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) | 📸 **[Screenshots](#screenshots)** | 📦 **[Installation](#installation)** |
-| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)** |
-| 🌐 **[Supported Domains](#supported-domains)** | 💻 **[Development](#development)** | 🤝 **[Contributing](#contributing)** |
-| 🔏 **[Privacy](#privacy)** | 📄 **[License](#license)** | |
+|                                                                                                                                                                                                         |                                                                                                                                                                                                             |                                      |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
+| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector)                                                              | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                          | 📦 **[Installation](#installation)** |
+| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)**   |
+| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                          | 💻 **[Development](#development)**                                                                                                                                                                          | 🤝 **[Contributing](#contributing)** |
+| 🔏 **[Privacy](#privacy)**                                                                                                                                                                              | 📄 **[License](#license)**                                                                                                                                                                                  |                                      |
 
 ---
 
@@ -45,16 +45,18 @@ Instantly know which episodes are available in English dub without opening them.
 
 | Location        | Badge colour                    | Example                                     |
 | --------------- | ------------------------------- | ------------------------------------------- |
-| Episode list    | Pink `DUB` badge              | A single dubbed episode                     |
+| Episode list    | Pink `DUB` badge                | A single dubbed episode                     |
 | Home page cards | Pink `N/total` badge            | `12/24` dubbed out of 24 total              |
 | Player page     | Inline `DUB` badge on the title | Confirmation when watching a dubbed episode |
 
-Detection uses a two-method strategy with a 12-hour local cache to minimise network requests:
+Detection uses a two-method strategy with a 24-hour local cache to minimise network requests:
 
 1. **Lightweight JSON API check** — hits animepahe's `/api?m=links` endpoint
 2. **HTML page fallback** — parses the play page if the API check is inconclusive
 
 A smart **binary search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. This cuts the number of network requests from O(n) to O(log n).
+
+All network requests are routed through a **`RequestThrottler`** — a built-in rate-limiting layer that enforces configurable concurrency limits, per-request jitter, and exponential back-off with automatic retry on HTTP 429/503/403 responses, keeping scans polite without sacrificing speed.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -75,11 +77,11 @@ A smart **binary search** algorithm is used on episode lists, since dubbed episo
 
 ## Installation
 
-| Browser | Store | Notes |
-|---|---|---|
-| <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="16" height="16" valign="middle"> **Firefox** | [Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/) | Requires Firefox 109.0+ |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="16" height="16" valign="middle"> **Microsoft Edge** | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Desktop only |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" width="16" height="16" valign="middle"> **Other Chromium** | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) | Manual install via Developer Mode — download `Animepahe-Enhancer.zip`, unzip, go to `chrome://extensions`, enable **Developer mode**, click **Load unpacked** |
+| Browser                                                                                                                                                              | Store                                                                                              | Notes                                                                                                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="16" height="16" valign="middle"> **Firefox**                          | [Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)        | Requires Firefox 109.0+                                                                                                                                       |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="16" height="16" valign="middle"> **Microsoft Edge**         | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Desktop only                                                                                                                                                  |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" width="16" height="16" valign="middle"> **Other Chromium** | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install via Developer Mode — download `Animepahe-Enhancer.zip`, unzip, go to `chrome://extensions`, enable **Developer mode**, click **Load unpacked** |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -111,7 +113,7 @@ The DUB Detector runs automatically in the background on three page types:
 
 - All visible episode cards are scanned (using binary search) when the page loads.
 - Dubbed episodes receive an orange **DUB** badge in the top-right corner of their card.
-- A status pill appears in the bottom-right of the screen with real-time scan progress (e.g., `🎙 DUB: 12 episodes dubbed ✓`).
+- A status pill appears in the bottom-right of the screen with real-time scan progress, including a live percentage indicator (e.g., `🎙 DUB: Scanning…  ·  42%`) that resolves to the final count on completion (e.g., `🎙 DUB: 12 episodes dubbed ✓`).
 - The scan re-runs automatically when the episode list is paginated or updated via AJAX.
 
 **Player page (`/play/{animeSession}/{epSession}`):**
@@ -126,7 +128,7 @@ The DUB Detector runs automatically in the background on three page types:
 - Cards with dubbed episodes receive a pink badge showing `dubbed/total` episodes (e.g., `12/24`).
 - Scanning is batched (3 at a time) to avoid rate-limiting.
 
-**Cache:** DUB results are cached in `chrome.storage.local` for **12 hours**. Stale entries are garbage-collected automatically 3 seconds after each page load. You can force-clear the cache from the popup.
+**Cache:** DUB results are cached in `chrome.storage.local` for **24 hours**. Stale entries are garbage-collected automatically 3 seconds after each page load. You can force-clear the cache from the popup.
 
 ### Popup Settings Panel
 
@@ -165,7 +167,8 @@ Click the extension icon in the browser toolbar to open the settings popup. From
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + key constants
 │       ├── 📄 router.js           # Page-type detection from the current URL
-│       └── 📄 cache.js            # DUB cache read/write/GC
+│       ├── 📄 cache.js            # DUB cache read/write/GC
+│       └── 📄 throttler.js        # RequestThrottler — rate-limiting, jitter, retry
 │
 ├── 📁 popup/
 │   ├── 🌐 popup.html              # Settings popup UI
@@ -196,6 +199,7 @@ flowchart TD
     CM --> HC["helpers/cache.js"]
     CM -->|cwEnabled| CW["features/continue-watching.js"]
     CM -->|dubEnabled| DD["features/dub-detector.js"]
+    DD --> TH["helpers/throttler.js\n(RequestThrottler)"]
     CW --> CWI["new ContinueWatching(storage).init(pageType)"]
     DD --> DDI["new DubDetector(storage).init(pageType)"]
 ```
@@ -260,7 +264,16 @@ All data is stored in `chrome.storage.local` (no external servers, no tracking):
 | `d2_{epSession}`    | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"` |
 | `h2_{animeSession}` | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`   |
 
-Cache entries prefixed `d2_` and `h2_` expire after 12 hours and are garbage-collected on each page load.
+Cache entries prefixed `d2_` and `h2_` expire after 24 hours and are garbage-collected on each page load.
+
+#### RequestThrottler
+
+All outbound DUB detection requests are routed through `helpers/throttler.js`, which exports a shared `throttler` singleton (and the `RequestThrottler` class for custom instances). It provides:
+
+- **Concurrency cap** — limits simultaneous in-flight fetches (`maxConcurrent`, default 32)
+- **Interval + jitter** — enforces a minimum gap between request launches with ± random variation to avoid burst patterns
+- **Exponential back-off with retry** — on HTTP 429, 503, or 403 (and Cloudflare HTML rate-limit pages), the request is re-queued and the entire drain loop backs off for `baseBackoff × 2ⁿ` ms (up to `maxRetries` attempts)
+- **`pendingCount` getter** — used by the DUB Detector's ETA pill to display live scan progress
 
 ### Adding a New Feature
 
@@ -310,11 +323,11 @@ That's it — no other files need to change.
 
 The extension requests the minimum permissions necessary:
 
-| Permission                                                            | Reason                                                                            |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `storage`                                                             | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
-| Host permissions for `*.animepahe.{pw,org,com,ru}`                    | Inject the main content script into animepahe pages                               |
-| Host permissions for `*.kwik.{cx}`                                    | Inject the iframe player script into the embedded Kwik video player               |
+| Permission                                         | Reason                                                                            |
+| -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `storage`                                          | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
+| Host permissions for `*.animepahe.{pw,org,com,ru}` | Inject the main content script into animepahe pages                               |
+| Host permissions for `*.kwik.{cx}`                 | Inject the iframe player script into the embedded Kwik video player               |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
 
@@ -380,13 +393,13 @@ The release pipeline is fully automated via GitHub Actions:
 
 **Required repository secrets:**
 
-| Secret                  | Description                                              |
-| ----------------------- | -------------------------------------------------------- |
-| `AMO_JWT_ISSUER`        | AMO API key issuer (from addons.mozilla.org credentials) |
-| `AMO_JWT_SECRET`        | AMO API key secret                                       |
-| `EDGE_PRODUCT_ID`       | Microsoft Partner Center Application UUID                |
-| `EDGE_CLIENT_ID`        | Microsoft Partner Center App API Client ID               |
-| `EDGE_CLIENT_SECRET`    | Microsoft Partner Center API client secret               |
+| Secret               | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| `AMO_JWT_ISSUER`     | AMO API key issuer (from addons.mozilla.org credentials) |
+| `AMO_JWT_SECRET`     | AMO API key secret                                       |
+| `EDGE_PRODUCT_ID`    | Microsoft Partner Center Application UUID                |
+| `EDGE_CLIENT_ID`     | Microsoft Partner Center App API Client ID               |
+| `EDGE_CLIENT_SECRET` | Microsoft Partner Center API client secret               |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
