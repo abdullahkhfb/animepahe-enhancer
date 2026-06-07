@@ -9,6 +9,101 @@ import { throttler } from "../helpers/throttler.js";
 
 const PILL_ID = "ape-dub-pill";
 
+const AUDIO_DUB_VALUES = new Set(["eng", "english", "dub", "dubbed"]);
+
+function _jsonSignalsDub(node) {
+  if (node === null || node === undefined) return false;
+  if (Array.isArray(node)) return node.some(_jsonSignalsDub);
+  if (typeof node === "object") {
+    for (const [key, val] of Object.entries(node)) {
+      const lk = key.toLowerCase();
+      if (lk === "audio") {
+        if (
+          typeof val === "string" &&
+          AUDIO_DUB_VALUES.has(val.trim().toLowerCase())
+        )
+          return true;
+        if (Array.isArray(val) && val.some(_audioArraySignalsDub)) return true;
+      }
+      if ((lk === "dub" || lk === "dubbed") && val != null) return true;
+      if (typeof val === "object" && val !== null && _jsonSignalsDub(val))
+        return true;
+    }
+    return false;
+  }
+  return false;
+}
+
+function _audioArraySignalsDub(track) {
+  if (!track || typeof track !== "object") return false;
+  for (const [k, v] of Object.entries(track)) {
+    const lk = k.toLowerCase();
+    if (
+      (lk === "lang" || lk === "language" || lk === "code") &&
+      typeof v === "string"
+    ) {
+      const lv = v.trim().toLowerCase();
+      if (AUDIO_DUB_VALUES.has(lv) || lv === "en") return true;
+    }
+    if (
+      lk === "label" &&
+      typeof v === "string" &&
+      /\benglish\b|\bdub\b/i.test(v)
+    )
+      return true;
+  }
+  return false;
+}
+
+function _htmlSignalsDub(html, doc) {
+  for (const el of doc.querySelectorAll(
+    "[data-audio],[data-lang],[data-dub]",
+  )) {
+    const v = (el.dataset.audio || el.dataset.lang || el.dataset.dub || "")
+      .trim()
+      .toLowerCase();
+    if (AUDIO_DUB_VALUES.has(v) || v === "en") return true;
+  }
+
+  const area =
+    doc.getElementById("pickDownload") || doc.getElementById("scrollArea");
+  if (area) {
+    const txt = area.textContent;
+    if (/\bDub\b(?!\s*(?:bed|bing|subtitle|sub\b))/i.test(txt)) return true;
+    if (
+      /\b(?:English|Eng)\b(?!\s*(?:sub|subtitle|subtitles|subbed|dub\s+sub))/i.test(
+        txt,
+      )
+    )
+      return true;
+  }
+
+  const audioFieldRe =
+    /['"']?(?:audio|lang|language|dubbed)['"']?\s*:\s*['"](?:eng|en|english|dub|dubbed)['"]/i;
+  const audioProximityRe =
+    /['"']?audio['"']?\s*:[^;{}]{0,80}['"](?:eng|en|english|dub|dubbed)['"]/i;
+
+  for (const s of doc.querySelectorAll("script:not([src])")) {
+    const t = s.textContent || "";
+    if (audioFieldRe.test(t) || audioProximityRe.test(t)) return true;
+  }
+
+  {
+    const lhtml = html.toLowerCase();
+    const needles = ['"audio":', "'audio':"];
+    for (const needle of needles) {
+      let pos = 0;
+      while ((pos = lhtml.indexOf(needle, pos)) !== -1) {
+        const snippet = lhtml.slice(pos, pos + 60);
+        if (/["'](eng|en|english|dub|dubbed)["']/.test(snippet)) return true;
+        pos += needle.length;
+      }
+    }
+  }
+
+  return false;
+}
+
 export class DubDetector {
   constructor(storage) {
     this._storage = storage;
@@ -23,12 +118,13 @@ export class DubDetector {
     this._activeSearches = new Map();
     this._searchIdCounter = 0;
     this._maxTotalReqs = 0;
-    this._parallelProbes = 8;
+    this._parallelProbes = 12;
+
+    this._inFlight = new Map();
   }
 
-  async init(initialPageType) {
+  async init(_initialPageType) {
     this._handleRoute();
-
     let currentUrl = location.href;
     new MutationObserver(() => {
       if (location.href !== currentUrl) {
@@ -58,21 +154,16 @@ export class DubDetector {
   _getThumbnailTarget(anchor) {
     let img = anchor.querySelector("img");
     if (img) return anchor;
-
     let p = anchor.parentElement;
     for (let d = 0; p && d < 4; d++) {
       img = p.querySelector("img");
       if (img) break;
       p = p.parentElement;
     }
-
     if (img) return img.closest("a") || img.parentElement;
     return anchor;
   }
 
-  /**
-   * @param {string} baseText  Text prefix for the pill, e.g. "🎙 DUB: Scanning"
-   */
   _startEta(baseText) {
     this._stopEta();
     this._scanStart = Date.now();
@@ -103,13 +194,15 @@ export class DubDetector {
 
     const pending = throttler.pendingCount + searchPending;
     const currentTotal = this._reqCompleted + pending;
-    this._maxTotalReqs = Math.max(this._maxTotalReqs, currentTotal);
+    if (currentTotal > this._maxTotalReqs) this._maxTotalReqs = currentTotal;
 
     let pctStr = "";
     if (this._maxTotalReqs > 0) {
       let pct = Math.floor((this._reqCompleted / this._maxTotalReqs) * 100);
-      pct = Math.max(0, Math.min(100, pct));
-      if (pending === 0 && this._reqCompleted > 0) pct = 100;
+      pct = Math.max(
+        0,
+        Math.min(pending === 0 && this._reqCompleted > 0 ? 100 : 99, pct),
+      );
       pctStr = `  ·  ${pct}%`;
     }
 
@@ -129,9 +222,8 @@ export class DubDetector {
         if (debounceTimer) return;
         debounceTimer = setTimeout(() => {
           debounceTimer = null;
-          const currentSessions = getPageSessions();
-          if (currentSessions)
-            this._scanEpisodeList(currentSessions.animeSession);
+          const s = getPageSessions();
+          if (s) this._scanEpisodeList(s.animeSession);
         }, 100);
       });
       this._episodeListObserver.observe(document.body, {
@@ -154,17 +246,13 @@ export class DubDetector {
 
     for (const a of cards) {
       if (a.closest("#ape-cw-section")) continue;
-
       const href = a.getAttribute("href") || "";
       const m = href.match(/\/play\/[^/]+\/([^/?#]+)/);
       if (!m) continue;
-
       const epSession = m[1];
       const target = this._getThumbnailTarget(a);
-
       if (target.dataset.apeDubDone) continue;
       target.dataset.apeDubDone = "1";
-
       if (!seenSessions.has(epSession)) {
         seenSessions.add(epSession);
         episodes.push({ el: target, epSession });
@@ -193,10 +281,7 @@ export class DubDetector {
       episodes,
       (ep) => ep.epSession,
     );
-
-    for (let i = 0; i < boundaryCount; i++) {
-      this._addEpBadge(episodes[i].el);
-    }
+    for (let i = 0; i < boundaryCount; i++) this._addEpBadge(episodes[i].el);
     return boundaryCount;
   }
 
@@ -204,9 +289,7 @@ export class DubDetector {
     const sessions = getPageSessions();
     if (!sessions) return;
 
-    const oldBadge = document.querySelector(".ape-dub-inline");
-    if (oldBadge) oldBadge.remove();
-
+    document.querySelector(".ape-dub-inline")?.remove();
     this._startEta("🎙 DUB: Checking");
     const dubbed = await this._isEpisodeDubbed(
       sessions.animeSession,
@@ -229,7 +312,9 @@ export class DubDetector {
     badge.className = "ape-dub-inline";
     badge.textContent = "DUB";
     badge.style.cssText =
-      "background:#e8710a;color:#fff;font:700 11px system-ui,sans-serif;padding:3px 9px;border-radius:3px;margin-left:10px;vertical-align:middle;display:inline-block;box-shadow:0 1px 5px rgba(0,0,0,.5);letter-spacing:.5px;";
+      "background:#e8710a;color:#fff;font:700 11px system-ui,sans-serif;" +
+      "padding:3px 9px;border-radius:3px;margin-left:10px;vertical-align:middle;" +
+      "display:inline-block;box-shadow:0 1px 5px rgba(0,0,0,.5);letter-spacing:.5px;";
     h1.appendChild(badge);
   }
 
@@ -247,6 +332,7 @@ export class DubDetector {
             ".ui-autocomplete, .search-results, header, .top-header, form",
           ),
       );
+
       if (!cards.length) {
         this._homeBusy = false;
         return;
@@ -259,13 +345,10 @@ export class DubDetector {
         const href = a.getAttribute("href") || "";
         const m = href.match(/(?:\/anime\/|\/play\/)([^/?#]+)/);
         if (!m) continue;
-
         const animeSession = m[1];
         const target = this._getThumbnailTarget(a);
-
         if (target.dataset.apeDubDone) continue;
         target.dataset.apeDubDone = "1";
-
         if (!seenSessions.has(animeSession)) {
           seenSessions.add(animeSession);
           work.push({ anchor: target, animeSession });
@@ -282,6 +365,7 @@ export class DubDetector {
     };
 
     await scanHomeCards();
+
     if (!this._homeObserver) {
       let debounce = null;
       this._homeObserver = new MutationObserver(() => {
@@ -305,7 +389,6 @@ export class DubDetector {
     }
 
     this._setSpinner(anchor, true);
-
     try {
       const stats = await this._fetchAnimeStats(animeSession);
       if (stats) {
@@ -313,6 +396,7 @@ export class DubDetector {
         this._addHomeBadge(anchor, stats.dubs, stats.total);
       }
     } catch {
+      // Network failure — leave card without badge; do not cache.
     } finally {
       this._setSpinner(anchor, false);
     }
@@ -325,7 +409,7 @@ export class DubDetector {
         `/api?m=release&id=${animeSession}&sort=episode_asc&page=1`,
         true,
       );
-    } catch (e) {
+    } catch {
       return null;
     }
 
@@ -347,15 +431,11 @@ export class DubDetector {
     const check = (idx) =>
       this._isEpisodeDubbed(animeSession, sessionExtractor(eps[idx]));
 
-    if (eps.length === 1) {
-      return (await check(0)) ? 1 : 0;
-    }
-
+    if (eps.length === 1) return (await check(0)) ? 1 : 0;
     const [firstDubbed, lastDubbed] = await Promise.all([
       check(0),
       check(eps.length - 1),
     ]);
-
     if (!firstDubbed) return 0;
     if (lastDubbed) return eps.length;
 
@@ -363,7 +443,7 @@ export class DubDetector {
     let left = 0;
     let right = eps.length - 1;
 
-    while (left < right - 1) {
+    while (right - left > 1) {
       this._activeSearches.set(searchId, right - left);
       this._tickEta();
 
@@ -372,19 +452,24 @@ export class DubDetector {
 
       for (let i = 1; i < this._parallelProbes; i++) {
         const mid = Math.floor(left + step * i);
-        if (mid > left && mid < right && !probeIndices.includes(mid)) {
+        if (mid > left && mid < right && !probeIndices.includes(mid))
           probeIndices.push(mid);
-        }
       }
 
-      if (probeIndices.length === 0) break;
+      if (probeIndices.length === 0) {
+        const mid = Math.floor((left + right) / 2);
+        if (mid > left && mid < right) probeIndices.push(mid);
+        else break; // adjacent — boundary is between left and right
+      }
 
       const results = await Promise.all(probeIndices.map(check));
+
       let lastTrueIdx = -1;
       for (let i = 0; i < results.length; i++) {
         if (results[i]) lastTrueIdx = i;
         else break;
       }
+
       if (lastTrueIdx === -1) {
         right = probeIndices[0];
       } else if (lastTrueIdx === probeIndices.length - 1) {
@@ -451,9 +536,9 @@ export class DubDetector {
         bottom: "14px",
         right: "14px",
         zIndex: "2147483647",
-        background: "rgba(8, 8, 22, 0.92)",
+        background: "rgba(8,8,22,0.92)",
         color: "#e8e8f8",
-        font: "700 11px/1.5 system-ui, sans-serif",
+        font: "700 11px/1.5 system-ui,sans-serif",
         padding: "6px 14px",
         borderRadius: "20px",
         pointerEvents: "none",
@@ -470,11 +555,6 @@ export class DubDetector {
     return pill;
   }
 
-  /**
-   * @param {string}  text        Content to show in the pill
-   * @param {number}  autohideMs  If > 0, fade out after this many ms
-   * @param {boolean} live        If true, skip clearing the autohide timer
-   */
   _showPill(text, autohideMs = 0, live = false) {
     const pill = this._getOrCreatePill();
     if (!live) clearTimeout(this._pillTimer);
@@ -498,13 +578,37 @@ export class DubDetector {
     const cached = await readCache(epCacheKey(epSession));
     if (cached !== null) return cached;
 
-    let dubbed = false;
+    if (this._inFlight.has(epSession)) {
+      return this._inFlight.get(epSession);
+    }
+
+    const promise = this._fetchDubStatus(animeSession, epSession);
+    this._inFlight.set(epSession, promise);
+
+    try {
+      return await promise;
+    } finally {
+      this._inFlight.delete(epSession);
+    }
+  }
+
+  async _fetchDubStatus(animeSession, epSession) {
+    let dubbed = null;
+    let apiError = null;
+
     try {
       dubbed = await this._checkDubViaApi(animeSession, epSession);
-    } catch {
+    } catch (err) {
+      apiError = err;
+      if (err?.rateLimited) return false;
+    }
+
+    if (dubbed === null) {
       try {
         dubbed = await this._checkDubViaHtml(animeSession, epSession);
-      } catch {}
+      } catch {
+        return false;
+      }
     }
 
     await writeCache(epCacheKey(epSession), dubbed);
@@ -515,10 +619,7 @@ export class DubDetector {
     const data = await this._apiFetch(
       `/api?m=links&id=${animeSession}&session=${epSession}&p=kwik`,
     );
-    const s = JSON.stringify(data).toLowerCase();
-    return (
-      s.includes('"eng"') || s.includes('"english"') || s.includes('"dub"')
-    );
+    return _jsonSignalsDub(data);
   }
 
   async _checkDubViaHtml(animeSession, epSession) {
@@ -527,28 +628,6 @@ export class DubDetector {
       false,
     );
     const doc = new DOMParser().parseFromString(html, "text/html");
-
-    const area =
-      doc.getElementById("pickDownload") || doc.getElementById("scrollArea");
-    if (area) {
-      const txt = area.textContent;
-      if (/\bEng\b/i.test(txt) || /english/i.test(txt) || /\bdub\b/i.test(txt))
-        return true;
-    }
-
-    for (const s of doc.querySelectorAll("script:not([src])")) {
-      const t = s.textContent || "";
-      if (t.includes("audio") && /['\"](eng|english|dub)['\"]/.test(t))
-        return true;
-    }
-
-    const idx = html.toLowerCase().indexOf('"audio"');
-    if (
-      idx !== -1 &&
-      /eng|english|dub/.test(html.slice(idx, idx + 32).toLowerCase())
-    )
-      return true;
-
-    return false;
+    return _htmlSignalsDub(html, doc);
   }
 }

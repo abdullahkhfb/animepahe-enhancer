@@ -4,18 +4,24 @@ export const CACHE_TTL = 24 * 60 * 60 * 1_000;
 export const EP_PREFIX = "d2_";
 export const HOME_PREFIX = "h2_";
 
+const CACHE_VERSION = "v1";
+
 export function parseCacheEntry(raw) {
   if (!raw || typeof raw !== "string") return null;
   const pipe = raw.indexOf("|");
   if (pipe === -1) return null;
   const timestamp = Number(raw.slice(0, pipe));
   if (!Number.isFinite(timestamp)) return null;
-  const valuePart = raw.slice(pipe + 1);
+  const rest = raw.slice(pipe + 1);
+
+  if (!rest.startsWith(CACHE_VERSION + "|")) return null;
+  const valuePart = rest.slice(CACHE_VERSION.length + 1);
+
   return { timestamp, valuePart };
 }
 
 export function makeCacheEntry(value) {
-  return `${Date.now()}|${JSON.stringify(value)}`;
+  return `${Date.now()}|${CACHE_VERSION}|${JSON.stringify(value)}`;
 }
 
 export async function readCache(key) {

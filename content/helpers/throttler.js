@@ -1,21 +1,12 @@
 const _sleep = (ms) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
 
 export class RequestThrottler {
-  /**
-   * @param {{
-   *   minInterval?:   number,  // ms between consecutive request launches (default 280)
-   *   jitter?:        number,  // ± ms random variation (default 80)
-   *   maxConcurrent?: number,  // max simultaneous in-flight fetches (default 2)
-   *   maxRetries?:    number,  // retries on rate-limit hit (default 3)
-   *   baseBackoff?:   number,  // initial back-off ms; doubles each retry (default 2000)
-   * }} opts
-   */
   constructor(opts = {}) {
-    this._minInterval = opts.minInterval ?? 0;
-    this._jitter = opts.jitter ?? 0;
-    this._maxConcurrent = opts.maxConcurrent ?? 32;
-    this._maxRetries = opts.maxRetries ?? 3;
-    this._baseBackoff = opts.baseBackoff ?? 2_000;
+    this._minInterval = opts.minInterval ?? 120;
+    this._jitter = opts.jitter ?? 50;
+    this._maxConcurrent = opts.maxConcurrent ?? 6;
+    this._maxRetries = opts.maxRetries ?? 4;
+    this._baseBackoff = opts.baseBackoff ?? 3_000;
 
     this._queue = [];
     this._active = 0;
@@ -24,12 +15,6 @@ export class RequestThrottler {
     this._draining = false;
   }
 
-  /**
-   * Queue a fetch and return the parsed response (JSON or text).
-   * @param {string}  url
-   * @param {boolean} [wantJson=true]
-   * @returns {Promise<any>}
-   */
   fetch(url, wantJson = true) {
     return new Promise((resolve, reject) => {
       this._queue.push({ url, wantJson, resolve, reject, retries: 0 });
@@ -39,12 +24,6 @@ export class RequestThrottler {
 
   get pendingCount() {
     return this._queue.length + this._active;
-  }
-  get minInterval() {
-    return this._minInterval;
-  }
-  get maxConcurrent() {
-    return this._maxConcurrent;
   }
 
   async _drain() {
@@ -56,6 +35,7 @@ export class RequestThrottler {
         await _sleep(backoffRemaining);
         continue;
       }
+
       if (this._queue.length > 0 && this._active < this._maxConcurrent) {
         const jitter =
           Math.floor(Math.random() * this._jitter * 2) - this._jitter;
@@ -74,7 +54,7 @@ export class RequestThrottler {
         continue;
       }
 
-      await _sleep(30);
+      await _sleep(20);
     }
 
     this._draining = false;
@@ -86,10 +66,14 @@ export class RequestThrottler {
       task.resolve(result);
     } catch (err) {
       if (err.rateLimited && task.retries < this._maxRetries) {
-        const delay = this._baseBackoff * Math.pow(2, task.retries);
+        const serverHint = err.retryAfterMs ?? 0;
+        const expBackoff = this._baseBackoff * Math.pow(2, task.retries);
+        const jitter = Math.random() * expBackoff * 0.5;
+        const delay = Math.max(serverHint, expBackoff + jitter);
+
         this._backoffUntil = Date.now() + delay;
         task.retries++;
-        this._queue.unshift(task);
+        this._queue.push(task);
       } else {
         task.reject(err);
       }
@@ -105,26 +89,61 @@ export class RequestThrottler {
     const res = await fetch(url, {
       credentials: "include",
       headers: {
-        Accept: wantJson ? "application/json" : "text/html,*/*",
+        Accept: wantJson ? "application/json" : "text/html,*/*;q=0.9",
         "X-Requested-With": "XMLHttpRequest",
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
       },
     });
 
     if (res.status === 429 || res.status === 503 || res.status === 403) {
+      let retryAfterMs = 0;
+      const ra = res.headers.get("retry-after");
+      if (ra) {
+        const secs = Number(ra);
+        retryAfterMs =
+          Number.isFinite(secs) && secs > 0
+            ? secs * 1_000
+            : Date.parse(ra) - Date.now();
+        retryAfterMs = Math.max(0, retryAfterMs);
+      }
+
+      if (res.status === 503) {
+        const body = await res.text().catch(() => "");
+        const isCf =
+          /cloudflare|checking your browser|just a moment|cf-browser-verification/i.test(
+            body,
+          );
+        if (!isCf) {
+          throw new Error(`HTTP 503 (server error, not CF)`);
+        }
+        throw Object.assign(new Error("Cloudflare challenge (503)"), {
+          rateLimited: true,
+          retryAfterMs,
+          isCfChallenge: true,
+        });
+      }
+
       throw Object.assign(new Error(`HTTP ${res.status}`), {
         rateLimited: true,
+        retryAfterMs,
       });
     }
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     if (wantJson) {
       const ct = res.headers.get("content-type") ?? "";
       if (!ct.includes("json")) {
         const text = await res.text();
-        if (/rate.?limit|error\s+1015|cloudflare/i.test(text)) {
+        const isCf =
+          /cloudflare|checking your browser|just a moment|error\s+1015/i.test(
+            text,
+          );
+        if (isCf) {
           throw Object.assign(
-            new Error("Cloudflare rate-limit (HTML response)"),
-            { rateLimited: true },
+            new Error("Cloudflare interception (200 with HTML)"),
+            { rateLimited: true, isCfChallenge: true },
           );
         }
         throw new Error(`Expected JSON but got content-type: ${ct}`);
@@ -136,4 +155,10 @@ export class RequestThrottler {
   }
 }
 
-export const throttler = new RequestThrottler();
+export const throttler = new RequestThrottler({
+  minInterval: 120,
+  jitter: 50,
+  maxConcurrent: 6,
+  maxRetries: 4,
+  baseBackoff: 3_000,
+});
