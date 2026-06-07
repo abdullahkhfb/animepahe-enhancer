@@ -12,7 +12,7 @@
 </p>
 
 > [!WARNING]
-> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.7**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
+> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.8**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
