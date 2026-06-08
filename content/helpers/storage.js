@@ -8,6 +8,7 @@ export const CW_MAX_ENTRIES = 24;
 export const DEFAULT_SETTINGS = {
   cwEnabled: true,
   dubEnabled: true,
+  smartSearchEnabled: true,
 };
 
 export const storage = {

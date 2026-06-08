@@ -2,26 +2,26 @@
 
 # animepahe Enhancer
 
-> A lightweight browser extension that supercharges your animepahe experience — featuring automatic DUB detection and seamless Continue Watching with per-episode progress tracking.
+> A lightweight browser extension that supercharges your animepahe experience — featuring automatic DUB detection, seamless Continue Watching with per-episode progress tracking, and Smart Search that finds anime by any alternative title via AniList.
 
 <p align="center">
   <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
 </p>
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.8-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.9-blue" />
 </p>
 
 > [!WARNING]
-> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.8**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
+> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.9**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
-|                                                                                                                                                                                                         |                                                                                                                                                                                                             |                                      |
-| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
-| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector)                                                              | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                          | 📦 **[Installation](#installation)** |
-| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)**   |
-| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                          | 💻 **[Development](#development)**                                                                                                                                                                          | 🤝 **[Contributing](#contributing)** |
-| 🔏 **[Privacy](#privacy)**                                                                                                                                                                              | 📄 **[License](#license)**                                                                                                                                                                                  |                                      |
+|                                                                                                                                                                                                                                                            |                                                                                                                                                                                                             |                                      |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
+| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search)                                                               | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                          | 📦 **[Installation](#installation)** |
+| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)**   |
+| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                                                                             | 💻 **[Development](#development)**                                                                                                                                                                          | 🤝 **[Contributing](#contributing)** |
+| 🔏 **[Privacy](#privacy)**                                                                                                                                                                                                                                 | 📄 **[License](#license)**                                                                                                                                                                                  |                                      |
 
 ---
 
@@ -57,6 +57,20 @@ Detection uses a two-method strategy with a 24-hour local cache to minimise netw
 A smart **binary search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. This cuts the number of network requests from O(n) to O(log n).
 
 All network requests are routed through a **`RequestThrottler`** — a built-in rate-limiting layer that enforces configurable concurrency limits, per-request jitter, and exponential back-off with automatic retry on HTTP 429/503/403 responses, keeping scans polite without sacrificing speed.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+### 🔍 Smart Search
+
+Can’t find an anime because you only know its English dub title, a common nickname, or a romanized spelling that doesn’t match animepahe’s catalogue? Smart Search fixes that by querying [AniList](https://anilist.co) for every alternative title associated with your search term and running parallel searches for each one — all without leaving the search bar.
+
+- Activates automatically as you type (debounced 300�ms) — no extra interaction required
+- Fetches alternative titles (romaji, English, synonyms) from the AniList GraphQL API for the top matching anime
+- Runs additional searches on animepahe using each candidate title and merges the results
+- Extra results appear **above** the native dropdown, clearly labelled with a pink `also known as “…”` tag and a left-side accent border
+- Duplicate titles already shown by animepahe’s native search are automatically suppressed
+- Relevance filtering ensures only genuinely related titles are injected (word-overlap + substring checks)
+- AniList lookup results are cached locally for 24�hours (prefix�`ape_ss_`) to avoid redundant API calls
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -130,16 +144,36 @@ The DUB Detector runs automatically in the background on three page types:
 
 **Cache:** DUB results are cached in `chrome.storage.local` for **24 hours**. Stale entries are garbage-collected automatically 3 seconds after each page load. You can force-clear the cache from the popup.
 
+### Smart Search
+
+Smart Search activates automatically while you type in the animepahe search bar—no extra steps are needed:
+
+1. Start typing any title in the search bar. After a 300 ms debounce, Smart Search kicks in alongside the native search.
+2. animepahe’s regular results appear as normal. Smart Search then queries AniList for alternative titles associated with your term.
+3. Any additional matching anime found via those alternative titles are **injected at the top** of the dropdown under a labelled divider.
+4. Each extra result card shows:
+   - The anime’s poster thumbnail (circular)
+   - The title as listed on animepahe
+   - A pink _also known as “…”_ tag showing which search term led to this result
+   - A pink left-side accent border to visually distinguish injected results
+5. Click any result card (native or injected) to navigate to that anime’s page as normal.
+6. If Smart Search finds nothing additional, the dropdown is left unchanged.
+
+**Cache:** AniList lookup results are cached for **24 hours** (storage prefix `ape_ss_`). You can force-clear the cache from the popup.
+
 ### Popup Settings Panel
 
 Click the extension icon in the browser toolbar to open the settings popup. From here you can:
 
 - **Toggle Continue Watching** on or off
 - **Toggle DUB Detector** on or off
+- **Toggle Smart Search** on or off
 - See how many items are currently in your Continue Watching list
 - **Clear your Continue Watching list**
 - See how many DUB detection results are currently cached
 - **Clear the DUB cache** (forces a fresh scan on next visit)
+- See how many Smart Search AniList lookups are currently cached
+- **Clear the Smart Search cache** (forces fresh AniList lookups on next search)
 
 > After toggling a feature, reload the animepahe page for changes to take effect. The popup will show a reminder notice automatically.
 
@@ -162,7 +196,8 @@ Click the extension icon in the browser toolbar to open the settings popup. From
 │   │
 │   ├── 📁 features/               # One file per feature
 │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
-│   │   └── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
+│   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
+│   │   └── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + key constants
@@ -199,9 +234,11 @@ flowchart TD
     CM --> HC["helpers/cache.js"]
     CM -->|cwEnabled| CW["features/continue-watching.js"]
     CM -->|dubEnabled| DD["features/dub-detector.js"]
+    CM -->|smartSearchEnabled| SS["features/smart-search.js"]
     DD --> TH["helpers/throttler.js\n(RequestThrottler)"]
     CW --> CWI["new ContinueWatching(storage).init(pageType)"]
     DD --> DDI["new DubDetector(storage).init(pageType)"]
+    SS --> SSI["new SmartSearch(storage).init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules.
@@ -257,14 +294,41 @@ flowchart TD
 
 All data is stored in `chrome.storage.local` (no external servers, no tracking):
 
-| Key                 | Type                  | Description                                                               |
-| ------------------- | --------------------- | ------------------------------------------------------------------------- |
-| `ape_settings`      | `object`              | `{ cwEnabled: boolean, dubEnabled: boolean }`                             |
-| `ape_cw_v1`         | `string` (JSON array) | Continue Watching list, up to 24 entries                                  |
-| `d2_{epSession}`    | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"` |
-| `h2_{animeSession}` | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`   |
+| Key                 | Type                  | Description                                                                                         |
+| ------------------- | --------------------- | --------------------------------------------------------------------------------------------------- |
+| `ape_settings`      | `object`              | `{ cwEnabled: boolean, dubEnabled: boolean, smartSearchEnabled: boolean }`                          |
+| `ape_cw_v1`         | `string` (JSON array) | Continue Watching list, up to 24 entries                                                            |
+| `d2_{epSession}`    | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"`                           |
+| `h2_{animeSession}` | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`                             |
+| `ape_ss_{query}`    | `string`              | Smart Search AniList cache for a normalised query. Stores `allTitles` and `queryCandidates` arrays. |
 
-Cache entries prefixed `d2_` and `h2_` expire after 24 hours and are garbage-collected on each page load.
+Cache entries prefixed `d2_` and `h2_` expire after 24 hours and are garbage-collected on each page load. Entries prefixed `ape_ss_` also expire after 24 hours.
+
+#### Smart Search — AniList Alt-Title Lookup
+
+Smart Search enriches the native animepahe dropdown by resolving alternative titles through the AniList GraphQL API:
+
+```mermaid
+flowchart TD
+    A["User types in search bar (debounced 300 ms)"] --> B["Parallel: apSearch(query) + getAltTitles(query)"]
+    B --> C{AniList cache hit?}
+    C -->|Yes| D["✓ Return cached allTitles + queryCandidates"]
+    C -->|No| E["POST graphql.anilist.co\nQuery top-5 media, extract romaji/english/synonyms"]
+    E --> F["Write to ape_ss_ cache (24 h TTL)"]
+    F --> D
+    D --> G["Filter candidates: remove query itself, keep up to 3"]
+    G --> H["apSearch(candidate) for each — parallel"]
+    H --> I["Relevance filter: substring + word-overlap check"]
+    I --> J["Inject extra rows into dropdown (deduplicated)"]
+```
+
+Key design decisions:
+
+- **Debounce (300 ms)** prevents API calls on every keystroke.
+- **Normalisation** (`norm()`) strips punctuation and lowercases before any comparison.
+- **Relevance filter** (`isRelevant()`) uses substring inclusion and an 80 % alt-word / 50 % item-word overlap ratio.
+- **Deduplication** suppresses any result whose normalised title already appears in the native dropdown.
+- **Stale-query guard** — if the input changes while awaiting results, the injection is silently aborted.
 
 #### RequestThrottler
 
@@ -296,6 +360,7 @@ export class MyFeature {
 export const DEFAULT_SETTINGS = {
   cwEnabled: true,
   dubEnabled: true,
+  smartSearchEnabled: true,
   myFeatureEnabled: true, // ← add here
 };
 ```
@@ -328,6 +393,7 @@ The extension requests the minimum permissions necessary:
 | `storage`                                          | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
 | Host permissions for `*.animepahe.{pw,org,com,ru}` | Inject the main content script into animepahe pages                               |
 | Host permissions for `*.kwik.{cx}`                 | Inject the iframe player script into the embedded Kwik video player               |
+| Host permissions for `graphql.anilist.co`          | Fetch alternative anime titles for Smart Search (no account data exchanged)       |
 
 **No data is ever sent to any external server.** All storage is local to your browser.
 

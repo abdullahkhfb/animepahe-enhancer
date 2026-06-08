@@ -1,22 +1,27 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const SETTINGS_KEY = "ape_settings";
   const CW_KEY = "ape_cw_v1";
+  const SS_CACHE_PREFIX = "ape_alt_";
 
   const toggleCw = document.getElementById("toggle-cw");
   const toggleDub = document.getElementById("toggle-dub");
+  const toggleSs = document.getElementById("toggle-ss");
   const cwCount = document.getElementById("cw-count");
   const dubCacheCount = document.getElementById("dub-cache-count");
+  const ssCacheCount = document.getElementById("ss-cache-count");
   const btnClearCw = document.getElementById("cw-clear");
   const btnClearDub = document.getElementById("dub-clear-cache");
+  const btnClearSs = document.getElementById("ss-clear-cache");
   const reloadNotice = document.getElementById("reload-notice");
   const cwCard = document.getElementById("cw-card");
   const dubCard = document.getElementById("dub-card");
+  const ssCard = document.getElementById("ss-card");
   const versionBadge = document.getElementById("version-badge");
 
   const manifest = chrome.runtime.getManifest();
   versionBadge.textContent = `v${manifest.version}`;
 
-  let settings = { cwEnabled: true, dubEnabled: true };
+  let settings = { cwEnabled: true, dubEnabled: true, smartSearchEnabled: true };
   const data = await chrome.storage.local.get([SETTINGS_KEY, CW_KEY]);
   if (data[SETTINGS_KEY]) {
     settings = { ...settings, ...data[SETTINGS_KEY] };
@@ -24,9 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   toggleCw.checked = settings.cwEnabled;
   toggleDub.checked = settings.dubEnabled;
+  toggleSs.checked = settings.smartSearchEnabled;
   updateCardStyles();
   updateCwStats(data[CW_KEY]);
   updateDubStats();
+  updateSsStats();
 
   toggleCw.addEventListener("change", () => {
     settings.cwEnabled = toggleCw.checked;
@@ -35,6 +42,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   toggleDub.addEventListener("change", () => {
     settings.dubEnabled = toggleDub.checked;
+    saveSettings();
+  });
+
+  toggleSs.addEventListener("change", () => {
+    settings.smartSearchEnabled = toggleSs.checked;
     saveSettings();
   });
 
@@ -47,6 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function updateCardStyles() {
     cwCard.classList.toggle("disabled", !settings.cwEnabled);
     dubCard.classList.toggle("disabled", !settings.dubEnabled);
+    ssCard.classList.toggle("disabled", !settings.smartSearchEnabled);
   }
 
   btnClearCw.addEventListener("click", async () => {
@@ -64,6 +77,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
       await chrome.storage.local.remove(keysToRemove);
       updateDubStats();
+    });
+  });
+
+  btnClearSs.addEventListener("click", async () => {
+    await animateButton(btnClearSs, async () => {
+      const all = await chrome.storage.local.get(null);
+      const keysToRemove = Object.keys(all).filter((k) =>
+        k.startsWith(SS_CACHE_PREFIX),
+      );
+      await chrome.storage.local.remove(keysToRemove);
+      updateSsStats();
     });
   });
 
@@ -85,6 +109,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     ).length;
     dubCacheCount.textContent = `${count} cached`;
     btnClearDub.style.display = count === 0 ? "none" : "block";
+  }
+
+  async function updateSsStats() {
+    const all = await chrome.storage.local.get(null);
+    const count = Object.keys(all).filter((k) =>
+      k.startsWith(SS_CACHE_PREFIX),
+    ).length;
+    ssCacheCount.textContent = `${count} cached`;
+    btnClearSs.style.display = count === 0 ? "none" : "block";
   }
 
   // Utility for smooth button animations

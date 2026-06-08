@@ -299,6 +299,11 @@
       export: "DubDetector",
       enabled: settings.dubEnabled,
     },
+    {
+      module: "content/features/smart-search.js",
+      export: "SmartSearch",
+      enabled: settings.smartSearchEnabled,
+    },
     //  to add a new feature, append an entry here
     // {
     //   module:  "content/features/my-feature.js",

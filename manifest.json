@@ -2,9 +2,8 @@
   "manifest_version": 3,
   "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.0.8",
-  "description": "Continue Watching with video progress tracking + DUB episode detection for animepahe.",
-
+  "version": "0.0.9",
+  "description": "Continue Watching with video progress tracking + DUB episode detection + Smart Search via AniList for animepahe.",
   "browser_specific_settings": {
     "gecko": {
       "id": "animepahe-enhancer@abdullahkhfb.github.io",
@@ -15,22 +14,19 @@
     },
     "gecko_android": {}
   },
-
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-
   "permissions": ["storage"],
-
   "host_permissions": [
     "*://*.animepahe.pw/*",
     "*://*.animepahe.org/*",
     "*://*.animepahe.com/*",
-    "*://*.kwik.cx/*"
+    "*://*.kwik.cx/*",
+    "https://graphql.anilist.co/*"
   ],
-
   "content_scripts": [
     {
       "matches": [
@@ -49,7 +45,6 @@
       "all_frames": true
     }
   ],
-
   "web_accessible_resources": [
     {
       "resources": ["content/features/*.js", "content/helpers/*.js"],
@@ -61,7 +56,6 @@
       ]
     }
   ],
-
   "action": {
     "default_popup": "popup/popup.html",
     "default_title": "animepahe Enhancer",

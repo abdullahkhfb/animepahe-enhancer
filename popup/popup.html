@@ -174,6 +174,40 @@
       </div>
     </div>
 
+      <!-- Smart Search -->
+      <div class="feature-card" id="ss-card">
+        <div class="feature-header">
+          <div class="feature-icon ss-icon" style="background: transparent;">
+            <svg viewBox="0 0 256 256" style="width: 28px; height: 28px;" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="ss_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#e8710a;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#d92558;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <circle cx="108" cy="108" r="76" fill="none" stroke="url(#ss_grad)" stroke-width="20"/>
+              <line x1="163" y1="163" x2="224" y2="224" stroke="url(#ss_grad)" stroke-width="20" stroke-linecap="round"/>
+              <!-- spark / star for "smart" -->
+              <path d="M 108 52 Q 108 80 80 80 Q 108 80 108 108 Q 108 80 136 80 Q 108 80 108 52" fill="#fff" opacity="0.9"/>
+            </svg>
+          </div>
+          <div class="feature-text">
+            <span class="feature-name">Smart Search</span>
+            <span class="feature-desc">Find anime by any alternative name via AniList</span>
+          </div>
+          <label class="toggle" aria-label="Toggle Smart Search">
+            <input type="checkbox" id="toggle-ss" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+        <div class="feature-stats" id="ss-stats">
+          <span class="stat-chip" id="ss-cache-count">— cached</span>
+          <button class="action-btn" id="ss-clear-cache" title="Clear Smart Search cache">
+            Clear Cache
+          </button>
+        </div>
+      </div>
+
       <!-- Status notice -->
       <div class="notice" id="reload-notice" hidden>
         <svg
