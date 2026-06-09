@@ -119,8 +119,39 @@ export class DubDetector {
     this._searchIdCounter = 0;
     this._maxTotalReqs = 0;
     this._parallelProbes = 12;
+    this._batchDelay = 2000;
+    this._itemsScanned = 0;
+    this._totalItems = 0;
 
     this._inFlight = new Map();
+  }
+
+  _delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async _batchProcess(items, fn, batchSize = 2, batchDelayMs = 2000) {
+    const chunks = items.reduce((acc, item, index) => {
+      const chunkIndex = Math.floor(index / batchSize);
+      if (!acc[chunkIndex]) acc[chunkIndex] = [];
+      acc[chunkIndex].push(item);
+      return acc;
+    }, []);
+
+    await chunks.reduce(async (chain, batch, index) => {
+      await chain;
+
+      const results = await Promise.all(batch.map((item) => fn(item)));
+
+      const allCached = results.every((r) => r?.cached);
+      const anyNoDub = results.some((r) => !r?.hasDub);
+
+      const skipDelay = allCached || anyNoDub;
+
+      if (index < chunks.length - 1 && !skipDelay) {
+        await this._delay(batchDelayMs);
+      }
+    }, Promise.resolve());
   }
 
   async init(_initialPageType) {
@@ -164,14 +195,20 @@ export class DubDetector {
     return anchor;
   }
 
-  _startEta(baseText) {
+  _startEta(baseText, totalItems = 0) {
     this._stopEta();
     this._scanStart = Date.now();
     this._reqCompleted = 0;
     this._maxTotalReqs = 0;
+    this._itemsScanned = 0;
+    this._totalItems = totalItems;
     this._pillBaseText = baseText;
+
     this._tickEta();
-    this._etaInterval = setInterval(() => this._tickEta(), 50);
+
+    if (totalItems === 0) {
+      this._etaInterval = setInterval(() => this._tickEta(), 50);
+    }
   }
 
   _stopEta() {
@@ -181,7 +218,22 @@ export class DubDetector {
     }
   }
 
+  _itemCompleted() {
+    this._itemsScanned++;
+    this._tickEta();
+  }
+
   _tickEta() {
+    if (this._totalItems > 0) {
+      let pct = Math.floor((this._itemsScanned / this._totalItems) * 100);
+      pct = Math.max(
+        0,
+        Math.min(this._itemsScanned === this._totalItems ? 100 : 99, pct),
+      );
+      this._showPill(`${this._pillBaseText}  ·  ${pct}%`, 0, true);
+      return;
+    }
+
     let searchPending = 0;
     for (const size of this._activeSearches.values()) {
       if (size > 1) {
@@ -281,7 +333,15 @@ export class DubDetector {
       episodes,
       (ep) => ep.epSession,
     );
-    for (let i = 0; i < boundaryCount; i++) this._addEpBadge(episodes[i].el);
+
+    for (let i = 0; i < boundaryCount; i++) {
+      this._addEpBadge(episodes[i].el);
+    }
+
+    for (let i = boundaryCount; i < episodes.length; i++) {
+      this._addSubEpBadge(episodes[i].el);
+    }
+
     return boundaryCount;
   }
 
@@ -290,6 +350,8 @@ export class DubDetector {
     if (!sessions) return;
 
     document.querySelector(".ape-dub-inline")?.remove();
+    document.querySelector(".ape-sub-inline")?.remove();
+
     this._startEta("🎙 DUB: Checking");
     const dubbed = await this._isEpisodeDubbed(
       sessions.animeSession,
@@ -301,6 +363,7 @@ export class DubDetector {
       this._addPlayerBadge();
       this._showPill("🎙 DUB: Dubbed ✓", 5000);
     } else {
+      this._addSubPlayerBadge();
       this._showPill("🎙 DUB: Sub only", 4000);
     }
   }
@@ -311,6 +374,24 @@ export class DubDetector {
     const badge = document.createElement("span");
     badge.className = "ape-dub-inline";
     badge.textContent = "DUB";
+    badge.style.cssText =
+      "background:#d92558;color:#fff;font:700 11px system-ui,sans-serif;" +
+      "padding:3px 9px;border-radius:3px;margin-left:10px;vertical-align:middle;" +
+      "display:inline-block;box-shadow:0 1px 5px rgba(0,0,0,.5);letter-spacing:.5px;";
+    h1.appendChild(badge);
+  }
+
+  _addSubPlayerBadge() {
+    const h1 = document.querySelector("h1");
+    if (
+      !h1 ||
+      h1.querySelector(".ape-sub-inline") ||
+      h1.querySelector(".ape-dub-inline")
+    )
+      return;
+    const badge = document.createElement("span");
+    badge.className = "ape-sub-inline";
+    badge.textContent = "SUB ONLY";
     badge.style.cssText =
       "background:#e8710a;color:#fff;font:700 11px system-ui,sans-serif;" +
       "padding:3px 9px;border-radius:3px;margin-left:10px;vertical-align:middle;" +
@@ -356,8 +437,13 @@ export class DubDetector {
       }
 
       if (work.length > 0) {
-        this._startEta("🎙 DUB: Scanning home");
-        await Promise.all(work.map((item) => this._scanHomeCard(item)));
+        this._startEta("🎙 DUB: Scanning home", work.length);
+        await this._batchProcess(
+          work,
+          (item) => this._scanHomeCard(item),
+          2,
+          this._batchDelay,
+        );
         this._stopEta();
         this._showPill("🎙 DUB: scan complete ✓", 4000);
       }
@@ -385,21 +471,26 @@ export class DubDetector {
     const cached = await readCache(homeCacheKey(animeSession));
     if (cached) {
       this._addHomeBadge(anchor, cached.dubs, cached.total);
-      return;
+      this._itemCompleted();
+      return { cached: true, hasDub: cached.dubs > 0 };
     }
 
     this._setSpinner(anchor, true);
+    let hasDub = false;
     try {
       const stats = await this._fetchAnimeStats(animeSession);
       if (stats) {
         await writeCache(homeCacheKey(animeSession), stats);
         this._addHomeBadge(anchor, stats.dubs, stats.total);
+        hasDub = stats.dubs > 0;
       }
     } catch {
-      // Network failure — leave card without badge; do not cache.
     } finally {
       this._setSpinner(anchor, false);
     }
+
+    this._itemCompleted();
+    return { cached: false, hasDub };
   }
 
   async _fetchAnimeStats(animeSession) {
@@ -432,12 +523,20 @@ export class DubDetector {
       this._isEpisodeDubbed(animeSession, sessionExtractor(eps[idx]));
 
     if (eps.length === 1) return (await check(0)) ? 1 : 0;
+
+    const reqsBeforeInitial = this._reqCompleted;
     const [firstDubbed, lastDubbed] = await Promise.all([
       check(0),
       check(eps.length - 1),
     ]);
+    const initialWasCached = this._reqCompleted === reqsBeforeInitial;
+
     if (!firstDubbed) return 0;
     if (lastDubbed) return eps.length;
+
+    if (!initialWasCached) {
+      await this._delay(this._batchDelay);
+    }
 
     const searchId = ++this._searchIdCounter;
     let left = 0;
@@ -459,10 +558,12 @@ export class DubDetector {
       if (probeIndices.length === 0) {
         const mid = Math.floor((left + right) / 2);
         if (mid > left && mid < right) probeIndices.push(mid);
-        else break; // adjacent — boundary is between left and right
+        else break;
       }
 
+      const reqsBeforeProbes = this._reqCompleted;
       const results = await Promise.all(probeIndices.map(check));
+      const probesWereCached = this._reqCompleted === reqsBeforeProbes;
 
       let lastTrueIdx = -1;
       for (let i = 0; i < results.length; i++) {
@@ -477,6 +578,10 @@ export class DubDetector {
       } else {
         left = probeIndices[lastTrueIdx];
         right = probeIndices[lastTrueIdx + 1];
+      }
+
+      if (right - left > 1 && !probesWereCached) {
+        await this._delay(this._batchDelay);
       }
     }
 
@@ -503,11 +608,29 @@ export class DubDetector {
     el.appendChild(badge);
   }
 
+  _addSubEpBadge(el) {
+    if (el.querySelector(".ape-dub-badge")) return;
+    const badge = document.createElement("span");
+    badge.className = "ape-dub-badge ape-sub-badge-ep";
+    badge.textContent = "SUB ONLY";
+    badge.style.setProperty("background", "#e8710a", "important");
+    if (getComputedStyle(el).position === "static")
+      el.style.setProperty("position", "relative", "important");
+    el.appendChild(badge);
+  }
+
   _addHomeBadge(el, dubs, total) {
-    if (!dubs || el.querySelector(".ape-dub-badge-home")) return;
+    if (el.querySelector(".ape-dub-badge-home")) return;
     const badge = document.createElement("span");
     badge.className = "ape-dub-badge ape-dub-badge-home";
-    badge.textContent = `🎙 ${dubs}/${total}`;
+
+    if (dubs > 0) {
+      badge.textContent = `🎙 ${dubs}/${total}`;
+    } else {
+      badge.textContent = `SUB ONLY`;
+      badge.style.setProperty("background", "#e8710a", "important");
+    }
+
     if (getComputedStyle(el).position === "static")
       el.style.setProperty("position", "relative", "important");
     el.appendChild(badge);

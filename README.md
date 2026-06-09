@@ -8,11 +8,11 @@
   <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
 </p>
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.9-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.9.1-blue" />
 </p>
 
 > [!WARNING]
-> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.9**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
+> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.9.1**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
@@ -43,11 +43,11 @@ Never lose your place again. animepahe Enhancer tracks your exact playback posit
 
 Instantly know which episodes are available in English dub without opening them. The DUB Detector automatically scans anime listings, episode pages, and the home feed and overlays colour-coded badges:
 
-| Location        | Badge colour                    | Example                                     |
-| --------------- | ------------------------------- | ------------------------------------------- |
-| Episode list    | Pink `DUB` badge                | A single dubbed episode                     |
-| Home page cards | Pink `N/total` badge            | `12/24` dubbed out of 24 total              |
-| Player page     | Inline `DUB` badge on the title | Confirmation when watching a dubbed episode |
+| Location        | Badge colour                                       | Example                        |
+| --------------- | -------------------------------------------------- | ------------------------------ |
+| Episode list    | Pink `DUB` badge / Orange `SUB ONLY` badge         | Dubbed or sub-only episode     |
+| Home page cards | Pink `N/total` badge / Orange `SUB ONLY`           | `12/24` dubbed out of 24 total |
+| Player page     | Inline `DUB` badge / `SUB ONLY` badge on the title | Confirmation when watching     |
 
 Detection uses a two-method strategy with a 24-hour local cache to minimise network requests:
 
@@ -126,21 +126,21 @@ The DUB Detector runs automatically in the background on three page types:
 **Anime episode list page (`/anime/{session}`):**
 
 - All visible episode cards are scanned (using binary search) when the page loads.
-- Dubbed episodes receive an orange **DUB** badge in the top-right corner of their card.
+- Dubbed episodes receive a pink **DUB** badge in the top-right corner of their card; sub-only episodes receive an orange **SUB ONLY** badge.
 - A status pill appears in the bottom-right of the screen with real-time scan progress, including a live percentage indicator (e.g., `🎙 DUB: Scanning…  ·  42%`) that resolves to the final count on completion (e.g., `🎙 DUB: 12 episodes dubbed ✓`).
 - The scan re-runs automatically when the episode list is paginated or updated via AJAX.
 
 **Player page (`/play/{animeSession}/{epSession}`):**
 
 - A quick check runs on load.
-- If the episode is dubbed, a **DUB** badge is appended inline to the episode title (`<h1>`).
+- If the episode is dubbed, a **DUB** badge is appended inline to the episode title (`<h1>`); otherwise a **SUB ONLY** badge is shown.
 - The status pill shows `🎙 DUB: Dubbed ✓` or `🎙 DUB: Sub only`.
 
 **Home page (latest releases grid):**
 
 - Every anime card in the latest release feed is scanned.
 - Cards with dubbed episodes receive a pink badge showing `dubbed/total` episodes (e.g., `12/24`).
-- Scanning is batched (3 at a time) to avoid rate-limiting.
+- Scanning is batched (2 at a time) to avoid rate-limiting.
 
 **Cache:** DUB results are cached in `chrome.storage.local` for **24 hours**. Stale entries are garbage-collected automatically 3 seconds after each page load. You can force-clear the cache from the popup.
 
@@ -334,7 +334,7 @@ Key design decisions:
 
 All outbound DUB detection requests are routed through `helpers/throttler.js`, which exports a shared `throttler` singleton (and the `RequestThrottler` class for custom instances). It provides:
 
-- **Concurrency cap** — limits simultaneous in-flight fetches (`maxConcurrent`, default 32)
+- **Concurrency cap** — limits simultaneous in-flight fetches (`maxConcurrent`, default 6)
 - **Interval + jitter** — enforces a minimum gap between request launches with ± random variation to avoid burst patterns
 - **Exponential back-off with retry** — on HTTP 429, 503, or 403 (and Cloudflare HTML rate-limit pages), the request is re-queued and the entire drain loop backs off for `baseBackoff × 2ⁿ` ms (up to `maxRetries` attempts)
 - **`pendingCount` getter** — used by the DUB Detector's ETA pill to display live scan progress
