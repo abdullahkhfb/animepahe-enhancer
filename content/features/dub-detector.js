@@ -114,13 +114,39 @@ export class DubDetector {
     this._scanStart = 0;
     this._reqCompleted = 0;
     this._etaInterval = null;
-    this._pillBaseText = "";
+    this._pillBaseText = "";	
     this._activeSearches = new Map();
     this._searchIdCounter = 0;
     this._maxTotalReqs = 0;
     this._parallelProbes = 12;
+    this._batchDelay = 1200;     // 1.2-second gap between pairs
+    this._requestDelay = 650;   // NEW: 0.65-second gap between individual page opens inside a pair
 
     this._inFlight = new Map();
+  }
+
+  _delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // UPDATED: Now staggers execution within the batch instead of Promise.all
+  async _batchProcess(items, fn, batchSize = 3, batchDelayMs = 1200, requestDelayMs = 650) {
+    for (let i = 0; i < items.length; i += batchSize) {
+      const batch = items.slice(i, i + batchSize);
+      
+      for (let j = 0; j < batch.length; j++) {
+        await fn(batch[j]);
+        // Pause between individual items in the pair
+        if (j < batch.length - 1) {
+          await this._delay(requestDelayMs);
+        }
+      }
+      
+      // Pause between this pair and the next pair
+      if (i + batchSize < items.length) {
+        await this._delay(batchDelayMs);
+      }
+    }
   }
 
   async init(_initialPageType) {
@@ -357,7 +383,13 @@ export class DubDetector {
 
       if (work.length > 0) {
         this._startEta("🎙 DUB: Scanning home");
-        await Promise.all(work.map((item) => this._scanHomeCard(item)));
+        await this._batchProcess(
+          work,
+          (item) => this._scanHomeCard(item),
+          2,
+          this._batchDelay,
+          this._requestDelay
+        );
         this._stopEta();
         this._showPill("🎙 DUB: scan complete ✓", 4000);
       }
@@ -432,12 +464,16 @@ export class DubDetector {
       this._isEpisodeDubbed(animeSession, sessionExtractor(eps[idx]));
 
     if (eps.length === 1) return (await check(0)) ? 1 : 0;
-    const [firstDubbed, lastDubbed] = await Promise.all([
-      check(0),
-      check(eps.length - 1),
-    ]);
+
+    // UPDATED: Stagger the initial dual check
+    const firstDubbed = await check(0);
+    await this._delay(this._requestDelay);
+    const lastDubbed = await check(eps.length - 1);
+
     if (!firstDubbed) return 0;
     if (lastDubbed) return eps.length;
+
+    await this._delay(this._batchDelay);
 
     const searchId = ++this._searchIdCounter;
     let left = 0;
@@ -462,7 +498,14 @@ export class DubDetector {
         else break; // adjacent — boundary is between left and right
       }
 
-      const results = await Promise.all(probeIndices.map(check));
+      // UPDATED: Stagger the probes instead of Promise.all
+      const results = [];
+      for (let i = 0; i < probeIndices.length; i++) {
+        results.push(await check(probeIndices[i]));
+        if (i < probeIndices.length - 1) {
+          await this._delay(this._requestDelay);
+        }
+      }
 
       let lastTrueIdx = -1;
       for (let i = 0; i < results.length; i++) {
@@ -477,6 +520,10 @@ export class DubDetector {
       } else {
         left = probeIndices[lastTrueIdx];
         right = probeIndices[lastTrueIdx + 1];
+      }
+
+      if (right - left > 1) {
+        await this._delay(this._batchDelay);
       }
     }
 
