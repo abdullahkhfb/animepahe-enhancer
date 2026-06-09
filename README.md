@@ -78,12 +78,12 @@ Can’t find an anime because you only know its English dub title, a common nick
 
 ## Screenshots
 
-<img width="1390" height="1213" alt="image" src="https://github.com/user-attachments/assets/73c57c2f-384e-4c83-b6fa-4c809745bc3f" />
-<img width="1500" height="395" alt="image" src="https://github.com/user-attachments/assets/7ae473e9-d98f-4692-9509-ddb2235f9589" />
-<img width="1920" height="998" alt="image" src="https://github.com/user-attachments/assets/001e014b-6e9e-472c-a6f5-6efac4c60804" />
-<img width="1388" height="852" alt="image" src="https://github.com/user-attachments/assets/3228f406-223f-4bd6-82a0-25a7b7db33ae" />
-<img width="1375" height="112" alt="image" src="https://github.com/user-attachments/assets/799950cc-a656-404a-9f32-d33688074a13" />
-<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/6902d90e-ea4a-4e9a-82d3-64aca52ec57c" />
+<img width="1411" height="1267" alt="Screenshot 2026-06-09 at 18-35-39 animepahe okay-ish anime website" src="https://github.com/user-attachments/assets/cc27f0d9-8305-40dd-9dcc-8631a563f57e" />
+<img width="1407" height="866" alt="Screenshot 2026-06-09 at 18-36-57 Kill Blue Ep  1-9 animepahe" src="https://github.com/user-attachments/assets/9a642184-9172-4542-9b9f-6ad9f4c48940" />
+<img width="1390" height="1052" alt="Screenshot 2026-06-09 at 18-39-12 Kill Blue Ep  6 animepahe" src="https://github.com/user-attachments/assets/fb2bc822-1724-4479-8bca-06a319944e11" />
+<img width="1500" height="782" alt="Screenshot 2026-06-09 at 18-40-01 animepahe okay-ish anime website" src="https://github.com/user-attachments/assets/4b617ab2-b832-434c-89c5-94e68ada777e" />
+<img width="1600" height="850" alt="1" src="https://github.com/user-attachments/assets/aa21e625-b1d3-4de2-ab1f-bd46d834634d" />
+
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
