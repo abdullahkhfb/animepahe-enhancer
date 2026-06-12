@@ -8,11 +8,11 @@
   <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
 </p>
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.9.1-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.0.9.2-blue" />
 </p>
 
 > [!WARNING]
-> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.9.1**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
+> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.0.9.2**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
@@ -83,7 +83,7 @@ Can’t find an anime because you only know its English dub title, a common nick
 <img width="1407" height="866" alt="Screenshot 2026-06-09 at 18-36-57 Kill Blue Ep  1-9 animepahe" src="https://github.com/user-attachments/assets/9a642184-9172-4542-9b9f-6ad9f4c48940" />
 <img width="1390" height="1052" alt="Screenshot 2026-06-09 at 18-39-12 Kill Blue Ep  6 animepahe" src="https://github.com/user-attachments/assets/fb2bc822-1724-4479-8bca-06a319944e11" />
 <img width="1500" height="782" alt="Screenshot 2026-06-09 at 18-40-01 animepahe okay-ish anime website" src="https://github.com/user-attachments/assets/4b617ab2-b832-434c-89c5-94e68ada777e" />
-<img width="1600" height="850" alt="1" src="https://github.com/user-attachments/assets/aa21e625-b1d3-4de2-ab1f-bd46d834634d" />
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/0cdd844a-cce1-4e31-b537-3582084a9602" />
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
