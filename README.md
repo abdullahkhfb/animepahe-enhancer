@@ -16,12 +16,13 @@
 
 ## Table of Contents
 
-|                                                                                                                                                                                                                                                            |                                                                                                                                                                                                             |                                      |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
-| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search)                                                               | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                          | 📦 **[Installation](#installation)** |
-| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)**   |
-| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                                                                             | 💻 **[Development](#development)**                                                                                                                                                                          | 🤝 **[Contributing](#contributing)** |
-| 🔏 **[Privacy](#privacy)**                                                                                                                                                                                                                                 | 📄 **[License](#license)**                                                                                                                                                                                  |                                      |
+|                                                                                                                                                                                                                                                            |                                                                                                                                                                                                             |                                            |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- |
+| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search)                                                               | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                          | 📦 **[Installation](#installation)**       |
+| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) | 🔒 **[Permissions](#permissions)**         |
+| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                                                                             | 💻 **[Development](#development)**                                                                                                                                                                          | 🤝 **[Contributing](#contributing)**       |
+| 🔏 **[Privacy](#privacy)**                                                                                                                                                                                                                                 | 🔐 **[Security](#security)**                                                                                                                                                                                | 🤝 **[Code of Conduct](#code-of-conduct)** |
+| 📄 **[License](#license)**                                                                                                                                                                                                                                 |                                                                                                                                                                                                             |                                            |
 
 ---
 
@@ -83,7 +84,6 @@ Can’t find an anime because you only know its English dub title, a common nick
 <img width="1390" height="1052" alt="Screenshot 2026-06-09 at 18-39-12 Kill Blue Ep  6 animepahe" src="https://github.com/user-attachments/assets/fb2bc822-1724-4479-8bca-06a319944e11" />
 <img width="1500" height="782" alt="Screenshot 2026-06-09 at 18-40-01 animepahe okay-ish anime website" src="https://github.com/user-attachments/assets/4b617ab2-b832-434c-89c5-94e68ada777e" />
 <img width="1600" height="850" alt="1" src="https://github.com/user-attachments/assets/aa21e625-b1d3-4de2-ab1f-bd46d834634d" />
-
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -473,12 +473,16 @@ The release pipeline is fully automated via GitHub Actions:
 
 ## Contributing
 
-Contributions, bug reports, and feature suggestions are welcome!
+Contributions, bug reports, and feature suggestions are welcome! Please read [**CONTRIBUTING.md**](CONTRIBUTING.md) for the full guide. Here's the short version:
 
-1. [Open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues/new) to discuss what you'd like to change.
-2. Fork the repository and create your branch from `main`.
-3. Make your changes — keep the code style consistent (ES2020+, no build step).
-4. Open a Pull Request with a clear description of the change and the problem it solves.
+- **Discuss before you build.** For anything beyond a trivial fix, [open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues/new) first to align on direction.
+- **Fork and branch.** Create your branch from `main` (`fix/<description>` or `feat/<description>`).
+- **No build step.** The extension is plain ES2020+ — no bundler, no TypeScript, no npm dependencies. Keep it that way.
+- **One concern per PR.** Focused pull requests are reviewed faster.
+- **Follow the feature contract.** New features go in `content/features/my-feature.js`, get a key in `DEFAULT_SETTINGS`, and register in the `FEATURES` array in `main.js`. See [Adding a New Feature](#adding-a-new-feature) and the full guide in [CONTRIBUTING.md](CONTRIBUTING.md).
+- **Open a Pull Request** with a clear description of what changed and why, plus the browsers you tested on.
+
+For security vulnerabilities, do **not** open a public issue — see [**SECURITY.md**](SECURITY.md) instead.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -487,6 +491,27 @@ Contributions, bug reports, and feature suggestions are welcome!
 ## Privacy
 
 All data is stored locally in your browser — nothing is ever sent to an external server. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+---
+
+## Security
+
+To report a security vulnerability, please **do not open a public GitHub issue**. Instead, use one of the private channels described in [**SECURITY.md**](SECURITY.md):
+
+- **Email:** [rynvexa@proton.me](mailto:rynvexa@proton.me) with the subject `[SECURITY] animepahe-enhancer — <brief description>`
+- **GitHub Security Advisory:** [Open a draft advisory](https://github.com/abdullahkhfb/animepahe-enhancer/security/advisories/new)
+
+You will receive an acknowledgement within 48 hours. Fixes are coordinated privately and credited publicly after the patched version is live in the stores.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+---
+
+## Code of Conduct
+
+This project follows the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. By participating, you agree to uphold its standards. See [**CODE_OF_CONDUCT.md**](CODE_OF_CONDUCT.md) for details, including how to report unacceptable behaviour.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
