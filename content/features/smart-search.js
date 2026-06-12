@@ -3,11 +3,11 @@ import { readCache, writeCache } from "../helpers/cache.js";
 const ANILIST_URL = "https://graphql.anilist.co";
 const CACHE_PFX = "ape_ss_";
 const MIN_LEN = 2;
-const DEBOUNCE_MS = 300;
+const DEBOUNCE_MS = 100;
 
 const ANILIST_QUERY = `
 query ($q: String) {
-  Page(perPage: 5) {
+  Page(perPage: 15) {
     media(search: $q, type: ANIME, sort: SEARCH_MATCH) {
       title { romaji english }
       synonyms
@@ -31,26 +31,43 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
+function levenshtein(a, b) {
+  const m = a.length,
+    n = b.length;
+  const dp = Array.from({ length: m + 1 }, (_, i) => [i]);
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] =
+        a[i - 1] === b[j - 1]
+          ? dp[i - 1][j - 1]
+          : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+function fuzzyMatch(a, b) {
+  if (!a || !b) return false;
+  if (a.includes(b) || b.includes(a)) return true;
+  const maxDist = Math.floor(Math.max(a.length, b.length) * 0.25);
+  return levenshtein(a, b) <= maxDist;
+}
+
 function isRelevant(itemTitle, altTitlesNorms, nq) {
   const nItem = norm(itemTitle);
-
-  if (nItem.includes(nq) || nq.includes(nItem)) return true;
-
-  const itemWords = nItem.split(" ");
+  if (nItem.includes(nq) || fuzzyMatch(nItem, nq)) return true;
 
   for (const nAlt of altTitlesNorms) {
     if (nItem.includes(nAlt) || nAlt.includes(nItem)) return true;
+    if (fuzzyMatch(nItem, nAlt)) return true;
 
     const altWords = nAlt.split(" ");
     let overlap = 0;
     for (const w of altWords) {
-      if (itemWords.includes(w)) overlap++;
+      if (nItem.includes(w)) overlap++;
     }
-
-    const altRatio = overlap / altWords.length;
-    const itemRatio = overlap / itemWords.length;
-
-    if (altRatio >= 0.8 && itemRatio >= 0.5) return true;
+    if (altWords.length > 0 && overlap / altWords.length >= 0.7) return true;
   }
   return false;
 }
@@ -59,11 +76,14 @@ async function getAltTitles(query) {
   const key = `${CACHE_PFX}${norm(query).replace(/\s/g, "_").slice(0, 80)}`;
   try {
     const hit = await readCache(key);
-    if (hit !== null && hit.allTitles) return hit;
+    if (hit !== null && hit.allTitles && hit.allTitles.length > 0) return hit;
   } catch {}
 
-  const resObj = { allTitles: [], queryCandidates: [] };
+  const resObj = { allTitles: [], queryCandidates: [], bestMatch: "" };
   try {
+    let json = null;
+    console.log(`[SmartSearch] Direct fetch to AniList Data...`);
+
     const res = await fetch(ANILIST_URL, {
       method: "POST",
       headers: {
@@ -72,21 +92,22 @@ async function getAltTitles(query) {
       },
       body: JSON.stringify({ query: ANILIST_QUERY, variables: { q: query } }),
     });
-    if (!res.ok) throw new Error(`AniList ${res.status}`);
-    const json = await res.json();
+    if (res.ok) json = await res.json();
+
     const media = json?.data?.Page?.media ?? [];
 
     if (media.length > 0) {
+      resObj.bestMatch =
+        media[0].title?.english || media[0].title?.romaji || "";
       const nq = norm(query);
       let targetMedia = media[0];
-
       for (const m of media) {
         const allM = [
           m.title?.romaji,
           m.title?.english,
           ...(m.synonyms || []),
         ].map((t) => norm(t));
-        if (allM.includes(nq)) {
+        if (allM.some((t) => fuzzyMatch(t, nq))) {
           targetMedia = m;
           break;
         }
@@ -95,24 +116,26 @@ async function getAltTitles(query) {
       const r = targetMedia.title?.romaji;
       const e = targetMedia.title?.english;
       const syns = targetMedia.synonyms ?? [];
-
       const rawAll = [r, e, ...syns].filter(Boolean);
       resObj.allTitles = [
         ...new Set(rawAll.filter((t) => t.length >= MIN_LEN)),
       ];
-
-      const rawCands = [r, e, ...syns].filter(Boolean);
+      const rawCands = [e, r, ...syns].filter(Boolean);
       resObj.queryCandidates = [
         ...new Set(rawCands.filter((t) => t.length >= MIN_LEN)),
       ];
+
+      console.log(`[SmartSearch] Synonyms Extracted:`, resObj.queryCandidates);
     }
   } catch (err) {
-    console.warn("[ape-ss] AniList:", err);
+    console.error(`[SmartSearch] Critical Error in getAltTitles:`, err);
   }
 
-  try {
-    await writeCache(key, resObj);
-  } catch {}
+  if (resObj.allTitles.length > 0) {
+    try {
+      await writeCache(key, resObj);
+    } catch {}
+  }
   return resObj;
 }
 
@@ -122,170 +145,101 @@ async function apSearch(q) {
       credentials: "include",
       headers: { "X-Requested-With": "XMLHttpRequest" },
     });
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.warn(
+        `[SmartSearch] AnimePahe API returned status ${res.status} for query: ${q}`,
+      );
+      return [];
+    }
     const json = await res.json();
     return Array.isArray(json?.data) ? json.data : [];
-  } catch {
+  } catch (err) {
+    console.warn(
+      `[SmartSearch] AnimePahe API Fetch failed for query: ${q}`,
+      err,
+    );
     return [];
   }
 }
 
-function getDropdown() {
-  return (
-    document.querySelector("#suggestionList") ||
-    document.querySelector(".ui-autocomplete") ||
-    document.querySelector("ul.suggestions") ||
-    document.querySelector(".search-results ul") ||
-    (() => {
-      const input = getInput();
-      if (!input) return null;
-      let el = input.parentElement;
-      for (let d = 0; d < 5; d++) {
-        const ul = el?.querySelector("ul");
-        if (ul && ul.children.length > 0) return ul;
-        el = el?.parentElement;
-      }
-      return null;
-    })()
-  );
-}
-
 function getInput() {
-  return document.querySelector(
-    "input#inputSearch, input[name='q'], input[placeholder*='earch' i]",
-  );
+  return document.querySelector("input[name='q']");
 }
 
-function buildRow(item, originalQuery, referenceRow) {
-  let row;
+function getDropdown() {
+  return document.querySelector(".search-results, .search-results ul");
+}
 
-  if (referenceRow) {
-    row = referenceRow.cloneNode(true);
-    row.removeAttribute("data-ape-ss-extra");
+function buildRow(item, originalQuery) {
+  const posterStr = item.poster
+    ? `<img src="${esc(item.poster)}" alt="${esc(item.title ?? "")}" style="width:40px !important; height:40px !important; border-radius:50% !important; object-fit:cover !important; flex-shrink:0 !important; display:block !important; margin:0 !important; padding:0 !important;">`
+    : `<div style="width:40px; height:40px; border-radius:50%; background:#1a1a30; flex-shrink:0;"></div>`;
 
-    const a = row.querySelector("a");
+  const meta = [
+    item.type,
+    item.episodes ? `${item.episodes} Eps` : "",
+    item.season,
+    item.year,
+  ]
+    .filter(Boolean)
+    .join(" - ");
 
-    if (a) {
-      a.href = `/anime/${esc(item.session ?? "")}`;
-      a.innerHTML = "";
-
-      const posterStr = item.poster
-        ? `<img src="${esc(item.poster)}" alt="${esc(item.title ?? "")}" style="float:left; margin-right:10px; flex-shrink:0;">`
-        : `<span style="width:40px; height:40px; background:#1a1a30; border-radius:50%; float:left; margin-right:10px; flex-shrink:0; display:inline-block;"></span>`;
-
-      const meta1 = [
-        item.type,
-        item.episodes ? `${item.episodes} Episodes` : "",
-        item.status ? `(${item.status})` : "",
-      ]
-        .filter(Boolean)
-        .join(" - ")
-        .replace("- (", "(");
-      const meta2 = [item.season, item.year].filter(Boolean).join(" ");
-
-      a.innerHTML = `
-        ${posterStr}
-        <div style="display:flex; flex-direction:column; justify-content:center; line-height:1.4; overflow:hidden;">
-          <strong style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${esc(item.title ?? "")}</strong>
-          ${meta1 ? `<span style="font-size:11px; opacity:0.7; margin-top:2px;">${esc(meta1)}</span>` : ""}
-          ${meta2 ? `<span style="font-size:11px; opacity:0.7;">${esc(meta2)}</span>` : ""}
-          <span class="ape-ss-aka">also known as "${esc(originalQuery)}"</span>
-        </div>
-        <div style="clear:both;"></div>
-      `;
-    }
-  } else {
-    row = document.createElement("li");
-
-    const posterStr = item.poster
-      ? `<img src="${esc(item.poster)}" alt="${esc(item.title ?? "")}" style="float:left; margin-right:10px; flex-shrink:0;">`
-      : `<span style="width:40px; height:40px; background:#1a1a30; border-radius:50%; float:left; margin-right:10px; flex-shrink:0; display:inline-block;"></span>`;
-
-    row.innerHTML = `
-      <a href="/anime/${esc(item.session ?? "")}" style="display:block; padding:8px 12px; text-decoration:none; color:inherit; overflow:hidden;">
-        ${posterStr}
-        <div style="display:flex; flex-direction:column; justify-content:center; line-height:1.4;">
-          <strong style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">${esc(item.title ?? "")}</strong>
-          <span class="ape-ss-aka">also known as "${esc(originalQuery)}"</span>
-        </div>
-        <div style="clear:both;"></div>
-      </a>
-    `;
-  }
-
+  const row = document.createElement("li");
   row.dataset.apeSSExtra = "1";
   row.dataset.apeSession = item.session ?? "";
+  row.style.cssText =
+    "border-left: 3px solid #d92558 !important; list-style: none !important; margin: 0 !important; padding: 0 !important;";
+
+  row.innerHTML = `
+    <a href="/anime/${esc(item.session ?? "")}" style="display:flex !important; align-items:center !important; gap:12px !important; padding:8px 12px !important; text-decoration:none !important; color:inherit !important; cursor:pointer !important; background:transparent !important;">
+      ${posterStr}
+      <div style="display:flex; flex-direction:column; justify-content:center; overflow:hidden; line-height:1.3;">
+        <strong style="color:#ffffff !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:13px !important; display:block; font-weight:bold !important;">${esc(item.title ?? "")}</strong>
+        <small style="color:#a0a0a0 !important; font-size:11px !important; display:block; margin-top:2px;">${esc(meta)}</small>
+        <span style="display:block; font-size:10px !important; color:#d97090 !important; font-style:italic !important; margin-top:2px; font-weight:600 !important;">also matching "${esc(originalQuery)}"</span>
+      </div>
+    </a>
+  `;
+
   return row;
 }
 
-function injectRows(extraItems, originalQuery) {
+function injectRows(data, originalQuery) {
   const list = getDropdown();
-  if (!list || !extraItems.length) return;
+  if (!list) return;
 
-  list.querySelectorAll("[data-ape-ss-extra]").forEach((el) => el.remove());
-  list.querySelector(".ape-ss-header")?.remove();
+  list
+    .querySelectorAll("[data-ape-ss-extra], .ape-ss-dym")
+    .forEach((el) => el.remove());
 
-  if (!extraItems.length) return;
+  if (data.dym) {
+    const dymRow = document.createElement("li");
+    dymRow.className = "ape-ss-dym";
+    dymRow.style.cssText =
+      "padding: 8px 12px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); list-style: none;";
+    dymRow.innerHTML = `<span style="color: #888;">Did you mean:</span> <a href="#" style="color: #d92558; font-weight: bold; text-decoration: none;">${esc(data.dym)}</a>?`;
 
-  const nativeRows = [...list.children].filter((li) => !li.dataset.apeSSExtra);
-  const referenceRow = nativeRows[0] ?? null;
+    dymRow.querySelector("a").addEventListener("click", (e) => {
+      e.preventDefault();
+      const input = getInput();
+      if (input) {
+        input.value = data.dym;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    });
 
-  const header = document.createElement("li");
-  header.className = "ape-ss-header";
-  header.innerHTML = `Also matching <strong>"${esc(originalQuery)}"</strong>`;
-  list.insertBefore(header, list.firstChild);
-
-  let insertAfter = header;
-  for (const item of extraItems) {
-    if (list.querySelector(`[data-ape-session="${item.session}"]`)) continue;
-    const row = buildRow(item, originalQuery, referenceRow);
-    insertAfter.insertAdjacentElement("afterend", row);
-    insertAfter = row;
+    list.insertBefore(dymRow, list.firstChild);
   }
-}
 
-function injectStyles() {
-  if (document.getElementById("ape-ss-styles")) return;
-  const s = document.createElement("style");
-  s.id = "ape-ss-styles";
-  s.textContent = `
-    #suggestionList img, .ui-autocomplete img, .search-results img, ul.suggestions img {
-        border-radius: 50% !important;
-        width: 40px !important;
-        height: 40px !important;
-        object-fit: cover !important;
-    }
+  for (const item of data.items) {
+    if (list.querySelector(`[href*="${item.session}"]`)) continue;
+    const row = buildRow(item, originalQuery);
+    list.appendChild(row);
+  }
 
-    .ape-ss-header {
-      padding: 4px 12px;
-      font-size: 10px;
-      font-weight: 700;
-      color: #888;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-      cursor: default;
-      list-style: none;
-    }
-    .ape-ss-header strong { color: #d92558; }
-
-    li[data-ape-ss-extra] {
-      border-left: 3px solid #d92558;
-    }
-    li[data-ape-ss-extra]:hover {
-      background: rgba(217,37,88,.08) !important;
-    }
-    .ape-ss-aka {
-      display: block;
-      font-size: 10px;
-      color: #d97090;
-      font-style: italic;
-      font-weight: 600;
-      margin-top: 3px;
-      pointer-events: none;
-    }
-  `;
-  document.head.appendChild(s);
+  if (list.style.display === "none" && (data.items.length > 0 || data.dym)) {
+    list.style.display = "block";
+  }
 }
 
 export class SmartSearch {
@@ -293,11 +247,11 @@ export class SmartSearch {
     this._storage = storage;
     this._debounceTimer = null;
     this._lastQuery = "";
+    this._pendingResults = null;
     this._dropdownObserver = null;
   }
 
   async init(_pageType) {
-    injectStyles();
     this._attachInputListener();
   }
 
@@ -306,40 +260,86 @@ export class SmartSearch {
       "input",
       (e) => {
         const input = e.target;
-        if (
-          !input.matches(
-            "input#inputSearch, input[name='q'], input[placeholder*='earch' i]",
-          )
-        )
-          return;
+        if (!input.matches("input[name='q']")) return;
+
         const q = input.value.trim();
         clearTimeout(this._debounceTimer);
+
         if (q.length < MIN_LEN) {
           this._lastQuery = "";
+          this._pendingResults = null;
+          const list = getDropdown();
+          if (list)
+            list
+              .querySelectorAll("[data-ape-ss-extra], .ape-ss-dym")
+              .forEach((el) => el.remove());
           return;
         }
-        this._debounceTimer = setTimeout(
-          () => this._handleQuery(q),
-          DEBOUNCE_MS,
-        );
+
+        this._debounceTimer = setTimeout(() => {
+          this._prefetch(q);
+        }, DEBOUNCE_MS);
       },
       true,
     );
   }
 
-  async _handleQuery(query) {
-    if (norm(query) === norm(this._lastQuery)) return;
-    this._lastQuery = query;
+  _observeDropdown() {
+    const list = getDropdown();
+    if (!list) return;
+    const parent = list.parentElement || document.body;
 
+    if (this._dropdownObserver) this._dropdownObserver.disconnect();
+
+    this._dropdownObserver = new MutationObserver(() => {
+      const currentList = getDropdown();
+      if (currentList && !currentList.querySelector("[data-ape-ss-extra]")) {
+        this._dropdownObserver.disconnect();
+        this._tryInjectPending();
+        this._dropdownObserver.observe(parent, {
+          childList: true,
+          subtree: true,
+        });
+      }
+    });
+
+    this._dropdownObserver.observe(parent, { childList: true, subtree: true });
+  }
+
+  async _prefetch(query) {
+    console.log(`\n--- [SmartSearch] INITIALIZED FOR: "${query}" ---`);
+    const nq = norm(query);
+    if (nq === norm(this._lastQuery)) return;
+    this._lastQuery = query;
+    this._pendingResults = null;
+
+    const promise = this._fetchExtras(query, nq);
+    this._pendingResults = { nq, promise, data: null, originalQuery: query };
+
+    promise.then((data) => {
+      if (this._pendingResults?.nq === nq) {
+        this._pendingResults.data = data;
+        this._waitForDropdown().then(() => {
+          this._observeDropdown();
+          this._tryInjectPending();
+        });
+      }
+    });
+  }
+
+  async _fetchExtras(query, nq) {
     const [altData, nativeItems] = await Promise.all([
       getAltTitles(query),
       apSearch(query),
     ]);
 
+    console.log(
+      `[SmartSearch] Native AnimePahe Results Found:`,
+      nativeItems.length,
+    );
+
     const altTitles = altData.allTitles || [];
     const queryCandidates = altData.queryCandidates || [];
-
-    const nq = norm(query);
     const nativeNorms = new Set(nativeItems.map((r) => norm(r.title ?? "")));
     const altTitlesNorms = altTitles.map((t) => norm(t));
 
@@ -347,43 +347,58 @@ export class SmartSearch {
       ...new Set(queryCandidates.filter((t) => norm(t) !== nq)),
     ].slice(0, 3);
 
-    if (!candidates.length) return;
+    const result = { items: [], dym: null };
 
-    const batches = await Promise.all(candidates.map((c) => apSearch(c)));
-
-    const seen = new Set(nativeNorms);
-    const extras = [];
-
-    for (const batch of batches) {
-      for (const item of batch) {
-        const n = norm(item.title ?? "");
-        if (!seen.has(n)) {
-          if (isRelevant(item.title, altTitlesNorms, nq)) {
-            seen.add(n);
-            extras.push(item);
-          }
-        }
-      }
+    if (
+      nativeItems.length === 0 &&
+      altData.bestMatch &&
+      norm(altData.bestMatch) !== nq
+    ) {
+      result.dym = altData.bestMatch;
     }
 
-    if (!extras.length) return;
+    if (!candidates.length) {
+      console.log(`[SmartSearch] No extra synonyms needed searching.`);
+      return result;
+    }
 
-    const currentQuery = getInput()?.value?.trim() ?? "";
-    if (norm(currentQuery) !== nq) return;
+    const seen = new Set(nativeNorms);
 
-    await this._waitForDropdown();
+    for (const c of candidates) {
+      console.log(`[SmartSearch] Querying AnimePahe API for synonym: "${c}"`);
+      const batch = await apSearch(c);
 
-    if (norm(getInput()?.value?.trim() ?? "") !== nq) return;
+      for (const item of batch) {
+        const n = norm(item.title ?? "");
+        if (!seen.has(n) && isRelevant(item.title, altTitlesNorms, nq)) {
+          seen.add(n);
+          result.items.push(item);
+        }
+      }
 
-    injectRows(extras, query);
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
+
+    console.log(
+      `[SmartSearch] Total extra relevant results injected:`,
+      result.items.length,
+    );
+    return result;
   }
 
-  _waitForDropdown(maxMs = 1500) {
+  _tryInjectPending() {
+    const pending = this._pendingResults;
+    if (!pending || !pending.data) return;
+
+    const currentNq = norm(getInput()?.value?.trim() ?? "");
+    if (currentNq !== pending.nq) return;
+
+    injectRows(pending.data, pending.originalQuery);
+  }
+
+  _waitForDropdown(maxMs = 2000) {
     return new Promise((resolve) => {
-      if (getDropdown()) {
-        resolve();
-        return;
-      }
+      if (getDropdown()) return resolve();
       const t0 = Date.now();
       const obs = new MutationObserver(() => {
         if (getDropdown() || Date.now() - t0 > maxMs) {
@@ -392,10 +407,6 @@ export class SmartSearch {
         }
       });
       obs.observe(document.body, { childList: true, subtree: true });
-      setTimeout(() => {
-        obs.disconnect();
-        resolve();
-      }, maxMs);
     });
   }
 }

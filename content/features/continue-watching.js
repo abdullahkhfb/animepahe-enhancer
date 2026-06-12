@@ -206,17 +206,60 @@ export class ContinueWatching {
       ? linkEl.textContent.trim()
       : document.title || "Unknown Anime";
 
-    const heading = h1 ? h1.textContent.trim() : "";
-    const afterName = heading
-      .slice(animeTitle.length)
-      .replace(/^[\s\-–—]+/, "");
-    const epNumMatch = afterName.match(/(\d+(?:\.\d+)?)/);
-    const epNumber = epNumMatch ? epNumMatch[1] : "?";
+    let epNumber = "?";
+    const titleMatch = document.title.match(
+      /[Ee]p(?:isode)?\s*(\d+(?:\.\d+)?)/,
+    );
+    if (titleMatch) {
+      epNumber = titleMatch[1];
+    }
+    if (epNumber === "?") {
+      const epTitleEl =
+        document.querySelector(".dropdown-menu .dropdown-item.active") ||
+        document.querySelector(".episode-title") ||
+        document.querySelector(".theatre-info .episode") ||
+        document.querySelector(".theatre-info [class*=\'ep\']") ||
+        document.querySelector(".theatre-episodes .active") ||
+        document.querySelector(".episode-list .active");
 
-    const posterEl = document.querySelector(".anime-poster");
-    let thumbnailUrl = posterEl
-      ? posterEl.getAttribute("src") || posterEl.getAttribute("data-src") || ""
-      : "";
+      if (epTitleEl) {
+        const epMatch = epTitleEl.textContent.match(/(\d+(?:\.\d+)?)/);
+        if (epMatch) epNumber = epMatch[1];
+      }
+    }
+    if (epNumber === "?") {
+      const heading = h1 ? h1.textContent.trim() : "";
+      const afterName = heading
+        .slice(animeTitle.length)
+        .replace(/^[\s\-–—:]+/, "");
+      const epMatch = afterName.match(/(\d+(?:\.\d+)?)/);
+      if (epMatch) epNumber = epMatch[1];
+    }
+    const POSTER_SELECTORS = [
+      ".anime-poster img",
+      ".anime-poster",
+      ".theatre-info .anime-cover img",
+      ".theatre-info .poster img",
+      ".theatre-info img",
+      ".anime-cover img",
+      ".anime-info img",
+      'aside img[src*="i.animepahe"]',
+      'img[src*="i.animepahe"]',
+    ];
+    let thumbnailUrl = "";
+    for (const sel of POSTER_SELECTORS) {
+      const el = document.querySelector(sel);
+      if (!el) continue;
+      const url =
+        el.getAttribute("src") ||
+        el.getAttribute("data-src") ||
+        el.getAttribute("data-lazy-src") ||
+        "";
+      if (url) {
+        thumbnailUrl = url;
+        break;
+      }
+    }
     thumbnailUrl = thumbnailUrl.replace(/\.th\.(jpe?g|png|webp)$/i, ".$1");
 
     return {
@@ -263,6 +306,7 @@ export class ContinueWatching {
     let list = await this._storage.getCwList();
 
     list = list.filter((x) => x.animeSession !== meta.animeSession);
+
     list.unshift({ ...meta, time, duration });
 
     if (list.length > CW_MAX_ENTRIES) list = list.slice(0, CW_MAX_ENTRIES);
