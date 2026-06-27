@@ -4,18 +4,26 @@ const MSG = {
   UPDATE_TIME: "AP_CW_UPDATE_TIME",
 };
 
-const UPDATE_INTERVAL = 2_000;
+const DEFAULT_UPDATE_INTERVAL = 2_000;
 
-(function init() {
+(async function init() {
+  let updateInterval = DEFAULT_UPDATE_INTERVAL;
+  try {
+    const { ape_settings } = await chrome.storage.local.get("ape_settings");
+    if (ape_settings?.playerUpdateInterval) {
+      updateInterval = ape_settings.playerUpdateInterval;
+    }
+  } catch {}
+
   const video = findVideo();
   if (video) {
-    setup(video);
+    setup(video, updateInterval);
   } else {
     const observer = new MutationObserver(() => {
       const v = findVideo();
       if (v) {
         observer.disconnect();
-        setup(v);
+        setup(v, updateInterval);
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
@@ -26,7 +34,7 @@ function findVideo() {
   return document.querySelector("video") ?? null;
 }
 
-function setup(video) {
+function setup(video, updateInterval) {
   window.parent.postMessage({ type: MSG.REQUEST_TIME }, "*");
 
   window.addEventListener("message", (event) => {
@@ -49,7 +57,7 @@ function setup(video) {
 
   video.addEventListener("play", () => {
     if (updateTimer) return;
-    updateTimer = setInterval(reportProgress, UPDATE_INTERVAL);
+    updateTimer = setInterval(reportProgress, updateInterval);
   });
 
   video.addEventListener("pause", () => {

@@ -1,6 +1,6 @@
 import { storage } from "./storage.js";
 
-export const CACHE_TTL = 24 * 60 * 60 * 1_000;
+export const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1_000;
 export const EP_PREFIX = "d2_";
 export const HOME_PREFIX = "h2_";
 
@@ -24,11 +24,11 @@ export function makeCacheEntry(value) {
   return `${Date.now()}|${CACHE_VERSION}|${JSON.stringify(value)}`;
 }
 
-export async function readCache(key) {
+export async function readCache(key, ttlMs = DEFAULT_CACHE_TTL_MS) {
   const raw = await storage.get(key);
   const entry = parseCacheEntry(raw);
   if (!entry) return null;
-  if (Date.now() - entry.timestamp > CACHE_TTL) return null;
+  if (Date.now() - entry.timestamp > ttlMs) return null;
   try {
     return JSON.parse(entry.valuePart);
   } catch {
@@ -43,7 +43,7 @@ export async function writeCache(key, value) {
 export const epCacheKey = (epSession) => `${EP_PREFIX}${epSession}`;
 export const homeCacheKey = (animeSession) => `${HOME_PREFIX}${animeSession}`;
 
-export async function gcDubCache() {
+export async function gcDubCache(ttlMs = DEFAULT_CACHE_TTL_MS) {
   const [epEntries, homeEntries] = await Promise.all([
     storage.getWithPrefix(EP_PREFIX),
     storage.getWithPrefix(HOME_PREFIX),
@@ -54,7 +54,7 @@ export async function gcDubCache() {
 
   for (const [key, raw] of Object.entries({ ...epEntries, ...homeEntries })) {
     const entry = parseCacheEntry(raw);
-    if (!entry || now - entry.timestamp > CACHE_TTL) {
+    if (!entry || now - entry.timestamp > ttlMs) {
       staleKeys.push(key);
     }
   }

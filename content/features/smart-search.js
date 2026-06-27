@@ -2,8 +2,7 @@ import { readCache, writeCache } from "../helpers/cache.js";
 
 const ANILIST_URL = "https://graphql.anilist.co";
 const CACHE_PFX = "ape_ss_";
-const MIN_LEN = 2;
-const DEBOUNCE_MS = 100;
+const MIN_TITLE_LEN = 2;
 
 const ANILIST_QUERY = `
 query ($q: String) {
@@ -72,10 +71,10 @@ function isRelevant(itemTitle, altTitlesNorms, nq) {
   return false;
 }
 
-async function getAltTitles(query) {
+async function getAltTitles(query, ttlMs) {
   const key = `${CACHE_PFX}${norm(query).replace(/\s/g, "_").slice(0, 80)}`;
   try {
-    const hit = await readCache(key);
+    const hit = await readCache(key, ttlMs);
     if (hit !== null && hit.allTitles && hit.allTitles.length > 0) return hit;
   } catch {}
 
@@ -118,11 +117,11 @@ async function getAltTitles(query) {
       const syns = targetMedia.synonyms ?? [];
       const rawAll = [r, e, ...syns].filter(Boolean);
       resObj.allTitles = [
-        ...new Set(rawAll.filter((t) => t.length >= MIN_LEN)),
+        ...new Set(rawAll.filter((t) => t.length >= MIN_TITLE_LEN)),
       ];
       const rawCands = [e, r, ...syns].filter(Boolean);
       resObj.queryCandidates = [
-        ...new Set(rawCands.filter((t) => t.length >= MIN_LEN)),
+        ...new Set(rawCands.filter((t) => t.length >= MIN_TITLE_LEN)),
       ];
 
       console.log(`[SmartSearch] Synonyms Extracted:`, resObj.queryCandidates);
@@ -243,12 +242,17 @@ function injectRows(data, originalQuery) {
 }
 
 export class SmartSearch {
-  constructor(storage) {
+  constructor(storage, settings = {}) {
     this._storage = storage;
     this._debounceTimer = null;
     this._lastQuery = "";
     this._pendingResults = null;
     this._dropdownObserver = null;
+    this._minLen = settings.ssMinQueryLen ?? 2;
+    this._debounceMs = settings.ssDebounceMs ?? 100;
+    this._maxSynonyms = settings.ssMaxSynonyms ?? 3;
+    this._synonymDelay = settings.ssSynonymDelay ?? 250;
+    this._cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
   }
 
   async init(_pageType) {
@@ -265,7 +269,7 @@ export class SmartSearch {
         const q = input.value.trim();
         clearTimeout(this._debounceTimer);
 
-        if (q.length < MIN_LEN) {
+        if (q.length < this._minLen) {
           this._lastQuery = "";
           this._pendingResults = null;
           const list = getDropdown();
@@ -278,7 +282,7 @@ export class SmartSearch {
 
         this._debounceTimer = setTimeout(() => {
           this._prefetch(q);
-        }, DEBOUNCE_MS);
+        }, this._debounceMs);
       },
       true,
     );
@@ -329,7 +333,7 @@ export class SmartSearch {
 
   async _fetchExtras(query, nq) {
     const [altData, nativeItems] = await Promise.all([
-      getAltTitles(query),
+      getAltTitles(query, this._cacheTtlMs),
       apSearch(query),
     ]);
 
@@ -345,7 +349,7 @@ export class SmartSearch {
 
     const candidates = [
       ...new Set(queryCandidates.filter((t) => norm(t) !== nq)),
-    ].slice(0, 3);
+    ].slice(0, this._maxSynonyms);
 
     const result = { items: [], dym: null };
 
@@ -376,7 +380,7 @@ export class SmartSearch {
         }
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 250));
+      await new Promise((resolve) => setTimeout(resolve, this._synonymDelay));
     }
 
     console.log(

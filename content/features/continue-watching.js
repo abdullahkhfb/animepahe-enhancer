@@ -8,12 +8,13 @@ const MSG = {
 };
 
 const SECTION_ID = "ape-cw-section";
-const CARDS_PER_PAGE = 6;
 
 export class ContinueWatching {
   /** @param {import("../helpers/storage.js").storage} storage */
-  constructor(storage) {
+  constructor(storage, settings = {}) {
     this._storage = storage;
+    this._cardsPerPage = settings.cwCardsPerPage ?? 6;
+    this._maxEntries = settings.cwMaxEntries ?? CW_MAX_ENTRIES;
   }
 
   async init(initialPageType) {
@@ -83,7 +84,7 @@ export class ContinueWatching {
     const section = document.createElement("section");
     section.id = SECTION_ID;
 
-    const needsToggle = list.length > CARDS_PER_PAGE;
+    const needsToggle = list.length > this._cardsPerPage;
     section.innerHTML = `
       <div class="ape-cw-header">
         <h2 class="ape-cw-heading">
@@ -309,7 +310,7 @@ export class ContinueWatching {
 
     list.unshift({ ...meta, time, duration });
 
-    if (list.length > CW_MAX_ENTRIES) list = list.slice(0, CW_MAX_ENTRIES);
+    if (list.length > this._maxEntries) list = list.slice(0, this._maxEntries);
     await this._storage.setCwList(list);
   }
 }

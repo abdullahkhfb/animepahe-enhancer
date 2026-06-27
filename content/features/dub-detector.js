@@ -105,7 +105,7 @@ function _htmlSignalsDub(html, doc) {
 }
 
 export class DubDetector {
-  constructor(storage) {
+  constructor(storage, settings = {}) {
     this._storage = storage;
     this._episodeListObserver = null;
     this._homeObserver = null;
@@ -118,8 +118,10 @@ export class DubDetector {
     this._activeSearches = new Map();
     this._searchIdCounter = 0;
     this._maxTotalReqs = 0;
-    this._parallelProbes = 12;
-    this._batchDelay = 2000;
+    this._parallelProbes = settings.dubParallelProbes ?? 12;
+    this._batchDelay = settings.dubBatchDelay ?? 2000;
+    this._homeBatchSize = settings.dubHomeBatchSize ?? 2;
+    this._cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
     this._itemsScanned = 0;
     this._totalItems = 0;
 
@@ -441,7 +443,7 @@ export class DubDetector {
         await this._batchProcess(
           work,
           (item) => this._scanHomeCard(item),
-          2,
+          this._homeBatchSize,
           this._batchDelay,
         );
         this._stopEta();
@@ -468,7 +470,7 @@ export class DubDetector {
   }
 
   async _scanHomeCard({ anchor, animeSession }) {
-    const cached = await readCache(homeCacheKey(animeSession));
+    const cached = await readCache(homeCacheKey(animeSession), this._cacheTtlMs);
     if (cached) {
       this._addHomeBadge(anchor, cached.dubs, cached.total);
       this._itemCompleted();
@@ -698,7 +700,7 @@ export class DubDetector {
   }
 
   async _isEpisodeDubbed(animeSession, epSession) {
-    const cached = await readCache(epCacheKey(epSession));
+    const cached = await readCache(epCacheKey(epSession), this._cacheTtlMs);
     if (cached !== null) return cached;
 
     if (this._inFlight.has(epSession)) {

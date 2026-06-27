@@ -15,6 +15,14 @@ export class RequestThrottler {
     this._draining = false;
   }
 
+  updateOptions(opts = {}) {
+    if (opts.minInterval != null) this._minInterval = opts.minInterval;
+    if (opts.jitter != null) this._jitter = opts.jitter;
+    if (opts.maxConcurrent != null) this._maxConcurrent = opts.maxConcurrent;
+    if (opts.maxRetries != null) this._maxRetries = opts.maxRetries;
+    if (opts.baseBackoff != null) this._baseBackoff = opts.baseBackoff;
+  }
+
   fetch(url, wantJson = true) {
     return new Promise((resolve, reject) => {
       this._queue.push({ url, wantJson, resolve, reject, retries: 0 });

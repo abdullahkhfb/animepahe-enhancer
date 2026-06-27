@@ -5,10 +5,189 @@ export const KEYS = {
 
 export const CW_MAX_ENTRIES = 24;
 
+export const ADVANCED_SETTINGS_SCHEMA = [
+  {
+    group: "Continue Watching",
+    items: [
+      {
+        key: "cwMaxEntries",
+        label: "Max saved entries",
+        desc: "How many shows are kept in your Continue Watching list before the oldest is dropped.",
+        min: 5,
+        max: 100,
+        step: 1,
+        default: 24,
+      },
+      {
+        key: "cwCardsPerPage",
+        label: 'Cards before "Show More"',
+        desc: "How many cards are visible on the homepage before the list collapses.",
+        min: 2,
+        max: 20,
+        step: 1,
+        default: 6,
+      },
+    ],
+  },
+  {
+    group: "DUB Detector",
+    items: [
+      {
+        key: "cacheTtlHours",
+        label: "Cache duration (hours)",
+        desc: "How long detected DUB/SUB results (and Smart Search lookups) stay cached before being re-checked.",
+        min: 1,
+        max: 168,
+        step: 1,
+        default: 24,
+      },
+      {
+        key: "dubParallelProbes",
+        label: "Binary-search probes",
+        desc: "How many points are probed per step when narrowing down which episodes are dubbed. Higher finds the answer in fewer rounds but fires more requests at once.",
+        min: 2,
+        max: 30,
+        step: 1,
+        default: 12,
+      },
+      {
+        key: "dubBatchDelay",
+        label: "Delay between batches (ms)",
+        desc: "Pause inserted between scan batches/rounds so the site isn't hammered.",
+        min: 0,
+        max: 10000,
+        step: 100,
+        default: 2000,
+      },
+      {
+        key: "dubHomeBatchSize",
+        label: "Homepage scan batch size",
+        desc: "How many homepage cards are checked for dubs at the same time.",
+        min: 1,
+        max: 10,
+        step: 1,
+        default: 2,
+      },
+    ],
+  },
+  {
+    group: "Network Throttler",
+    items: [
+      {
+        key: "throttleMinInterval",
+        label: "Min interval between requests (ms)",
+        desc: "Minimum spacing enforced between outgoing requests to animepahe.",
+        min: 0,
+        max: 2000,
+        step: 10,
+        default: 120,
+      },
+      {
+        key: "throttleJitter",
+        label: "Jitter (ms)",
+        desc: "Random variation added on top of the minimum interval, so requests don't go out at a perfectly robotic cadence.",
+        min: 0,
+        max: 1000,
+        step: 10,
+        default: 50,
+      },
+      {
+        key: "throttleMaxConcurrent",
+        label: "Max concurrent requests",
+        desc: "How many requests may be in flight at the same time.",
+        min: 1,
+        max: 20,
+        step: 1,
+        default: 6,
+      },
+      {
+        key: "throttleMaxRetries",
+        label: "Max retries on rate limit",
+        desc: "How many times a throttled (429/503) request is retried before giving up.",
+        min: 0,
+        max: 10,
+        step: 1,
+        default: 4,
+      },
+      {
+        key: "throttleBaseBackoff",
+        label: "Base backoff (ms)",
+        desc: "Starting wait time before retrying after a rate-limit response. Doubles with each retry.",
+        min: 500,
+        max: 30000,
+        step: 500,
+        default: 3000,
+      },
+    ],
+  },
+  {
+    group: "Smart Search",
+    items: [
+      {
+        key: "ssMinQueryLen",
+        label: "Minimum query length",
+        desc: "Smallest number of typed characters before Smart Search starts looking things up.",
+        min: 1,
+        max: 10,
+        step: 1,
+        default: 2,
+      },
+      {
+        key: "ssDebounceMs",
+        label: "Debounce delay (ms)",
+        desc: "How long to wait after you stop typing before searching.",
+        min: 0,
+        max: 1000,
+        step: 10,
+        default: 100,
+      },
+      {
+        key: "ssMaxSynonyms",
+        label: "Max alternate titles queried",
+        desc: "How many AniList synonyms/alt-titles are searched per query.",
+        min: 0,
+        max: 10,
+        step: 1,
+        default: 3,
+      },
+      {
+        key: "ssSynonymDelay",
+        label: "Delay between synonym queries (ms)",
+        desc: "Pause between each alternate-title lookup against animepahe's search.",
+        min: 0,
+        max: 2000,
+        step: 50,
+        default: 250,
+      },
+    ],
+  },
+  {
+    group: "Player",
+    items: [
+      {
+        key: "playerUpdateInterval",
+        label: "Progress save interval (ms)",
+        desc: "How often your playback position is saved while a video is playing.",
+        min: 500,
+        max: 10000,
+        step: 250,
+        default: 2000,
+      },
+    ],
+  },
+];
+
+const ADVANCED_DEFAULTS = Object.fromEntries(
+  ADVANCED_SETTINGS_SCHEMA.flatMap((group) =>
+    group.items.map((item) => [item.key, item.default]),
+  ),
+);
+
 export const DEFAULT_SETTINGS = {
   cwEnabled: true,
   dubEnabled: true,
   smartSearchEnabled: true,
+  ...ADVANCED_DEFAULTS,
 };
 
 export const storage = {
@@ -43,7 +222,9 @@ export const storage = {
 
   async setSettings(patch) {
     const current = await this.getSettings();
-    return this.set(KEYS.SETTINGS, { ...current, ...patch });
+    const next = { ...current, ...patch };
+    await this.set(KEYS.SETTINGS, next);
+    return next;
   },
 
   async getCwList() {

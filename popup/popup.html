@@ -221,6 +221,35 @@
         </svg>
         Reload the page for changes to take effect.
       </div>
+
+      <!-- ── Advanced Settings ────────────────────────────── -->
+      <button class="advanced-toggle" id="advanced-toggle" aria-expanded="false">
+        <span class="advanced-toggle-icon">
+          <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.1 1.4a1.5 1.5 0 0 0-2.2 0L6.3 2a1.5 1.5 0 0 1-1.6.4l-.9-.3a1.5 1.5 0 0 0-1.9.9l-.3.9a1.5 1.5 0 0 1-1.1 1.1l-.9.3a1.5 1.5 0 0 0-.9 1.9l.3.9A1.5 1.5 0 0 1 0 9.7v.6c0 .6.4 1.2 1 1.4l.9.3a1.5 1.5 0 0 1 1.1 1.1l.3.9a1.5 1.5 0 0 0 1.9.9l.9-.3a1.5 1.5 0 0 1 1.6.4l.6.6a1.5 1.5 0 0 0 2.2 0l.6-.6a1.5 1.5 0 0 1 1.6-.4l.9.3a1.5 1.5 0 0 0 1.9-.9l.3-.9a1.5 1.5 0 0 1 1.1-1.1l.9-.3a1.5 1.5 0 0 0 .9-1.9l-.3-.9A1.5 1.5 0 0 1 16 6.3v-.6a1.5 1.5 0 0 0-1-1.4l-.9-.3a1.5 1.5 0 0 1-1.1-1.1l-.3-.9a1.5 1.5 0 0 0-1.9-.9l-.9.3a1.5 1.5 0 0 1-1.6-.4l-.6-.6ZM8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
+          </svg>
+        </span>
+        <span class="advanced-toggle-text">
+          <span class="advanced-toggle-name">Advanced Settings</span>
+          <span class="advanced-toggle-sub">For experienced users</span>
+        </span>
+        <svg class="advanced-toggle-chevron" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.6 6.6a.75.75 0 0 1 1.06-.02L8 8.71l2.34-2.13a.75.75 0 1 1 1.02 1.1l-2.85 2.6a.75.75 0 0 1-1.02 0l-2.85-2.6a.75.75 0 0 1-.04-1.08Z"/>
+        </svg>
+      </button>
+
+      <div class="advanced-panel" id="advanced-panel" hidden>
+        <div class="advanced-warning">
+          These control internal timing, caching, and request behavior.
+          Defaults work well for almost everyone — change with care.
+        </div>
+
+        <div id="advanced-groups"></div>
+
+        <button class="advanced-reset-all" id="advanced-reset-all">
+          Reset All Advanced Settings
+        </button>
+      </div>
     </main>
 
     <!-- ── Footer ─────────────────────────────────────────── -->
@@ -254,6 +283,6 @@
     </a>
     </footer>
 
-    <script src="popup.js"></script>
+    <script type="module" src="popup.js"></script>
   </body>
 </html>

@@ -19,14 +19,26 @@
     return chrome.runtime.getURL(path);
   }
 
-  const [{ getPageType }, { storage }, { gcDubCache }] = await Promise.all([
-    import(extUrl("content/helpers/router.js")),
-    import(extUrl("content/helpers/storage.js")),
-    import(extUrl("content/helpers/cache.js")),
-  ]);
+  const [{ getPageType }, { storage }, { gcDubCache }, { throttler }] =
+    await Promise.all([
+      import(extUrl("content/helpers/router.js")),
+      import(extUrl("content/helpers/storage.js")),
+      import(extUrl("content/helpers/cache.js")),
+      import(extUrl("content/helpers/throttler.js")),
+    ]);
 
   const pageType = getPageType();
   const settings = await storage.getSettings();
+
+  throttler.updateOptions({
+    minInterval: settings.throttleMinInterval,
+    jitter: settings.throttleJitter,
+    maxConcurrent: settings.throttleMaxConcurrent,
+    maxRetries: settings.throttleMaxRetries,
+    baseBackoff: settings.throttleBaseBackoff,
+  });
+
+  const cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
 
   if (!document.getElementById("ape-dub-styles")) {
     const s = document.createElement("style");
@@ -275,7 +287,7 @@
     document.head.appendChild(s);
   }
 
-  setTimeout(() => gcDubCache(), 3_000);
+  setTimeout(() => gcDubCache(cacheTtlMs), 3_000);
 
   // feature registry
   //
@@ -319,7 +331,7 @@
       try {
         const mod = await import(extUrl(f.module));
         const FeatureClass = mod[f.export];
-        const instance = new FeatureClass(storage);
+        const instance = new FeatureClass(storage, settings);
         await instance.init(pageType);
       } catch (err) {
         console.error(
