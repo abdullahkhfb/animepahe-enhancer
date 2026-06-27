@@ -13,6 +13,7 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - [Making Changes](#making-changes)
   - [Bug Fixes](#bug-fixes)
   - [New Features](#new-features)
+  - [New Advanced Settings](#new-advanced-settings)
   - [Documentation](#documentation)
 - [Code Style](#code-style)
 - [Submitting a Pull Request](#submitting-a-pull-request)
@@ -94,15 +95,18 @@ animepahe-enhancer/
 │   │   └── smart-search.js
 │   │
 │   └── helpers/                  # Shared utilities imported by any feature
-│       ├── storage.js            # chrome.storage.local wrapper + DEFAULT_SETTINGS + key constants
+│       ├── storage.js            # chrome.storage.local wrapper + DEFAULT_SETTINGS
+│       │                         #   + ADVANCED_SETTINGS_SCHEMA (drives the popup's panel)
 │       ├── router.js             # Page-type detection from the current URL
-│       ├── cache.js              # DUB cache read/write/garbage collection
+│       ├── cache.js              # DUB cache read/write/garbage collection (configurable TTL)
 │       └── throttler.js          # RequestThrottler — concurrency, jitter, retry, back-off
+│                                 #   (tunable at runtime via updateOptions())
 │
 ├── popup/
 │   ├── popup.html
 │   ├── popup.css
-│   └── popup.js
+│   └── popup.js                  # ES module — imports ADVANCED_SETTINGS_SCHEMA from
+│                                 #   storage.js to render the Advanced Settings panel
 │
 ├── icons/
 │   ├── icon16.{png,svg}
@@ -133,8 +137,9 @@ Every feature in the extension follows a three-file contract:
 
 ```js
 export class MyFeature {
-  constructor(storage) {
+  constructor(storage, settings) {
     this.storage = storage;
+    this.settings = settings; // the fully-merged object from storage.getSettings()
   }
 
   async init(pageType) {
@@ -181,6 +186,39 @@ const FEATURES = [
 ```
 
 No other files need to change. If you add a toggle to the popup, update `popup/popup.html` and `popup/popup.js` accordingly.
+
+### New Advanced Settings
+
+If your change adds a tunable value (a timing, limit, batch size, etc.) rather than a new on/off feature, it almost certainly belongs in the **Advanced Settings** panel instead of a bespoke popup control. That panel is generated entirely from one schema — you don't touch `popup.html`, `popup.js`, or any CSS.
+
+**1. Add an entry to `ADVANCED_SETTINGS_SCHEMA` in `content/helpers/storage.js`**, under an existing `group` or a new one:
+
+```js
+{
+  key: "myNewTunable",
+  label: "My new tunable",
+  desc: "What this controls, in plain language.",
+  min: 0,
+  max: 100,
+  step: 1,
+  default: 10,
+}
+```
+
+**2. Read it wherever it's needed**, with a fallback to that same default:
+
+```js
+this._myValue = settings.myNewTunable ?? 10;
+```
+
+That's it. The popup will automatically render a labeled input, your description, and its own **↺ reset** button for the new setting, and fold it into **Reset All Advanced Settings** — no other files need to change.
+
+A few conventions to follow:
+
+- Pick a sensible `min`/`max` range — the input is hard-clamped to it on every change.
+- `default` must match whatever the code already falls back to today, so existing users see no behavior change until they touch the new control.
+- Keep `desc` to one plain-language sentence — it's read by people who don't necessarily know the implementation.
+- If the value is shared by more than one feature (e.g. cache duration is read by both the DUB Detector and Smart Search), say so in `desc` rather than adding a second, duplicate setting.
 
 ### Documentation
 
@@ -245,6 +283,7 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 - [ ] No new `permissions` or `host_permissions` added without justification
 - [ ] No `innerHTML` used with untrusted/third-party data
 - [ ] `DEFAULT_SETTINGS` updated if a new toggle was added
+- [ ] `ADVANCED_SETTINGS_SCHEMA` updated (with a matching `default`) if a new tunable was added, instead of hand-rolling popup UI
 - [ ] `manifest.json` `version` field **not** bumped (maintainer handles versioning)
 - [ ] `README.md` updated if user-facing behaviour changed
 
