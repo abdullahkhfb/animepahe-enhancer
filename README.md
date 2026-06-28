@@ -8,11 +8,11 @@
   <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
 </p>
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.1.0.1-blue" />
 </p>
 
 > [!WARNING]
-> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.1.0**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
+> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.1.0.1**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
