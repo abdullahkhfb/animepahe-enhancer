@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <mask id="gear-hole">
+      <rect width="100" height="100" fill="white" />
+      <circle cx="50" cy="50" r="16" fill="black" />
+    </mask>
+  </defs>
+
+  <g mask="url(#gear-hole)" fill="#D3D3D3">
+    <circle cx="50" cy="50" r="32" />
+    
+    <rect x="42" y="10" width="16" height="80" rx="3" />
+    <rect x="42" y="10" width="16" height="80" rx="3" transform="rotate(45 50 50)" />
+    <rect x="42" y="10" width="16" height="80" rx="3" transform="rotate(90 50 50)" />
+    <rect x="42" y="10" width="16" height="80" rx="3" transform="rotate(135 50 50)" />
+  </g>
+</svg>
