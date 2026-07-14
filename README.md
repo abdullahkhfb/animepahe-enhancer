@@ -16,13 +16,13 @@
 
 ## Table of Contents
 
-|                                                                                                                                                                                                                                                            |                                                                                                                                                                                                                                                                                          |                                            |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- |
-| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search) <br> &nbsp;&nbsp;↳ [Advanced Settings](#-advanced-settings)   | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                                                                                                       | 📦 **[Installation](#installation)**       |
-| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) <br> &nbsp;&nbsp;↳ [Adding an Advanced Setting](#adding-an-advanced-setting) | 🔒 **[Permissions](#permissions)**         |
-| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                                                                             | 💻 **[Development](#development)**                                                                                                                                                                                                                                                       | 🤝 **[Contributing](#contributing)**       |
-| 🔏 **[Privacy](#privacy)**                                                                                                                                                                                                                                 | 🔐 **[Security](#security)**                                                                                                                                                                                                                                                             | 🤝 **[Code of Conduct](#code-of-conduct)** |
-| 📄 **[License](#license)**                                                                                                                                                                                                                                 |                                                                                                                                                                                                                                                                                          |                                            |
+|                                                                                                                                                                                                                                                            |                                                                                                                                                                                                                                                                                          |                                      |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
+| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search) <br> &nbsp;&nbsp;↳ [Advanced Settings](#-advanced-settings)   | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                                                                                                       | 📦 **[Installation](#installation)** |
+| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching-1) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector-1) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search-1) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel) | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) <br> &nbsp;&nbsp;↳ [Adding an Advanced Setting](#adding-an-advanced-setting) | 🔒 **[Permissions](#permissions)**   |
+| 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                                                                             | 📝 **[Todo](#todo)**                                                                                                                                                                                                                                                                     | 💻 **[Development](#development)**   |
+| 🤝 **[Contributing](#contributing)**                                                                                                                                                                                                                       | 🔏 **[Privacy](#privacy)**                                                                                                                                                                                                                                                               | 🔐 **[Security](#security)**         |
+| 🤝 **[Code of Conduct](#code-of-conduct)**                                                                                                                                                                                                                 | 📄 **[License](#license)**                                                                                                                                                                                                                                                               |                                      |
 
 ---
 
@@ -75,7 +75,7 @@ Can’t find an anime because you only know its English dub title, a common nick
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-### ⚙️ Advanced Settings
+### ⚙ Advanced Settings
 
 For anyone who wants to fine-tune exactly how the extension behaves, every internal timing, caching, and request-throttling value is exposed in a collapsible **Advanced Settings** panel inside the popup — no code editing required.
 
@@ -474,6 +474,16 @@ The extension requests the minimum permissions necessary:
 **Kwik video player (iframe script):**
 
 - `kwik.cx`
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+---
+
+## Todo
+
+Planned features and improvements that aren't implemented yet:
+
+- **Intro & Outro Skipping** — Skip anime intros and outros with a single click
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
