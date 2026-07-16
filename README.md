@@ -137,6 +137,8 @@ For anyone who wants to fine-tune exactly how the extension behaves, every inter
 <img width="1390" height="1052" alt="Screenshot 2026-06-09 at 18-39-12 Kill Blue Ep  6 animepahe" src="https://github.com/user-attachments/assets/fb2bc822-1724-4479-8bca-06a319944e11" />
 <img width="1500" height="782" alt="Screenshot 2026-06-09 at 18-40-01 animepahe okay-ish anime website" src="https://github.com/user-attachments/assets/4b617ab2-b832-434c-89c5-94e68ada777e" />
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/0cdd844a-cce1-4e31-b537-3582084a9602" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/2562d58f-5dd5-4f30-a7c8-d36793c34f41" />
+
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
