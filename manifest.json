@@ -3,7 +3,7 @@
   "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
   "version": "0.2.0.0",
-  "description": "Continue Watching with video progress tracking + DUB episode detection + Smart Search via AniList + Intro/Outro Skipping for animepahe.",
+  "description": "Video progress tracking, DUB detection, Smart Search via AniList, and Intro/Outro Skipping for animepahe.",
   "browser_specific_settings": {
     "gecko": {
       "id": "animepahe-enhancer@abdullahkhfb.github.io",
