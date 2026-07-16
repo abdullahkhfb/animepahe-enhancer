@@ -316,6 +316,11 @@
       export: "SmartSearch",
       enabled: settings.smartSearchEnabled,
     },
+    {
+      module: "content/features/intro-skip.js",
+      export: "IntroSkip",
+      enabled: settings.introSkipEnabled,
+    },
     //  to add a new feature, append an entry here
     // {
     //   module:  "content/features/my-feature.js",

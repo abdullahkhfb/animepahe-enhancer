@@ -2,24 +2,21 @@
 
 # animepahe Enhancer
 
-> A lightweight browser extension that supercharges your animepahe experience — featuring automatic DUB detection, seamless Continue Watching with per-episode progress tracking, and Smart Search that finds anime by any alternative title via AniList.
+> A lightweight browser extension that supercharges your animepahe experience — featuring automatic DUB detection, seamless Continue Watching with per-episode progress tracking, Smart Search that finds anime by any alternative title via AniList, and Intro/Outro Skipping powered by the open-anime-timestamps dataset.
 
 <p align="center">
   <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
 </p>
 <p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.1.0.2-blue" />
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/"><img alt="Firefox Add-on" src="https://img.shields.io/badge/Firefox-Add--on-FF7139?logo=firefox-browser&logoColor=white" /></a> <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd"><img alt="Edge Add-on" src="https://img.shields.io/badge/Edge-Add--on-0078D7?logo=microsoft-edge&logoColor=white" /></a> <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" /> <img alt="License" src="https://img.shields.io/badge/License-MIT-green" /> <img alt="Version" src="https://img.shields.io/badge/version-0.2.0.0-blue" />
 </p>
-
-> [!WARNING]
-> **Edge (v0.0.2) Bug Alert:** The current live Edge version has known issues. A fully patched update (**v0.1.0.1**) has been submitted and will automatically roll out to resolve these bugs as soon as Microsoft review completes.
 
 ## Table of Contents
 
 |                                                                                                                                                                                                                                                          |                                                                                                                                                                                                                                                                                          |                                      |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------- |
-| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search) <br> &nbsp;&nbsp;↳ [Advanced Settings](#-advanced-settings) | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                                                                                                       | 📦 **[Installation](#installation)** |
-| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel)     | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) <br> &nbsp;&nbsp;↳ [Adding an Advanced Setting](#adding-an-advanced-setting) | 🔒 **[Permissions](#permissions)**   |
+| ✨ **[Features](#features)** <br> &nbsp;&nbsp;↳ [Continue Watching](#-continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#-dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#-smart-search) <br> &nbsp;&nbsp;↳ [Intro / Outro Skip](#-intro--outro-skip) <br> &nbsp;&nbsp;↳ [Advanced Settings](#-advanced-settings) | 📸 **[Screenshots](#screenshots)**                                                                                                                                                                                                                                                       | 📦 **[Installation](#installation)** |
+| ⚙️ **[Usage](#usage)** <br> &nbsp;&nbsp;↳ [Continue Watching](#continue-watching) <br> &nbsp;&nbsp;↳ [DUB Detector](#dub-detector) <br> &nbsp;&nbsp;↳ [Smart Search](#smart-search) <br> &nbsp;&nbsp;↳ [Intro / Outro Skip](#intro--outro-skip-usage) <br> &nbsp;&nbsp;↳ [Popup Settings Panel](#popup-settings-panel)     | 🏗️ **[Architecture](#architecture)** <br> &nbsp;&nbsp;↳ [File Structure](#file-structure) <br> &nbsp;&nbsp;↳ [How It Works](#how-it-works) <br> &nbsp;&nbsp;↳ [Adding a New Feature](#adding-a-new-feature) <br> &nbsp;&nbsp;↳ [Adding an Advanced Setting](#adding-an-advanced-setting) | 🔒 **[Permissions](#permissions)**   |
 | 🌐 **[Supported Domains](#supported-domains)**                                                                                                                                                                                                           | 📝 **[Todo](#todo)**                                                                                                                                                                                                                                                                     | 💻 **[Development](#development)**   |
 | 🤝 **[Contributing](#contributing)**                                                                                                                                                                                                                     | 🔏 **[Privacy](#privacy)**                                                                                                                                                                                                                                                               | 🔐 **[Security](#security)**         |
 | 🤝 **[Code of Conduct](#code-of-conduct)**                                                                                                                                                                                                               | 📄 **[License](#license)**                                                                                                                                                                                                                                                               |                                      |
@@ -63,15 +60,51 @@ All network requests are routed through a **`RequestThrottler`** — a built-in 
 
 ### 🔍 Smart Search
 
-Can’t find an anime because you only know its English dub title, a common nickname, or a romanized spelling that doesn’t match animepahe’s catalogue? Smart Search fixes that by querying [AniList](https://anilist.co) for every alternative title associated with your search term and running parallel searches for each one — all without leaving the search bar.
+Can't find an anime because you only know its English dub title, a common nickname, or a romanized spelling that doesn't match animepahe's catalogue? Smart Search fixes that by querying [AniList](https://anilist.co) for every alternative title associated with your search term and running parallel searches for each one — all without leaving the search bar.
 
 - Activates automatically as you type (debounced 100 ms by default) — no extra interaction required
 - Fetches alternative titles (romaji, English, synonyms) from the AniList GraphQL API for the top matching anime
 - Runs additional searches on animepahe using each candidate title and merges the results
-- Extra results appear **above** the native dropdown, clearly labelled with a pink `also known as “…”` tag and a left-side accent border
-- Duplicate titles already shown by animepahe’s native search are automatically suppressed
+- Extra results appear **above** the native dropdown, clearly labelled with a pink `also known as "…"` tag and a left-side accent border
+- Duplicate titles already shown by animepahe's native search are automatically suppressed
 - Relevance filtering ensures only genuinely related titles are injected (word-overlap + substring checks)
 - AniList lookup results are cached locally for 24 hours by default (prefix `ape_ss_`) — shares the same configurable cache-duration setting as the DUB Detector
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+### ⏭ Intro / Outro Skip
+
+Automatically skip anime openings and endings — or show a manual Skip button when you're ready. This feature uses the community-maintained [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) dataset (~27 MB, cached locally in IndexedDB) to look up intro and outro timestamps per episode, with an optional fallback to the [AnimeSkip API](https://animeskip.org) for community-submitted timestamps when the local database doesn't have the anime.
+
+- **Two modes:**
+  - **Auto-skip** (opt-in): The player automatically jumps past intros and outros without any interaction
+  - **Manual skip** (default): A styled **Skip Intro** / **Skip Outro** button appears on top of the video when the playback enters an intro or outro range; clicking it seeks past the segment
+- **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps — giving you a visual map of non-story content at a glance
+- **Dual data sources**: Looks up the [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) database first (AniDB-keyed, cached in IndexedDB with ETag-based conditional refresh). If the anime or episode isn't found, it falls back to the [AnimeSkip API](https://api.anime-skip.com) (AniList-keyed, cached in chrome.storage.local)
+- **ID resolution chain**: To bridge animepahe's session-based URLs to AniDB/AniList IDs, the extension queries the AniList GraphQL API for a title match, then resolves the AniDB ID via [relations.yuna.moe](https://relations.yuna.moe). Results are cached per anime session
+- **Smart defaults**: When the database only provides a start time (no end), the intro/outro is extended by a configurable default duration (90 seconds by default), so the skip button always has a valid target
+- **Fullscreen-aware**: The skip button and progress bar highlights work correctly in both normal and fullscreen playback, automatically reparenting into the fullscreen element
+- **Status pill**: A floating pill in the bottom-right corner of the player page shows real-time lookup progress and the final result (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`)
+- **Popup controls**: Toggle the feature on/off, view the cached database size and age, force-refresh the database, or clear all cached data
+
+The timestamp resolution pipeline for a single episode:
+
+```mermaid
+flowchart TD
+    A["Player page detected\nExtract animeSession, animeTitle, epNumber"] --> B["Resolve AniList ID\nvia AniList GraphQL search\n(title similarity matching)"]
+    B --> C["Resolve AniDB ID\nvia relations.yuna.moe\n(AniList or MAL ID → AniDB)"]
+    C --> D{AniDB ID found?}
+    D -->|Yes| E["Look up episode in\nopen-anime-timestamps DB\n(cached in IndexedDB, ~27 MB)"]
+    D -->|No| F{AniList ID available?}
+    F -->|No| G["⏭ Not found in database"]
+    F -->|Yes| H["Query AnimeSkip API\n(AniList → show → episode → timestamps)"]
+    E --> I{Episode has\nintro/outro data?}
+    I -->|Yes| J["⏭ Send skip ranges to\nKwik iframe via postMessage"]
+    I -->|No| H
+    H --> K{API returned\ntimestamps?}
+    K -->|Yes| J
+    K -->|No| G
+```
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -79,13 +112,14 @@ Can’t find an anime because you only know its English dub title, a common nick
 
 For anyone who wants to fine-tune exactly how the extension behaves, every internal timing, caching, and request-throttling value is exposed in a collapsible **Advanced Settings** panel inside the popup — no code editing required.
 
-| Group                 | What's tunable                                                                                |
-| --------------------- | --------------------------------------------------------------------------------------------- |
-| **Continue Watching** | Max saved entries · cards shown before "Show More"                                            |
-| **DUB Detector**      | Cache duration · binary-search probe count · delay between scan batches · homepage batch size |
-| **Network Throttler** | Min request interval · jitter · max concurrent requests · max retries · base backoff          |
-| **Smart Search**      | Minimum query length · debounce delay · max alternate titles queried · synonym query delay    |
-| **Player**            | Progress-save interval                                                                        |
+| Group                 | What's tunable                                                                                                                                |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Continue Watching** | Max saved entries · cards shown before "Show More"                                                                                           |
+| **DUB Detector**      | Cache duration · binary-search probe count · delay between scan batches · homepage batch size                                                |
+| **Network Throttler** | Min request interval · jitter · max concurrent requests · max retries · base backoff                                                         |
+| **Smart Search**      | Minimum query length · debounce delay · max alternate titles queried · synonym query delay                                                   |
+| **Player**            | Progress-save interval                                                                                                                       |
+| **Intro / Outro Skip** | Auto-skip toggle · online API fallback toggle · progress bar highlights · skip button auto-hide · poll interval · default OP/ED duration · timestamp DB refresh interval · ID lookup cache duration |
 
 - Each setting has its own plain-language description, a numeric input clamped to a sane range, and an individual **↺ reset** button
 - A **Reset All Advanced Settings** button restores every tunable above to its default in one click — without touching your feature toggles
@@ -113,7 +147,7 @@ For anyone who wants to fine-tune exactly how the extension behaves, every inter
 | Browser                                                                                                                                                              | Store                                                                                              | Notes                                                                                                                                                         |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="16" height="16" valign="middle"> **Firefox**                          | [Firefox Add-ons (AMO)](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)        | Requires Firefox 140.0+ and Firefox Android 142.0+                                                                                                            |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="16" height="16" valign="middle"> **Microsoft Edge**         | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Broken                                                                                                                                                        |
+| <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="16" height="16" valign="middle"> **Microsoft Edge**         | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Manual install via Developer Mode — download `Animepahe-Enhancer.zip`, unzip, go to `edge://extensions`, enable **Developer mode**, click **Load unpacked** |
 | <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" width="16" height="16" valign="middle"> **Other Chromium** | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install via Developer Mode — download `Animepahe-Enhancer.zip`, unzip, go to `chrome://extensions`, enable **Developer mode**, click **Load unpacked** |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
@@ -168,17 +202,36 @@ The DUB Detector runs automatically in the background on three page types:
 Smart Search activates automatically while you type in the animepahe search bar—no extra steps are needed:
 
 1. Start typing any title in the search bar. After a 100 ms debounce by default (configurable), Smart Search kicks in alongside the native search.
-2. animepahe’s regular results appear as normal. Smart Search then queries AniList for alternative titles associated with your term.
+2. animepahe's regular results appear as normal. Smart Search then queries AniList for alternative titles associated with your term.
 3. Any additional matching anime found via those alternative titles are **injected at the top** of the dropdown under a labelled divider.
 4. Each extra result card shows:
-   - The anime’s poster thumbnail (circular)
+   - The anime's poster thumbnail (circular)
    - The title as listed on animepahe
-   - A pink _also known as “…”_ tag showing which search term led to this result
+   - A pink _also known as "…"_ tag showing which search term led to this result
    - A pink left-side accent border to visually distinguish injected results
-5. Click any result card (native or injected) to navigate to that anime’s page as normal.
+5. Click any result card (native or injected) to navigate to that anime's page as normal.
 6. If Smart Search finds nothing additional, the dropdown is left unchanged.
 
 **Cache:** AniList lookup results are cached for **24 hours by default** (storage prefix `ape_ss_`, configurable in Advanced Settings). You can force-clear the cache from the popup.
+
+### Intro / Outro Skip {#intro--outro-skip-usage}
+
+The Intro / Outro Skip feature activates automatically on the player page (`/play/{animeSession}/{epSession}`):
+
+1. When you navigate to a player page, the extension extracts the anime title and episode number from the page.
+2. It resolves the anime to an AniDB ID (via AniList search → relations.yuna.moe) and looks up intro/outro timestamps for that episode. A status pill in the bottom-right corner shows progress (e.g., `⏭ Resolving anime…`, `⏭ Looking up timestamps…`).
+3. If timestamps are found, a result pill appears (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`) and the skip ranges are sent to the Kwik player iframe.
+4. In **manual mode** (default): A **Skip Intro** or **Skip Outro** button appears overlaid on the video when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after a configurable delay (8 seconds by default) but reappears if you move your mouse.
+5. In **auto-skip mode** (opt-in, toggled in Advanced Settings): The player automatically seeks past intros and outros as soon as playback enters the range. A 1-second grace period after manual seeks prevents the extension from fighting your input.
+6. **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps — so you can see at a glance where the non-story content is. This can be disabled in Advanced Settings.
+7. If the anime isn't found in the local open-anime-timestamps database, the extension falls back to the [AnimeSkip API](https://animeskip.org) (if the API fallback is enabled in Advanced Settings) to query community-submitted timestamps.
+
+**Data sources and caching:**
+
+- The open-anime-timestamps database (~27 MB) is downloaded from GitHub and cached in **IndexedDB** (too large for `chrome.storage.local`'s default quota). It's refreshed on a configurable schedule (7 days by default) using conditional GET with ETag headers to avoid re-downloading unchanged data.
+- AniList → AniDB ID mappings are cached per anime session in `chrome.storage.local` (prefix `ape_isid_`, configurable TTL, default 7 days).
+- AnimeSkip API responses are cached in `chrome.storage.local` (prefix `ape_askip_`, 1–7 day TTLs depending on the cache layer).
+- You can view the cached database size and age, force a refresh, or clear all cached data from the popup.
 
 ### Popup Settings Panel
 
@@ -187,19 +240,23 @@ Click the extension icon in the browser toolbar to open the settings popup. From
 - **Toggle Continue Watching** on or off
 - **Toggle DUB Detector** on or off
 - **Toggle Smart Search** on or off
+- **Toggle Intro / Outro Skip** on or off
 - See how many items are currently in your Continue Watching list
 - **Clear your Continue Watching list**
 - See how many DUB detection results are currently cached
 - **Clear the DUB cache** (forces a fresh scan on next visit)
 - See how many Smart Search AniList lookups are currently cached
 - **Clear the Smart Search cache** (forces fresh AniList lookups on next search)
+- See the Intro/Outro Skip timestamp database status (size, age) and ID cache entry count
+- **Refresh the skip-timestamps database** (clears metadata so the content script re-downloads on next page load)
+- **Clear the Intro/Outro Skip cache** (clears ID lookups and timestamp DB metadata)
 - Expand **⚙️ Advanced Settings** to view and edit every internal tunable — grouped by feature, each with its own description, bounded input, and reset button
 
 > After toggling a feature, reload the animepahe page for changes to take effect. The popup will show a reminder notice automatically.
 
 #### Advanced Settings panel
 
-Click **⚙️ Advanced Settings** (collapsed by default) to expand a panel covering 16 tunables across 5 groups — Continue Watching, DUB Detector, Network Throttler, Smart Search, and Player (see the [Advanced Settings](#-advanced-settings) feature section above for what each group controls).
+Click **⚙️ Advanced Settings** (collapsed by default) to expand a panel covering 24 tunables across 6 groups — Continue Watching, DUB Detector, Network Throttler, Smart Search, Player, and Intro / Outro Skip (see the [Advanced Settings](#-advanced-settings) feature section above for what each group controls).
 
 - Every row shows a short plain-language explanation alongside a number input
 - Out-of-range values are automatically clamped to that setting's min/max as you type or on blur
@@ -222,20 +279,27 @@ Click **⚙️ Advanced Settings** (collapsed by default) to expand a panel cove
 ├── 📁 content/
 │   ├── 📄 main.js                 # Entry point — loads settings, detects page,
 │   │                              #   dynamically imports and initializes features
-│   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge
+│   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge for
+│   │                              #   Continue Watching + Intro/Outro Skip controller
 │   │
 │   ├── 📁 features/               # One file per feature
 │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
 │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
-│   │   └── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
+│   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
+│   │   └── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + DEFAULT_SETTINGS
 │       │                          #   + ADVANCED_SETTINGS_SCHEMA (drives the popup's panel)
 │       ├── 📄 router.js           # Page-type detection from the current URL
 │       ├── 📄 cache.js            # DUB cache read/write/GC (configurable TTL)
-│       └── 📄 throttler.js        # RequestThrottler — rate-limiting, jitter, retry
-│                                  #   (tunable at runtime via updateOptions())
+│       ├── 📄 throttler.js        # RequestThrottler — rate-limiting, jitter, retry
+│       │                          #   (tunable at runtime via updateOptions())
+│       ├── 📄 timestamps-db.js    # open-anime-timestamps dataset access (IndexedDB
+│       │                          #   cache, ID resolution, episode lookup + AnimeSkip
+│       │                          #   fallback)
+│       └── 📄 animeskip.js        # AnimeSkip API client — GraphQL queries for
+│                                  #   community-submitted intro/outro timestamps
 │
 ├── 📁 popup/
 │   ├── 🌐 popup.html              # Settings popup UI
@@ -247,7 +311,8 @@ Click **⚙️ Advanced Settings** (collapsed by default) to expand a panel cove
 ├── 📁 icons/
 │   ├── 🖼️  icon16.{png,svg}
 │   ├── 🖼️  icon48.{png,svg}
-│   └── 🖼️  icon128.{png,svg}
+│   ├── 🖼️  icon128.{png,svg}
+│   └── 🖼️  intro-skip.svg         # Intro/Outro Skip feature icon
 │
 └── 📁 .github/
     └── 📁 workflows/
@@ -270,9 +335,11 @@ flowchart TD
     CM -->|cwEnabled| CW["features/continue-watching.js"]
     CM -->|dubEnabled| DD["features/dub-detector.js"]
     CM -->|smartSearchEnabled| SS["features/smart-search.js"]
+    CM -->|introSkipEnabled| IS["features/intro-skip.js"]
     CW --> CWI["new ContinueWatching(storage, settings)\n.init(pageType)"]
     DD --> DDI["new DubDetector(storage, settings)\n.init(pageType)"]
     SS --> SSI["new SmartSearch(storage, settings)\n.init(pageType)"]
+    IS --> ISI["new IntroSkip(storage, settings)\n.init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules. Every feature constructor receives the same `settings` object (loaded once via `storage.getSettings()`), so reading a user-tuned value is just `settings.someKey ?? someDefault`.
@@ -303,6 +370,9 @@ sequenceDiagram
 | `AP_CW_REQUEST_TIME` | iframe → parent | —                    | Iframe asks parent for saved timestamp    |
 | `AP_CW_RESTORE_TIME` | parent → iframe | `{ time: number }`   | Parent sends saved position; iframe seeks |
 | `AP_CW_UPDATE_TIME`  | iframe → parent | `{ time, duration }` | Iframe reports current playback position  |
+| `AP_IS_SET_RANGES`   | parent → iframe | `{ ranges, autoSkip, pollMs, buttonAutoHideMs, showHighlights }` | Parent sends intro/outro skip ranges to iframe |
+| `AP_IS_SEEK`         | parent → iframe | `{ time: number }`   | Parent instructs iframe to seek (reserved) |
+| `AP_IS_READY`        | iframe → parent | —                    | Iframe signals it's ready to receive skip ranges |
 
 #### DUB Detector — Binary Search
 
@@ -326,17 +396,22 @@ flowchart TD
 
 #### Storage Schema
 
-All data is stored in `chrome.storage.local` (no external servers, no tracking):
+All settings and cache data are stored in `chrome.storage.local`. The large open-anime-timestamps database is stored in **IndexedDB** (see the [Intro / Outro Skip](#-intro--outro-skip) section above).
 
-| Key                 | Type                  | Description                                                                                                                                                                                                                                                                                                  |
-| ------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ape_settings`      | `object`              | `{ cwEnabled, dubEnabled, smartSearchEnabled, ...16 advanced tunables }` — feature toggles plus every Advanced Settings value (cache TTL, throttling, batch sizes, debounce timings, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` in `helpers/storage.js`. |
-| `ape_cw_v1`         | `string` (JSON array) | Continue Watching list, up to 24 entries by default (configurable)                                                                                                                                                                                                                                           |
-| `d2_{epSession}`    | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"`                                                                                                                                                                                                                                    |
-| `h2_{animeSession}` | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`                                                                                                                                                                                                                                      |
-| `ape_ss_{query}`    | `string`              | Smart Search AniList cache for a normalised query. Stores `allTitles` and `queryCandidates` arrays.                                                                                                                                                                                                          |
+| Key                    | Type                  | Description                                                                                                                                                                                                                                                                                                    |
+| ---------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ape_settings`         | `object`              | `{ cwEnabled, dubEnabled, smartSearchEnabled, introSkipEnabled, ...24 advanced tunables }` — feature toggles plus every Advanced Settings value (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` in `helpers/storage.js`. |
+| `ape_cw_v1`           | `string` (JSON array) | Continue Watching list, up to 24 entries by default (configurable)                                                                                                                                                                                                                                             |
+| `d2_{epSession}`      | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"`                                                                                                                                                                                                                                      |
+| `h2_{animeSession}`   | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`                                                                                                                                                                                                                                        |
+| `ape_ss_{query}`      | `string`              | Smart Search AniList cache for a normalised query. Stores `allTitles` and `queryCandidates` arrays.                                                                                                                                                                                                            |
+| `ape_isid_v1_{session}` | `string` (JSON)     | Intro Skip ID resolution cache — maps an animepahe `animeSession` to its resolved AniDB/AniList/MAL IDs. TTL is configurable (default 7 days).                                                                                                                                                                  |
+| `ape_is_db_meta`      | `object`              | Metadata for the open-anime-timestamps database cached in IndexedDB: `{ fetchedAt, sizeBytes, etag }`. Shared between the content script and popup (the popup can't access the content script's IndexedDB).                                                                                                        |
+| `ape_askip_show_{id}` | `string` (JSON)       | AnimeSkip API cache — AniList show ID lookup. 7-day TTL.                                                                                                                                                                                                                                                      |
+| `ape_askip_eps_{id}`  | `string` (JSON)       | AnimeSkip API cache — episode list for a show. 7-day TTL.                                                                                                                                                                                                                                                     |
+| `ape_askip_ts_{id}`   | `string` (JSON)       | AnimeSkip API cache — timestamps for an episode. 1-day TTL.                                                                                                                                                                                                                                                   |
 
-Cache entries prefixed `d2_`, `h2_`, and `ape_ss_` all expire after the same configurable cache-duration setting (24 hours by default) and are garbage-collected automatically.
+Cache entries prefixed `d2_`, `h2_`, and `ape_ss_` all expire after the same configurable cache-duration setting (24 hours by default) and are garbage-collected automatically. Intro Skip cache entries (`ape_isid_`, `ape_askip_`) have their own independent TTLs as described above. The timestamps database in IndexedDB is refreshed on a separate configurable schedule (7 days by default).
 
 #### Smart Search — AniList Alt-Title Lookup
 
@@ -360,7 +435,7 @@ Key design decisions:
 
 - **Debounce (100 ms by default, configurable)** prevents API calls on every keystroke.
 - **Normalisation** (`norm()`) strips punctuation and lowercases before any comparison.
-- **Relevance filter** (`isRelevant()`) uses substring inclusion and an 80 % alt-word / 50 % item-word overlap ratio.
+- **Relevance filter** (`isRelevant()`) uses substring inclusion and an 80 % alt-word / 50 % item-word overlap ratio.
 - **Deduplication** suppresses any result whose normalised title already appears in the native dropdown.
 - **Stale-query guard** — if the input changes while awaiting results, the injection is silently aborted.
 
@@ -396,6 +471,7 @@ export const DEFAULT_SETTINGS = {
   cwEnabled: true,
   dubEnabled: true,
   smartSearchEnabled: true,
+  introSkipEnabled: true,
   myFeatureEnabled: true, // ← add here
 };
 ```
@@ -449,14 +525,17 @@ The popup automatically renders a labeled input, description, and its own **↺ 
 
 The extension requests the minimum permissions necessary:
 
-| Permission                                         | Reason                                                                            |
-| -------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `storage`                                          | Save Continue Watching progress and DUB detection cache to `chrome.storage.local` |
-| Host permissions for `*.animepahe.{pw,org,com,ru}` | Inject the main content script into animepahe pages                               |
-| Host permissions for `*.kwik.{cx}`                 | Inject the iframe player script into the embedded Kwik video player               |
-| Host permissions for `graphql.anilist.co`          | Fetch alternative anime titles for Smart Search (no account data exchanged)       |
+| Permission                                         | Reason                                                                                                         |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `storage`                                          | Save settings, Continue Watching progress, and various caches to `chrome.storage.local` and IndexedDB          |
+| Host permissions for `*.animepahe.{pw,org,com,ru}` | Inject the main content script into animepahe pages                                                            |
+| Host permissions for `*.kwik.cx`                   | Inject the iframe player script into the embedded Kwik video player                                            |
+| Host permissions for `graphql.anilist.co`          | Fetch alternative anime titles for Smart Search and resolve IDs for Intro/Outro Skip (no account data exchanged) |
+| Host permissions for `relations.yuna.moe`          | Resolve AniList/MAL IDs to AniDB IDs for the Intro/Outro Skip timestamp database lookup                        |
+| Host permissions for `raw.githubusercontent.com`   | Download the open-anime-timestamps database (~27 MB, cached in IndexedDB with conditional GET refresh)         |
+| Host permissions for `api.anime-skip.com`          | Query the AnimeSkip API for community-submitted intro/outro timestamps as a fallback (if enabled)              |
 
-**No data is ever sent to any external server.** All storage is local to your browser.
+All network requests to external services (AniList, relations.yuna.moe, open-anime-timestamps, AnimeSkip) carry no personal identifiers or browsing history. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -475,6 +554,13 @@ The extension requests the minimum permissions necessary:
 
 - `kwik.cx`
 
+**External services (API calls only, no content script injection):**
+
+- `graphql.anilist.co` — AniList GraphQL API (Smart Search + Intro Skip ID resolution)
+- `relations.yuna.moe` — AniDB ID resolution (Intro Skip)
+- `raw.githubusercontent.com` (Ellivers/open-anime-timestamps) — Timestamp database download (Intro Skip)
+- `api.anime-skip.com` — AnimeSkip community timestamps fallback (Intro Skip)
+
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ---
@@ -483,7 +569,7 @@ The extension requests the minimum permissions necessary:
 
 Planned features and improvements that aren't implemented yet:
 
-- **Intro & Outro Skipping** — Skip anime intros and outros with a single click
+_(None currently — all planned features have been shipped.)_
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -561,7 +647,7 @@ For security vulnerabilities, do **not** open a public issue — see [**SECURITY
 
 ## Privacy
 
-All data is stored locally in your browser — nothing is ever sent to an external server. See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
+User data such as Continue Watching progress and settings is stored locally in your browser. Some features make outbound network requests to specific APIs for functionality (e.g., Smart Search and Intro/Outro Skip). See [PRIVACY.md](PRIVACY.md) for the full privacy policy.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

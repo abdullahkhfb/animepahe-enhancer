@@ -22,14 +22,6 @@ function norm(s) {
     .trim();
 }
 
-function esc(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
 function levenshtein(a, b) {
   const m = a.length,
     n = b.length;
@@ -170,9 +162,18 @@ function getDropdown() {
 }
 
 function buildRow(item, originalQuery) {
-  const posterStr = item.poster
-    ? `<img src="${esc(item.poster)}" alt="${esc(item.title ?? "")}" style="width:40px !important; height:40px !important; border-radius:50% !important; object-fit:cover !important; flex-shrink:0 !important; display:block !important; margin:0 !important; padding:0 !important;">`
-    : `<div style="width:40px; height:40px; border-radius:50%; background:#1a1a30; flex-shrink:0;"></div>`;
+  let posterEl;
+  if (item.poster) {
+    posterEl = document.createElement("img");
+    posterEl.src = item.poster;
+    posterEl.alt = item.title ?? "";
+    posterEl.style.cssText =
+      "width:40px !important; height:40px !important; border-radius:50% !important; object-fit:cover !important; flex-shrink:0 !important; display:block !important; margin:0 !important; padding:0 !important;";
+  } else {
+    posterEl = document.createElement("div");
+    posterEl.style.cssText =
+      "width:40px; height:40px; border-radius:50%; background:#1a1a30; flex-shrink:0;";
+  }
 
   const meta = [
     item.type,
@@ -189,16 +190,33 @@ function buildRow(item, originalQuery) {
   row.style.cssText =
     "border-left: 3px solid #d92558 !important; list-style: none !important; margin: 0 !important; padding: 0 !important;";
 
-  row.innerHTML = `
-    <a href="/anime/${esc(item.session ?? "")}" style="display:flex !important; align-items:center !important; gap:12px !important; padding:8px 12px !important; text-decoration:none !important; color:inherit !important; cursor:pointer !important; background:transparent !important;">
-      ${posterStr}
-      <div style="display:flex; flex-direction:column; justify-content:center; overflow:hidden; line-height:1.3;">
-        <strong style="color:#ffffff !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:13px !important; display:block; font-weight:bold !important;">${esc(item.title ?? "")}</strong>
-        <small style="color:#a0a0a0 !important; font-size:11px !important; display:block; margin-top:2px;">${esc(meta)}</small>
-        <span style="display:block; font-size:10px !important; color:#d97090 !important; font-style:italic !important; margin-top:2px; font-weight:600 !important;">also matching "${esc(originalQuery)}"</span>
-      </div>
-    </a>
-  `;
+  const link = document.createElement("a");
+  link.href = `/anime/${item.session ?? ""}`;
+  link.style.cssText =
+    "display:flex !important; align-items:center !important; gap:12px !important; padding:8px 12px !important; text-decoration:none !important; color:inherit !important; cursor:pointer !important; background:transparent !important;";
+
+  const textWrap = document.createElement("div");
+  textWrap.style.cssText =
+    "display:flex; flex-direction:column; justify-content:center; overflow:hidden; line-height:1.3;";
+
+  const titleEl = document.createElement("strong");
+  titleEl.style.cssText =
+    "color:#ffffff !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:13px !important; display:block; font-weight:bold !important;";
+  titleEl.textContent = item.title ?? "";
+
+  const metaEl = document.createElement("small");
+  metaEl.style.cssText =
+    "color:#a0a0a0 !important; font-size:11px !important; display:block; margin-top:2px;";
+  metaEl.textContent = meta;
+
+  const matchEl = document.createElement("span");
+  matchEl.style.cssText =
+    "display:block; font-size:10px !important; color:#d97090 !important; font-style:italic !important; margin-top:2px; font-weight:600 !important;";
+  matchEl.textContent = `also matching "${originalQuery}"`;
+
+  textWrap.append(titleEl, metaEl, matchEl);
+  link.append(posterEl, textWrap);
+  row.appendChild(link);
 
   return row;
 }
@@ -216,9 +234,20 @@ function injectRows(data, originalQuery) {
     dymRow.className = "ape-ss-dym";
     dymRow.style.cssText =
       "padding: 8px 12px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); list-style: none;";
-    dymRow.innerHTML = `<span style="color: #888;">Did you mean:</span> <a href="#" style="color: #d92558; font-weight: bold; text-decoration: none;">${esc(data.dym)}</a>?`;
 
-    dymRow.querySelector("a").addEventListener("click", (e) => {
+    const dymLabel = document.createElement("span");
+    dymLabel.style.cssText = "color: #888;";
+    dymLabel.textContent = "Did you mean:";
+
+    const dymLink = document.createElement("a");
+    dymLink.href = "#";
+    dymLink.style.cssText =
+      "color: #d92558; font-weight: bold; text-decoration: none;";
+    dymLink.textContent = data.dym;
+
+    dymRow.append(dymLabel, " ", dymLink, "?");
+
+    dymLink.addEventListener("click", (e) => {
       e.preventDefault();
       const input = getInput();
       if (input) {

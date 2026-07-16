@@ -29,7 +29,7 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - **Request a feature** — open an issue describing the problem you want to solve and why it fits the project.
 - **Fix a bug** — pick up an open issue labelled `bug` and open a pull request.
 - **Build a feature** — discuss first in an issue, then implement it.
-- **Improve the docs** — fix typos, clarify explanations, or add missing information in `README.md`, `PRIVACY.md`, or code comments.
+- **Improve the docs** — fix typos, clarify explanations, or add missing information in `README.md`, `PRIVACY.md`, `SECURITY.md`, or code comments.
 - **Report a security vulnerability** — see [`SECURITY.md`](SECURITY.md) for the private disclosure process. Do **not** open a public issue.
 
 ---
@@ -40,7 +40,7 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - **One concern per PR.** Keep pull requests focused. A PR that fixes a bug and adds an unrelated feature is harder to review and slows everything down.
 - **No build step required.** The extension is plain ES2020+ JavaScript with no bundler, no TypeScript, and no external npm dependencies. Keep it that way.
 - **Minimal permissions.** Any change that would require adding a new entry to `permissions` or `host_permissions` in `manifest.json` needs strong justification and will be scrutinised carefully.
-- **Local-first data.** No feature should transmit user data to an external server beyond what is already documented (AniList title lookups for Smart Search). New network targets require explicit discussion.
+- **Local-first data.** No feature should transmit user data to an external server beyond what is already documented (AniList title lookups for Smart Search, AniList/relations.yuna.moe/open-anime-timestamps/AnimeSkip requests for Intro/Outro Skip). New network targets require explicit discussion.
 - **Be respectful.** This project adheres to its [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
@@ -87,31 +87,50 @@ animepahe-enhancer/
 │
 ├── content/
 │   ├── main.js                   # Entry point — loads settings, detects page, imports features
-│   ├── iframe-player.js          # Injected into Kwik iframe; postMessage bridge for Continue Watching
+│   ├── iframe-player.js          # Injected into Kwik iframe; postMessage bridge for
+│   │                             #   Continue Watching + Intro/Outro Skip controller
 │   │
 │   ├── features/                 # One file per feature; each exports a class with init(pageType)
 │   │   ├── continue-watching.js
 │   │   ├── dub-detector.js
-│   │   └── smart-search.js
+│   │   ├── smart-search.js
+│   │   └── intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
 │   │
 │   └── helpers/                  # Shared utilities imported by any feature
 │       ├── storage.js            # chrome.storage.local wrapper + DEFAULT_SETTINGS
 │       │                         #   + ADVANCED_SETTINGS_SCHEMA (drives the popup's panel)
 │       ├── router.js             # Page-type detection from the current URL
 │       ├── cache.js              # DUB cache read/write/garbage collection (configurable TTL)
-│       └── throttler.js          # RequestThrottler — concurrency, jitter, retry, back-off
-│                                 #   (tunable at runtime via updateOptions())
+│       ├── throttler.js          # RequestThrottler — concurrency, jitter, retry, back-off
+│       │                         #   (tunable at runtime via updateOptions())
+│       ├── timestamps-db.js      # open-anime-timestamps dataset access (IndexedDB cache,
+│       │                         #   AniList → AniDB ID resolution, episode lookup,
+│       │                         #   AnimeSkip API fallback)
+│       └── animeskip.js          # AnimeSkip API client — GraphQL queries for
+│                                 #   community-submitted intro/outro timestamps
 │
 ├── popup/
 │   ├── popup.html
 │   ├── popup.css
 │   └── popup.js                  # ES module — imports ADVANCED_SETTINGS_SCHEMA from
-│                                 #   storage.js to render the Advanced Settings panel
+│                                 #   storage.js to render the Advanced Settings panel;
+│                                 #   imports clearTimestampsCache / getTimestampsCacheInfo
+│                                 #   from timestamps-db.js for Intro Skip cache management
 │
 ├── icons/
 │   ├── icon16.{png,svg}
 │   ├── icon48.{png,svg}
-│   └── icon128.{png,svg}
+│   ├── icon128.{png,svg}
+│   ├── intro-skip.svg            # Intro/Outro Skip feature icon
+│   ├── logo.svg
+│   ├── continue-watching.svg
+│   ├── dub-detector.svg
+│   ├── smart-search.svg
+│   ├── advanced-settings.svg
+│   ├── chevron.svg
+│   ├── github.svg
+│   ├── animepahe.svg
+│   └── notice.svg
 │
 └── .github/
     └── workflows/
@@ -157,6 +176,7 @@ export const DEFAULT_SETTINGS = {
   cwEnabled: true,
   dubEnabled: true,
   smartSearchEnabled: true,
+  introSkipEnabled: true,
   myFeatureEnabled: true, // ← add here
 };
 ```
@@ -222,7 +242,7 @@ A few conventions to follow:
 
 ### Documentation
 
-- Edit `README.md` or `PRIVACY.md` directly.
+- Edit `README.md`, `PRIVACY.md`, or `SECURITY.md` directly.
 - Code comments are valued — explain _why_ something is done, not just _what_ it does.
 - Architecture diagrams in the README use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
 
@@ -239,10 +259,10 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 | **Naming**           | `camelCase` for variables and functions; `PascalCase` for classes; `SCREAMING_SNAKE_CASE` for module-level constants  |
 | **Indentation**      | 2 spaces                                                                                                              |
 | **Strings**          | Double quotes for HTML attribute strings; single or template literals for JavaScript                                  |
-| **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied or third-party data |
+| **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied, animepahe-sourced, AniList-sourced, or AnimeSkip-sourced data |
 | **Error handling**   | Wrap feature initialisation in `try/catch` and log to `console.error` with the `[animepahe-enhancer]` prefix          |
 | **Comments**         | JSDoc for exported classes and public methods; inline comments for non-obvious logic                                  |
-| **Storage keys**     | All keys must use the established prefixes (`ape_`, `d2_`, `h2_`, `ape_ss_`) and be documented in `storage.js`        |
+| **Storage keys**     | All keys must use the established prefixes (`ape_`, `d2_`, `h2_`, `ape_ss_`, `ape_isid_`, `ape_askip_`) and be documented in `storage.js` or the relevant helper |
 
 ---
 
@@ -281,11 +301,13 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 
 - [ ] Tested manually in at least one browser (Firefox or Chrome/Edge)
 - [ ] No new `permissions` or `host_permissions` added without justification
-- [ ] No `innerHTML` used with untrusted/third-party data
+- [ ] No `innerHTML` used with untrusted/third-party data (animepahe DOM, AniList responses, AnimeSkip responses)
 - [ ] `DEFAULT_SETTINGS` updated if a new toggle was added
 - [ ] `ADVANCED_SETTINGS_SCHEMA` updated (with a matching `default`) if a new tunable was added, instead of hand-rolling popup UI
 - [ ] `manifest.json` `version` field **not** bumped (maintainer handles versioning)
 - [ ] `README.md` updated if user-facing behaviour changed
+- [ ] `PRIVACY.md` updated if new network targets or data flows were introduced
+- [ ] `SECURITY.md` updated if new attack surface was introduced
 
 ---
 

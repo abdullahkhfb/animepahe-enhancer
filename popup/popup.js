@@ -2,24 +2,34 @@ import {
   storage,
   ADVANCED_SETTINGS_SCHEMA,
 } from "../content/helpers/storage.js";
+import {
+  clearTimestampsCache,
+  getTimestampsCacheInfo,
+} from "../content/helpers/timestamps-db.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const CW_KEY = "ape_cw_v1";
   const SS_CACHE_PREFIX = "ape_alt_";
+  const IS_ID_CACHE_PREFIX = "ape_isid_";
 
   const toggleCw = document.getElementById("toggle-cw");
   const toggleDub = document.getElementById("toggle-dub");
   const toggleSs = document.getElementById("toggle-ss");
+  const toggleIs = document.getElementById("toggle-is");
   const cwCount = document.getElementById("cw-count");
   const dubCacheCount = document.getElementById("dub-cache-count");
   const ssCacheCount = document.getElementById("ss-cache-count");
+  const isStatusChip = document.getElementById("is-status-chip");
   const btnClearCw = document.getElementById("cw-clear");
   const btnClearDub = document.getElementById("dub-clear-cache");
   const btnClearSs = document.getElementById("ss-clear-cache");
+  const btnClearIs = document.getElementById("is-clear-cache");
+  const btnRefreshIs = document.getElementById("is-refresh-db");
   const reloadNotice = document.getElementById("reload-notice");
   const cwCard = document.getElementById("cw-card");
   const dubCard = document.getElementById("dub-card");
   const ssCard = document.getElementById("ss-card");
+  const isCard = document.getElementById("is-card");
   const versionBadge = document.getElementById("version-badge");
 
   const advancedToggle = document.getElementById("advanced-toggle");
@@ -37,10 +47,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   toggleCw.checked = settings.cwEnabled;
   toggleDub.checked = settings.dubEnabled;
   toggleSs.checked = settings.smartSearchEnabled;
+  toggleIs.checked = settings.introSkipEnabled;
   updateCardStyles();
   updateCwStats(data[CW_KEY]);
   updateDubStats();
   updateSsStats();
+  updateIsStats();
   buildAdvancedPanel();
 
   toggleCw.addEventListener("change", () => {
@@ -55,6 +67,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     saveSettings({ smartSearchEnabled: toggleSs.checked });
   });
 
+  toggleIs.addEventListener("change", () => {
+    saveSettings({ introSkipEnabled: toggleIs.checked });
+  });
+
   async function saveSettings(patch) {
     settings = await storage.setSettings(patch);
     updateCardStyles();
@@ -65,6 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     cwCard.classList.toggle("disabled", !settings.cwEnabled);
     dubCard.classList.toggle("disabled", !settings.dubEnabled);
     ssCard.classList.toggle("disabled", !settings.smartSearchEnabled);
+    isCard.classList.toggle("disabled", !settings.introSkipEnabled);
   }
 
   btnClearCw.addEventListener("click", async () => {
@@ -96,6 +113,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  btnClearIs.addEventListener("click", async () => {
+    await animateButton(btnClearIs, async () => {
+      await clearTimestampsCache();
+      await updateIsStats();
+    });
+  });
+
+  btnRefreshIs.addEventListener("click", async () => {
+    const originalText = btnRefreshIs.textContent;
+    btnRefreshIs.textContent = "Clearing...";
+    btnRefreshIs.style.pointerEvents = "none";
+    try {
+      // Clear the meta + ID cache. The content script notices the meta is
+      // missing on the next page load and re-downloads the timestamps DB.
+      // (The popup can't populate the content script's IndexedDB directly
+      // because they live on different origins.)
+      await clearTimestampsCache();
+      await updateIsStats();
+      btnRefreshIs.textContent = "Refreshes on next page";
+    } catch (err) {
+      console.error("[IntroSkip] Manual DB refresh failed:", err);
+      btnRefreshIs.textContent = "Failed";
+    } finally {
+      setTimeout(() => {
+        btnRefreshIs.textContent = originalText;
+        btnRefreshIs.style.pointerEvents = "auto";
+      }, 2000);
+    }
+  });
+
   function updateCwStats(cwRaw) {
     try {
       const list = typeof cwRaw === "string" ? JSON.parse(cwRaw) : [];
@@ -123,6 +170,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     ).length;
     ssCacheCount.textContent = `${count} cached`;
     btnClearSs.style.display = count === 0 ? "none" : "block";
+  }
+
+  async function updateIsStats() {
+    try {
+      const info = await getTimestampsCacheInfo();
+      if (!info.hasDb) {
+        isStatusChip.textContent =
+          info.idEntries > 0
+            ? `${info.idEntries} ID${info.idEntries === 1 ? "" : "s"} cached`
+            : "DB not cached";
+        btnClearIs.style.display = info.idEntries > 0 ? "block" : "none";
+        return;
+      }
+      const sizeMb = (info.sizeBytes / (1024 * 1024)).toFixed(1);
+      const ageHours = Math.floor(
+        (Date.now() - info.fetchedAt) / (60 * 60 * 1000),
+      );
+      const ageLabel =
+        ageHours < 1
+          ? "just now"
+          : ageHours < 24
+            ? `${ageHours}h ago`
+            : `${Math.floor(ageHours / 24)}d ago`;
+      isStatusChip.textContent = `DB ${sizeMb} MB · ${ageLabel}`;
+      btnClearIs.style.display = "block";
+    } catch {
+      isStatusChip.textContent = "— unknown";
+      btnClearIs.style.display = "none";
+    }
   }
 
   // Utility for smooth button animations

@@ -164,6 +164,10 @@ svg {
   background: rgba(217, 37, 88, 0.15);
   color: #d92558;
 }
+.is-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
 
 /* Feature text */
 .feature-text {

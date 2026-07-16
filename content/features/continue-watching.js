@@ -81,61 +81,81 @@ export class ContinueWatching {
   }
 
   _buildSection(list) {
+    const SVG_NS = "http://www.w3.org/2000/svg";
     const section = document.createElement("section");
     section.id = SECTION_ID;
 
     const needsToggle = list.length > this._cardsPerPage;
-    section.innerHTML = `
-      <div class="ape-cw-header">
-        <h2 class="ape-cw-heading">
-          <svg class="ape-cw-heading-icon" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 2a8 8 0 1 0 0 16A8 8 0 0 0 10 2ZM9 7l4.5 3L9 13V7Z"/>
-          </svg>
-          Continue Watching
-        </h2>
-        <div class="ape-cw-controls">
-          ${needsToggle ? `<button id="ape-cw-toggle" class="ape-cw-util-btn">Show More</button>` : ""}
-          <button id="ape-cw-clear" class="ape-cw-util-btn danger" title="Clear all history">Clear All</button>
-        </div>
-      </div>
-      <div class="ape-cw-grid ${needsToggle ? "collapsed" : ""}" id="ape-cw-grid"></div>
-    `;
 
-    const grid = section.querySelector("#ape-cw-grid");
+    const header = document.createElement("div");
+    header.className = "ape-cw-header";
+
+    const heading = document.createElement("h2");
+    heading.className = "ape-cw-heading";
+
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", "ape-cw-heading-icon");
+    svg.setAttribute("viewBox", "0 0 20 20");
+    svg.setAttribute("fill", "currentColor");
+    const path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute("d", "M10 2a8 8 0 1 0 0 16A8 8 0 0 0 10 2ZM9 7l4.5 3L9 13V7Z");
+    svg.appendChild(path);
+
+    heading.append(svg, " Continue Watching");
+
+    const controls = document.createElement("div");
+    controls.className = "ape-cw-controls";
+
+    let toggleBtn = null;
+    if (needsToggle) {
+      toggleBtn = document.createElement("button");
+      toggleBtn.id = "ape-cw-toggle";
+      toggleBtn.className = "ape-cw-util-btn";
+      toggleBtn.textContent = "Show More";
+      controls.appendChild(toggleBtn);
+    }
+
+    const clearBtn = document.createElement("button");
+    clearBtn.id = "ape-cw-clear";
+    clearBtn.className = "ape-cw-util-btn danger";
+    clearBtn.title = "Clear all history";
+    clearBtn.textContent = "Clear All";
+    controls.appendChild(clearBtn);
+
+    header.append(heading, controls);
+
+    const grid = document.createElement("div");
+    grid.className = needsToggle ? "ape-cw-grid collapsed" : "ape-cw-grid";
+    grid.id = "ape-cw-grid";
+
+    section.append(header, grid);
+
     list.forEach((entry) =>
       grid.appendChild(this._buildCard(entry, grid, section)),
     );
 
-    if (needsToggle) {
-      const toggleBtn = section.querySelector("#ape-cw-toggle");
+    if (toggleBtn) {
       toggleBtn.addEventListener("click", () => {
         const isCollapsed = grid.classList.toggle("collapsed");
         toggleBtn.textContent = isCollapsed ? "Show More" : "Show Less";
       });
     }
 
-    section
-      .querySelector("#ape-cw-clear")
-      .addEventListener("click", async (e) => {
-        e.preventDefault();
-        if (!confirm('Clear your entire "Continue Watching" list?')) return;
-        await this._storage.clearCwList();
-        section.classList.add("ape-cw-remove-anim");
-        section.addEventListener("animationend", () => section.remove(), {
-          once: true,
-        });
+    clearBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      if (!confirm('Clear your entire "Continue Watching" list?')) return;
+      await this._storage.clearCwList();
+      section.classList.add("ape-cw-remove-anim");
+      section.addEventListener("animationend", () => section.remove(), {
+        once: true,
       });
+    });
 
     return section;
   }
 
   _buildCard(entry, grid, section) {
-    const esc = (s) =>
-      String(s ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+    const SVG_NS = "http://www.w3.org/2000/svg";
 
     const pct =
       entry.duration > 0
@@ -144,36 +164,82 @@ export class ContinueWatching {
             Math.max(0, (entry.time / entry.duration) * 100),
           ).toFixed(1)
         : 0;
-    const progressHtml =
-      entry.duration > 0
-        ? `<div class="ape-cw-prog-bg"><div class="ape-cw-prog-bar" style="width:${pct}%"></div></div>`
-        : "";
 
     const card = document.createElement("div");
     card.className = "ape-cw-card";
-    card.innerHTML = `
-      <a href="${esc(entry.playUrl)}" class="ape-cw-link" title="${esc(entry.animeTitle)} — Episode ${esc(entry.epNumber)}">
-        <div class="ape-cw-thumb-wrap">
-          <img src="${esc(entry.thumbnailUrl)}" alt="${esc(entry.animeTitle)}" class="ape-cw-thumb" loading="lazy" onerror="this.style.display='none'">
-          <div class="ape-cw-overlay" aria-hidden="true">
-            <svg class="ape-cw-play-icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="40" cy="40" r="34" fill="rgba(0,0,0,.55)" stroke="rgba(255,255,255,.88)" stroke-width="3"/>
-              <polygon points="31,22 59,40 31,58" fill="rgba(255,255,255,.92)"/>
-            </svg>
-          </div>
-          <span class="ape-cw-ep-badge">EP&thinsp;${esc(entry.epNumber)}</span>
-          ${progressHtml}
-        </div>
-        <div class="ape-cw-info">
-          <span class="ape-cw-title">${esc(entry.animeTitle)}</span>
-        </div>
-      </a>
-      <button class="ape-cw-remove-btn" type="button" title="Remove from Continue Watching" aria-label="Remove ${esc(entry.animeTitle)}">✕</button>
-    `;
 
-    card
-      .querySelector(".ape-cw-remove-btn")
-      .addEventListener("click", async (e) => {
+    const link = document.createElement("a");
+    link.href = entry.playUrl;
+    link.className = "ape-cw-link";
+    link.title = `${entry.animeTitle} — Episode ${entry.epNumber}`;
+
+    const thumbWrap = document.createElement("div");
+    thumbWrap.className = "ape-cw-thumb-wrap";
+
+    const img = document.createElement("img");
+    img.src = entry.thumbnailUrl;
+    img.alt = entry.animeTitle;
+    img.className = "ape-cw-thumb";
+    img.loading = "lazy";
+    img.addEventListener("error", () => {
+      img.style.display = "none";
+    });
+
+    const overlay = document.createElement("div");
+    overlay.className = "ape-cw-overlay";
+    overlay.setAttribute("aria-hidden", "true");
+
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", "ape-cw-play-icon");
+    svg.setAttribute("viewBox", "0 0 80 80");
+    const circle = document.createElementNS(SVG_NS, "circle");
+    circle.setAttribute("cx", "40");
+    circle.setAttribute("cy", "40");
+    circle.setAttribute("r", "34");
+    circle.setAttribute("fill", "rgba(0,0,0,.55)");
+    circle.setAttribute("stroke", "rgba(255,255,255,.88)");
+    circle.setAttribute("stroke-width", "3");
+    const polygon = document.createElementNS(SVG_NS, "polygon");
+    polygon.setAttribute("points", "31,22 59,40 31,58");
+    polygon.setAttribute("fill", "rgba(255,255,255,.92)");
+    svg.append(circle, polygon);
+    overlay.appendChild(svg);
+
+    const epBadge = document.createElement("span");
+    epBadge.className = "ape-cw-ep-badge";
+    epBadge.textContent = `EP\u2009${entry.epNumber}`;
+
+    thumbWrap.append(img, overlay, epBadge);
+
+    if (entry.duration > 0) {
+      const progBg = document.createElement("div");
+      progBg.className = "ape-cw-prog-bg";
+      const progBar = document.createElement("div");
+      progBar.className = "ape-cw-prog-bar";
+      progBar.style.width = `${pct}%`;
+      progBg.appendChild(progBar);
+      thumbWrap.appendChild(progBg);
+    }
+
+    const info = document.createElement("div");
+    info.className = "ape-cw-info";
+    const titleSpan = document.createElement("span");
+    titleSpan.className = "ape-cw-title";
+    titleSpan.textContent = entry.animeTitle;
+    info.appendChild(titleSpan);
+
+    link.append(thumbWrap, info);
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "ape-cw-remove-btn";
+    removeBtn.type = "button";
+    removeBtn.title = "Remove from Continue Watching";
+    removeBtn.setAttribute("aria-label", `Remove ${entry.animeTitle}`);
+    removeBtn.textContent = "\u2715";
+
+    card.append(link, removeBtn);
+
+    removeBtn.addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
         const list = await this._storage.getCwList();

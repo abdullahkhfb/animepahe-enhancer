@@ -120,6 +120,44 @@
         </div>
       </div>
 
+      <div class="feature-card" id="is-card">
+        <div class="feature-header">
+          <div class="feature-icon is-icon" style="background: transparent">
+            <img
+              src="../icons/intro-skip.svg"
+              alt=""
+              width="28"
+              height="28"
+            />
+          </div>
+          <div class="feature-text">
+            <span class="feature-name">Intro / Outro Skip</span>
+            <span class="feature-desc">Skips openings & endings</span>
+          </div>
+          <label class="toggle" aria-label="Toggle Intro/Outro Skip">
+            <input type="checkbox" id="toggle-is" />
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+        <div class="feature-stats" id="is-stats">
+          <span class="stat-chip" id="is-status-chip">— unknown</span>
+          <button
+            class="action-btn"
+            id="is-refresh-db"
+            title="Force-refresh the skip-timestamps database"
+          >
+            Refresh DB
+          </button>
+          <button
+            class="action-btn danger"
+            id="is-clear-cache"
+            title="Clear cached ID lookups + timestamp DB"
+          >
+            Clear Cache
+          </button>
+        </div>
+      </div>
+
       <div class="notice" id="reload-notice">
         <img src="../icons/notice.svg" alt="" width="16" height="16" />
         Reload the page for changes to take effect.
