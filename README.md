@@ -571,7 +571,9 @@ All network requests to external services (AniList, relations.yuna.moe, open-ani
 
 Planned features and improvements that aren't implemented yet:
 
-_(None currently — all planned features have been shipped.)_
+- GUI Fixes
+- Remove the Anime-Skip API and replace it with an internal real-time updated dataset
+- Refactor the codebase
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
