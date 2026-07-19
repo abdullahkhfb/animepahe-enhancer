@@ -86,16 +86,14 @@ If you like tinkering, the popup has an **Advanced Settings** tab where you can 
 
 This README keeps things short on purpose. For anything more in-depth:
 
-| Guide                                          | What's in it                                                                     |
-| ---------------------------------------------- | -------------------------------------------------------------------------------- |
-| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical detail behind every feature                                   |
-| [docs/USAGE.md](docs/USAGE.md)                 | Step-by-step instructions for using each feature and the popup                   |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   | How the code is organized, and how to add a new feature or setting               |
-| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)     | Exactly what the extension can access, and why                                   |
-| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)     | Running the extension locally and how releases are published                     |
-| [docs/EDGE.md](docs/EDGE.md)                   | The current situation with the Microsoft Edge listing, and how to install anyway |
-| [RELEASE.md](RELEASE.md)                       | Release notes, mirrored from GitHub Releases                                     |
-| [docs/STORE_LISTING.md](docs/STORE_LISTING.md) | The description text used on the extension store listings                        |
+| Guide                                        | What's in it                                                                     |
+| -------------------------------------------- | -------------------------------------------------------------------------------- |
+| [docs/FEATURES.md](docs/FEATURES.md)         | The full technical detail behind every feature                                   |
+| [docs/USAGE.md](docs/USAGE.md)               | Step-by-step instructions for using each feature and the popup                   |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How the code is organized, and how to add a new feature or setting               |
+| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)   | Exactly what the extension can access, and why                                   |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)   | Running the extension locally and how releases are published                     |
+| [docs/EDGE.md](docs/EDGE.md)                 | The current situation with the Microsoft Edge listing, and how to install anyway |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
