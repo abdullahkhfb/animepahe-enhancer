@@ -2,7 +2,7 @@
 
 ## Overview
 
-animepahe Enhancer is a browser extension that operates **primarily client-side** with no backend infrastructure owned by the developer. Some features make outbound requests to specific public APIs (AniList, relations.yuna.moe, open-anime-timestamps on GitHub, and the AnimeSkip API) for functionality. All user-generated data (settings, watch progress, caches) lives in your browser's `chrome.storage.local` or IndexedDB. This document describes how to responsibly disclose security vulnerabilities and what the project's security posture looks like.
+animepahe Enhancer is a browser extension that operates **primarily client-side** with no backend infrastructure owned by the developer. Some features make outbound requests to specific public APIs (AniList, relations.yuna.moe, and open-anime-timestamps on GitHub) for functionality. All user-generated data (settings, watch progress, caches) lives in your browser's `chrome.storage.local` or IndexedDB. This document describes how to responsibly disclose security vulnerabilities and what the project's security posture looks like.
 
 ---
 
@@ -76,19 +76,18 @@ Understanding the extension's design helps set expectations about what is and is
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Content scripts**    | Injected into `*.animepahe.{pw,org,com,ru}`. Read and modify the DOM of those pages only.                                                                                                   |
 | **`iframe-player.js`** | Injected into the Kwik iframe (`*.kwik.cx`). Communicates with the parent page exclusively via `postMessage` using named message types (`AP_CW_REQUEST_TIME`, `AP_CW_RESTORE_TIME`, `AP_CW_UPDATE_TIME`, `AP_IS_SET_RANGES`, `AP_IS_SEEK`, `AP_IS_READY`). |
-| **Storage**            | Settings, Continue Watching data, DUB cache, Smart Search cache, and Intro Skip ID/timestamp caches are written to `chrome.storage.local` only. The open-anime-timestamps database (~27 MB) is stored in IndexedDB. No cookies, no `localStorage`. Keys are prefixed (`ape_settings`, `ape_cw_v1`, `d2_`, `h2_`, `ape_ss_`, `ape_isid_`, `ape_askip_`, `ape_is_db_meta`). |
-| **Network**            | Outbound requests go to `graphql.anilist.co` (Smart Search + Intro Skip ID resolution), `relations.yuna.moe` (Intro Skip ID resolution), `raw.githubusercontent.com` (timestamp DB download), `api.anime-skip.com` (AnimeSkip fallback), and the animepahe origin itself (DUB detection). All animepahe requests pass through the `RequestThrottler` rate-limiter. |
-| **Permissions**        | `storage` + host permissions scoped to animepahe domains, Kwik, AniList, relations.yuna.moe, GitHub raw (open-anime-timestamps repo), and AnimeSkip API. No `tabs`, `webRequest`, `cookies`, `identity`, or `downloads`. |
+| **Storage**            | Settings, Continue Watching data, DUB cache, Smart Search cache, and Intro Skip ID/timestamp caches are written to `chrome.storage.local` only. The open-anime-timestamps database (~27 MB) is stored in IndexedDB. No cookies, no `localStorage`. Keys are prefixed (`ape_settings`, `ape_cw_v1`, `d2_`, `h2_`, `ape_ss_`, `ape_isid_`, `ape_is_db_meta`). |
+| **Network**            | Outbound requests go to `graphql.anilist.co` (Smart Search + Intro Skip ID resolution), `relations.yuna.moe` (Intro Skip ID resolution), `raw.githubusercontent.com` (timestamp DB download), and the animepahe origin itself (DUB detection). All animepahe requests pass through the `RequestThrottler` rate-limiter. |
+| **Permissions**        | `storage` + host permissions scoped to animepahe domains, Kwik, AniList, relations.yuna.moe, and GitHub raw (open-anime-timestamps repo). No `tabs`, `webRequest`, `cookies`, `identity`, or `downloads`. |
 
 ### Attack surface
 
 The realistic attack surface is small but not zero:
 
 - **`postMessage` origin validation** — the `iframe-player.js` bridge must only trust messages from the expected animepahe origin. The Intro Skip feature sends `AP_IS_SET_RANGES` payloads to the Kwik iframe via `postMessage` using `"*"` as the target origin; the iframe processes these messages to control skip behaviour.
-- **DOM injection** — DUB badges, the Continue Watching row, Smart Search dropdown entries, and the Intro Skip status pill and skip button are built from extension-controlled or API-sourced data. Any path where animepahe-supplied content (e.g., an anime title), AniList-returned titles, or AnimeSkip-returned data flows into `.innerHTML` without sanitisation is a potential XSS vector.
+- **DOM injection** — DUB badges, the Continue Watching row, Smart Search dropdown entries, and the Intro Skip status pill and skip button are built from extension-controlled or API-sourced data. Any path where animepahe-supplied content (e.g., an anime title) or AniList-returned titles flow into `.innerHTML` without sanitisation is a potential XSS vector.
 - **Cache poisoning** — DUB cache keys are derived from animepahe session identifiers. Intro Skip ID cache keys are derived from animepahe session identifiers. Unusual characters in session IDs should not be able to produce collisions or escape into storage operations.
 - **AniList response handling** — titles returned from `graphql.anilist.co` are injected into the search UI. Malformed or adversarial titles must not execute script.
-- **AnimeSkip response handling** — timestamps and episode data returned from `api.anime-skip.com` are used to compute skip ranges and render progress bar highlights. Malformed responses should not cause script injection or crash the player.
 - **open-anime-timestamps database** — the ~27 MB JSON file downloaded from GitHub is parsed and queried locally. A compromised or tampered database (e.g., via a MITM attack on the GitHub download, though conditional GET/ETag provides some integrity) could contain malformed data. The database is treated as untrusted input and only numeric values are used for timestamp calculations.
 - **IndexedDB** — the Intro Skip feature creates a dedicated IndexedDB database (`ape_intro_skip`) to store the timestamps blob. This is accessible only to the extension's content scripts on the animepahe origin.
 
@@ -96,7 +95,7 @@ The realistic attack surface is small but not zero:
 
 The following are **not** considered security vulnerabilities for this project:
 
-- Vulnerabilities in animepahe, Kwik, AniList, relations.yuna.moe, or AnimeSkip themselves
+- Vulnerabilities in animepahe, Kwik, AniList, or relations.yuna.moe themselves
 - Browser-level security issues (report those to the relevant browser vendor)
 - Self-XSS (attacks that require the user to run script in the DevTools console)
 - Theoretical risks with no demonstrated impact
@@ -122,13 +121,13 @@ There is currently no bug bounty programme. Reporters receive public credit and 
 
 When contributing code, keep the following in mind:
 
-- **Never use `innerHTML` with untrusted data.** Use `textContent` for plain text or `createElement`/`appendChild` for structured UI. The only exception is static, developer-authored HTML strings with no user-supplied content. This applies especially to data received from AniList, AnimeSkip, and the animepahe DOM.
+- **Never use `innerHTML` with untrusted data.** Use `textContent` for plain text or `createElement`/`appendChild` for structured UI. The only exception is static, developer-authored HTML strings with no user-supplied content. This applies especially to data received from AniList and the animepahe DOM.
 - **Validate `postMessage` origins.** Any `message` event listener must check `event.origin` against an explicit allowlist of expected domains before acting on the payload. The current `iframe-player.js` accepts messages from any origin (`"*"`) — this is a known trade-off for cross-frame communication within the extension's scope and should be tightened if feasible.
 - **Keep network requests minimal and scoped.** New features must not introduce host permissions beyond what is strictly necessary.
 - **Do not expand `web_accessible_resources`.** Exposing additional files to external origins increases the attack surface unnecessarily.
-- **Sanitise before inserting AniList, AnimeSkip, or animepahe data into the DOM.** Treat all API and third-party data as untrusted.
+- **Sanitise before inserting AniList or animepahe data into the DOM.** Treat all API and third-party data as untrusted.
 - **Cache keys must be deterministic and bounded.** Avoid constructing storage keys from raw user input without normalisation.
-- **Validate and clamp numeric values from external sources.** Timestamps received from the open-anime-timestamps database or the AnimeSkip API should be validated as finite numbers before use in video seeking or DOM calculations.
+- **Validate and clamp numeric values from external sources.** Timestamps received from the open-anime-timestamps database should be validated as finite numbers before use in video seeking or DOM calculations.
 
 ---
 

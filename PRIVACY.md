@@ -16,8 +16,7 @@ However, several features make outbound network requests to specific third-party
 - **Intro / Outro Skip — Timestamp Resolution:** When the Intro / Outro Skip feature is enabled and you visit a player page, the extension makes outbound requests to resolve intro and outro timestamps for the current episode. This involves three potential external services:
   1. **[AniList GraphQL API](https://anilist.co) (`graphql.anilist.co`):** The anime title extracted from the page is sent to AniList to find a matching anime and retrieve its AniList and MyAnimeList IDs. Only the anime title string is transmitted. This is the same endpoint used by Smart Search — results are cached per anime session for 7 days by default (configurable).
   2. **[relations.yuna.moe](https://relations.yuna.moe) (`relations.yuna.moe/api/ids`):** The resolved AniList or MAL ID is sent to this service to obtain the corresponding AniDB ID, which is used as the key for the timestamp database. Only a numeric ID and a source identifier (`anilist` or `myanimelist`) are transmitted. Results are cached per anime session alongside the AniList ID lookup.
-  3. **[open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) (`raw.githubusercontent.com`):** A ~27 MB community-maintained JSON database of intro/outro timestamps is downloaded from GitHub and cached locally in your browser's IndexedDB. It is refreshed on a configurable schedule (7 days by default) using HTTP conditional GET (ETag) to avoid re-downloading unchanged data. This download contains no user-specific data — it is a public, static dataset. The database is used purely for local lookups after download.
-  4. **[AnimeSkip API](https://animeskip.org) (`api.anime-skip.com`):** If the local database does not contain timestamps for the current anime, and the online API fallback is enabled (it is by default), the extension queries the AnimeSkip GraphQL API using the AniList ID. The public client ID used for authentication is rate-limited and shared. Only the AniList ID is transmitted — no personal data. Results are cached locally in `chrome.storage.local` with TTLs of 1–7 days depending on the cache layer. The extension has no affiliation with AnimeSkip; it uses the publicly available, unauthenticated endpoint. If you prefer no data to leave your browser, you can disable the API fallback in Advanced Settings or disable the entire Intro / Outro Skip feature from the popup.
+  3. **[open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) (`raw.githubusercontent.com`):** A ~27 MB community-maintained JSON database of intro/outro timestamps is downloaded from GitHub and cached locally in your browser's IndexedDB. It is refreshed on a configurable schedule (7 days by default) using HTTP conditional GET (ETag) to avoid re-downloading unchanged data. This download contains no user-specific data — it is a public, static dataset. The database is used purely for local lookups after download. If an episode isn't in this database, no timestamps are shown for it — there is no online fallback.
 
 ## 2. Permissions Justification
 
@@ -28,7 +27,6 @@ To function correctly, the extension requires specific browser permissions, whic
 - `host permissions` for `graphql.anilist.co`: Required by the Smart Search feature to fetch alternative anime title data, and by the Intro / Outro Skip feature to resolve anime titles to AniList IDs. Only the search term or anime title is transmitted; no account information or personal data is included.
 - `host permissions` for `relations.yuna.moe`: Required exclusively by the Intro / Outro Skip feature to resolve AniList/MAL IDs to AniDB IDs for timestamp database lookups. Only a numeric ID and source identifier are transmitted.
 - `host permissions` for `raw.githubusercontent.com` (Ellivers/open-anime-timestamps repository): Required exclusively by the Intro / Outro Skip feature to download the community-maintained timestamp database (~27 MB). The downloaded file is a public, static JSON dataset containing no user-specific data. It is cached locally in IndexedDB and refreshed on a configurable schedule using conditional GET.
-- `host permissions` for `api.anime-skip.com`: Required exclusively by the Intro / Outro Skip feature's online fallback to query the AnimeSkip API for community-submitted intro/outro timestamps. Only the AniList ID is transmitted. This permission is not used if the API fallback is disabled in Advanced Settings.
 
 ## 3. Third-Party Services
 
@@ -41,12 +39,10 @@ The extension makes outbound requests to the following public APIs for specific 
 | [AniList](https://anilist.co) | `graphql.anilist.co` | Smart Search alt-title lookups; Intro Skip anime title → ID resolution | Search query (Smart Search) or anime title (Intro Skip) | 24h (Smart Search), 7d (Intro Skip) — both configurable |
 | [relations.yuna.moe](https://relations.yuna.moe) | `relations.yuna.moe/api/ids` | Intro Skip AniList/MAL → AniDB ID resolution | Numeric ID + source identifier | 7 days (configurable) |
 | [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) | `raw.githubusercontent.com` | Intro Skip timestamp database download | None (static file download) | IndexedDB, refreshed every 7 days by default (configurable) via ETag |
-| [AnimeSkip](https://animeskip.org) | `api.anime-skip.com` | Intro Skip community timestamp fallback (if enabled) | AniList ID only | 1–7 days depending on cache layer |
 
 All requests carry no personal identifiers. These API calls are subject to each service's own Terms of Service and Privacy Policy:
 
 - [AniList Terms of Service](https://anilist.co/terms)
-- [AnimeSkip](https://animeskip.org)
 
 Features that make outbound requests (Smart Search and Intro / Outro Skip) can be individually disabled from the extension popup. Disabling a feature prevents all outbound requests associated with it.
 

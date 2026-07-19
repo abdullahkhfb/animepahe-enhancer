@@ -1,0 +1,172 @@
+/* ── Features grid (two columns, side by side) ──────────── */
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* ── Feature card ────────────────────────────────────────── */
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.feature-card:hover {
+  border-color: rgba(255, 255, 255, 0.13);
+}
+
+.feature-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  text-align: left;
+}
+
+.feature-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Feature icons */
+.feature-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.feature-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.cw-icon {
+  background: rgba(232, 113, 10, 0.15);
+  color: #e8710a;
+}
+.dub-icon {
+  background: rgba(217, 37, 88, 0.15);
+  color: #d92558;
+}
+.is-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+.ss-icon {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.feature-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f0f0f8;
+  line-height: 1.25;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.feature-bottom {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.feature-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.feature-chevron {
+  width: 10px;
+  height: 10px;
+  margin-top: 2px;
+}
+
+/* Stats row (collapsible content) */
+.feature-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 9px;
+  margin-top: -1px;
+}
+
+.stat-chip {
+  flex: 1;
+  min-width: 60px;
+  font-size: 10px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Toggle switch ───────────────────────────────────────── */
+.toggle {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-track {
+  display: block;
+  width: 32px;
+  height: 19px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+  position: relative;
+}
+.toggle input:checked + .toggle-track {
+  background: var(--on);
+  border-color: var(--on);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toggle input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(13px);
+}
+
+/* Disabled card appearance */
+.feature-card.disabled .feature-icon,
+.feature-card.disabled .feature-name,
+.feature-card.disabled .feature-desc {
+  opacity: 0.45;
+}

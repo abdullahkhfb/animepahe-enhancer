@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create Extension Zip
-        run: zip -r Animepahe-Enhancer.zip . -x "*.git*" ".github/*" "README.md" ".gitignore" "LICENSE" "PRIVACY.md" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "SECURITY.md"
+        run: zip -r Animepahe-Enhancer.zip . -x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*"
       - name: Upload to Firefox (AMO)
         uses: browser-actions/release-firefox-addon@v0.2.1
         with:

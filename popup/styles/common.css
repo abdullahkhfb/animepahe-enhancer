@@ -1,0 +1,275 @@
+/* ── Reset & base ────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0b0b1c;
+  --surface: #13132a;
+  --surface2: #1a1a34;
+  --border: rgba(255, 255, 255, 0.07);
+  --text: #e4e4f0;
+  --muted: #7878a0;
+  --accent: #e8710a;
+  --accent2: #d92558;
+  --danger: #c0392b;
+  --on: #2ecc71;
+  --radius: 8px;
+}
+
+html {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  width: 400px;
+  max-height: 580px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+  color: inherit;
+  background: none;
+  border: none;
+}
+svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(
+    135deg,
+    rgba(232, 113, 10, 0.06) 0%,
+    rgba(217, 37, 88, 0.06) 100%
+  );
+  flex-shrink: 0;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f4f4f8;
+  letter-spacing: 0.01em;
+}
+.brand-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.version-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.04em;
+  align-self: flex-start;
+}
+
+/* ── Tabs ────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 10px 0;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tab-btn {
+  flex: 1;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 9px 6px 10px;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.15s,
+    background 0.15s,
+    border-color 0.15s;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tab-btn:hover {
+  color: #d0d0e8;
+  background: rgba(255, 255, 255, 0.04);
+}
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: rgba(232, 113, 10, 0.07);
+}
+
+/* ── Tab panel shell (used by every tab) ─────────────────── */
+.tab-panels {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Slim scrollbars for the internal scroll regions */
+.panel-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+.panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+.panel-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.panel-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  padding-left: 2px;
+}
+
+/* ── Generic action button (reused by Features' cache-clear
+   buttons and anywhere else a small pill button is needed) ── */
+.action-btn {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface2);
+  color: #b8b8d0;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s;
+}
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #f0f0f8;
+}
+.action-btn.danger:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ── Generic collapsible chevron (feature cards + advanced
+   groups both rotate this on expand) ─────────────────────── */
+.chevron-icon {
+  flex-shrink: 0;
+  color: var(--muted);
+  opacity: 0.8;
+  transition: transform 0.2s ease;
+}
+.collapsible-open .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Notice banner ───────────────────────────────────────── */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: #e8b24a;
+  background: rgba(232, 178, 74, 0.08);
+  border: 1px solid rgba(232, 178, 74, 0.2);
+  padding: 7px 10px;
+  border-radius: 6px;
+  animation: slide-in 0.2s ease;
+}
+.notice svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

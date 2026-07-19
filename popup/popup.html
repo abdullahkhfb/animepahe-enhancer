@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>animepahe Enhancer</title>
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="styles/common.css" />
+    <link rel="stylesheet" href="styles/features.css" />
+    <link rel="stylesheet" href="styles/advanced.css" />
+    <link rel="stylesheet" href="styles/links.css" />
   </head>
   <body>
     <header class="header">
@@ -24,205 +27,354 @@
       <span class="version-badge" id="version-badge">v1.0.0</span>
     </header>
 
-    <main class="main">
-      <p class="section-label">FEATURES</p>
-
-      <div class="feature-card" id="cw-card">
-        <div class="feature-header">
-          <div class="feature-icon cw-icon" style="background: transparent">
-            <img
-              src="../icons/continue-watching.svg"
-              alt=""
-              width="28"
-              height="28"
-            />
-          </div>
-          <div class="feature-text">
-            <span class="feature-name">Continue Watching</span>
-            <span class="feature-desc">Tracks playback progress</span>
-          </div>
-          <label class="toggle" aria-label="Toggle Continue Watching">
-            <input type="checkbox" id="toggle-cw" />
-            <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          </label>
-        </div>
-        <div class="feature-stats" id="cw-stats">
-          <span class="stat-chip" id="cw-count">— items</span>
-          <button
-            class="action-btn danger"
-            id="cw-clear"
-            title="Clear Continue Watching list"
-          >
-            Clear List
-          </button>
-        </div>
-      </div>
-
-      <div class="feature-card" id="dub-card">
-        <div class="feature-header">
-          <div class="feature-icon dub-icon" style="background: transparent">
-            <img
-              src="../icons/dub-detector.svg"
-              alt=""
-              width="28"
-              height="28"
-            />
-          </div>
-          <div class="feature-text">
-            <span class="feature-name">DUB Detector</span>
-            <span class="feature-desc">Highlights dubbed episodes</span>
-          </div>
-          <label class="toggle" aria-label="Toggle DUB Detector">
-            <input type="checkbox" id="toggle-dub" />
-            <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          </label>
-        </div>
-        <div class="feature-stats" id="dub-stats">
-          <span class="stat-chip" id="dub-cache-count">— cached</span>
-          <button
-            class="action-btn"
-            id="dub-clear-cache"
-            title="Clear DUB detection cache"
-          >
-            Clear Cache
-          </button>
-        </div>
-      </div>
-
-      <div class="feature-card" id="ss-card">
-        <div class="feature-header">
-          <div class="feature-icon ss-icon" style="background: transparent">
-            <img
-              src="../icons/smart-search.svg"
-              alt=""
-              width="28"
-              height="28"
-            />
-          </div>
-          <div class="feature-text">
-            <span class="feature-name">Smart Search</span>
-            <span class="feature-desc">Finds alternative titles</span>
-          </div>
-          <label class="toggle" aria-label="Toggle Smart Search">
-            <input type="checkbox" id="toggle-ss" />
-            <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          </label>
-        </div>
-        <div class="feature-stats" id="ss-stats">
-          <span class="stat-chip" id="ss-cache-count">— cached</span>
-          <button
-            class="action-btn"
-            id="ss-clear-cache"
-            title="Clear Smart Search cache"
-          >
-            Clear Cache
-          </button>
-        </div>
-      </div>
-
-      <div class="feature-card" id="is-card">
-        <div class="feature-header">
-          <div class="feature-icon is-icon" style="background: transparent">
-            <img
-              src="../icons/intro-skip.svg"
-              alt=""
-              width="28"
-              height="28"
-            />
-          </div>
-          <div class="feature-text">
-            <span class="feature-name">Intro / Outro Skip</span>
-            <span class="feature-desc">Skips openings & endings</span>
-          </div>
-          <label class="toggle" aria-label="Toggle Intro/Outro Skip">
-            <input type="checkbox" id="toggle-is" />
-            <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          </label>
-        </div>
-        <div class="feature-stats" id="is-stats">
-          <span class="stat-chip" id="is-status-chip">— unknown</span>
-          <button
-            class="action-btn"
-            id="is-refresh-db"
-            title="Force-refresh the skip-timestamps database"
-          >
-            Refresh DB
-          </button>
-          <button
-            class="action-btn danger"
-            id="is-clear-cache"
-            title="Clear cached ID lookups + timestamp DB"
-          >
-            Clear Cache
-          </button>
-        </div>
-      </div>
-
-      <div class="notice" id="reload-notice">
-        <img src="../icons/notice.svg" alt="" width="16" height="16" />
-        Reload the page for changes to take effect.
-      </div>
-
+    <nav class="tabs" role="tablist" aria-label="Popup sections">
       <button
-        class="advanced-toggle"
-        id="advanced-toggle"
-        aria-expanded="false"
+        class="tab-btn active"
+        id="tab-btn-features"
+        role="tab"
+        aria-selected="true"
+        aria-controls="panel-features"
+        data-tab="features"
       >
-        <span class="advanced-toggle-icon">
-          <img
-            src="../icons/advanced-settings.svg"
-            alt=""
-            width="16"
-            height="16"
-          />
-        </span>
-        <span class="advanced-toggle-text">
-          <span class="advanced-toggle-name">Advanced Settings</span>
-          <span class="advanced-toggle-sub">For experienced users</span>
-        </span>
-        <img
-          class="advanced-toggle-chevron"
-          src="../icons/chevron.svg"
-          alt=""
-          width="16"
-          height="16"
-        />
+        Features
       </button>
+      <button
+        class="tab-btn"
+        id="tab-btn-advanced"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-advanced"
+        data-tab="advanced"
+      >
+        Advanced Settings
+      </button>
+      <button
+        class="tab-btn"
+        id="tab-btn-links"
+        role="tab"
+        aria-selected="false"
+        aria-controls="panel-links"
+        data-tab="links"
+      >
+        Quick Links
+      </button>
+    </nav>
 
-      <div class="advanced-panel" id="advanced-panel" hidden>
-        <div class="advanced-warning">
-          These control internal timing, caching, and request behavior. Defaults
-          work well for almost everyone - change with care.
+    <main class="tab-panels">
+      <!-- ── Features tab ─────────────────────────────────────── -->
+      <section
+        class="tab-panel active"
+        id="panel-features"
+        role="tabpanel"
+        aria-labelledby="tab-btn-features"
+      >
+        <div class="panel-scroll">
+          <p class="section-label">FEATURES</p>
+
+          <div class="features-grid">
+            <div class="feature-card" id="cw-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon cw-icon" style="background: transparent">
+                    <img
+                      src="../icons/continue-watching.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">Continue Watching</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle Continue Watching"
+                    onclick="event.stopPropagation()"
+                  >
+                    <input type="checkbox" id="toggle-cw" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc">Tracks playback progress</span>
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-stats" id="cw-stats" hidden>
+                <span class="stat-chip" id="cw-count">— items</span>
+                <button
+                  class="action-btn danger"
+                  id="cw-clear"
+                  title="Clear Continue Watching list"
+                >
+                  Clear List
+                </button>
+              </div>
+            </div>
+
+            <div class="feature-card" id="dub-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon dub-icon" style="background: transparent">
+                    <img
+                      src="../icons/dub-detector.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">DUB Detector</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle DUB Detector"
+                    onclick="event.stopPropagation()"
+                  >
+                    <input type="checkbox" id="toggle-dub" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc">Highlights dubbed episodes</span>
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-stats" id="dub-stats" hidden>
+                <span class="stat-chip" id="dub-cache-count">— cached</span>
+                <button
+                  class="action-btn"
+                  id="dub-clear-cache"
+                  title="Clear DUB detection cache"
+                >
+                  Clear Cache
+                </button>
+              </div>
+            </div>
+
+            <div class="feature-card" id="ss-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon ss-icon" style="background: transparent">
+                    <img
+                      src="../icons/smart-search.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">Smart Search</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle Smart Search"
+                    onclick="event.stopPropagation()"
+                  >
+                    <input type="checkbox" id="toggle-ss" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc">Finds alternative titles</span>
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-stats" id="ss-stats" hidden>
+                <span class="stat-chip" id="ss-cache-count">— cached</span>
+                <button
+                  class="action-btn"
+                  id="ss-clear-cache"
+                  title="Clear Smart Search cache"
+                >
+                  Clear Cache
+                </button>
+              </div>
+            </div>
+
+            <div class="feature-card" id="is-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon is-icon" style="background: transparent">
+                    <img
+                      src="../icons/intro-skip.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">Intro / Outro Skip</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle Intro/Outro Skip"
+                    onclick="event.stopPropagation()"
+                  >
+                    <input type="checkbox" id="toggle-is" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc">Skips openings &amp; endings</span>
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-stats" id="is-stats" hidden>
+                <span class="stat-chip" id="is-status-chip">— unknown</span>
+                <button
+                  class="action-btn danger"
+                  id="is-clear-cache"
+                  title="Clear cached ID lookups + timestamp database"
+                >
+                  Clear Cache
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="notice" id="reload-notice" hidden>
+            <img src="../icons/notice.svg" alt="" width="16" height="16" />
+            Reload the page for changes to take effect.
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Advanced Settings tab ────────────────────────────── -->
+      <section
+        class="tab-panel"
+        id="panel-advanced"
+        role="tabpanel"
+        aria-labelledby="tab-btn-advanced"
+        hidden
+      >
+        <div class="panel-scroll">
+          <div class="advanced-warning">
+            These control internal timing, caching, and request behavior.
+            Defaults work well for almost everyone - change with care. Edits
+            below aren't saved until you press Apply Changes.
+          </div>
+
+          <div id="advanced-groups"></div>
+
+          <button class="advanced-reset-all" id="advanced-reset-all">
+            Reset All Advanced Settings
+          </button>
         </div>
 
-        <div id="advanced-groups"></div>
+        <div class="panel-footer">
+          <span class="apply-status" id="apply-status"></span>
+          <button class="apply-btn" id="advanced-apply" disabled>
+            Apply Changes
+          </button>
+        </div>
+      </section>
 
-        <button class="advanced-reset-all" id="advanced-reset-all">
-          Reset All Advanced Settings
-        </button>
-      </div>
+      <!-- ── Quick Links tab ───────────────────────────────────── -->
+      <section
+        class="tab-panel"
+        id="panel-links"
+        role="tabpanel"
+        aria-labelledby="tab-btn-links"
+        hidden
+      >
+        <div class="panel-scroll">
+          <p class="section-label">RESOURCES</p>
+
+          <a
+            class="link-row"
+            href="https://github.com/abdullahkhfb/animepahe-enhancer"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="link-icon">
+              <img src="../icons/github.svg" alt="" width="18" height="18" />
+            </span>
+            <span class="link-text">
+              <span class="link-name">GitHub Repository</span>
+              <span class="link-desc">Source code &amp; releases</span>
+            </span>
+            <span class="link-arrow">↗</span>
+          </a>
+
+          <a
+            class="link-row"
+            href="https://github.com/abdullahkhfb/animepahe-enhancer/issues"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="link-icon">
+              <img src="../icons/notice.svg" alt="" width="18" height="18" />
+            </span>
+            <span class="link-text">
+              <span class="link-name">Report an Issue</span>
+              <span class="link-desc">Bugs &amp; feature requests</span>
+            </span>
+            <span class="link-arrow">↗</span>
+          </a>
+
+          <a
+            class="link-row"
+            href="https://animepahe.pw"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="link-icon">
+              <img src="../icons/animepahe.svg" alt="" width="18" height="18" />
+            </span>
+            <span class="link-text">
+              <span class="link-name">animepahe</span>
+              <span class="link-desc">Open the site</span>
+            </span>
+            <span class="link-arrow">↗</span>
+          </a>
+
+          <p class="section-label section-label-spaced">RECOMMENDED</p>
+
+          <a
+            class="link-row"
+            href="https://malsync.moe"
+            target="_blank"
+            rel="noopener"
+          >
+            <span class="link-icon">
+              <img src="../icons/malsync.svg" alt="" width="18" height="18" />
+            </span>
+            <span class="link-text">
+              <span class="link-name">MalSync</span>
+              <span class="link-desc"
+                >Syncs your progress to MAL/AniList/Kitsu</span
+              >
+            </span>
+            <span class="link-arrow">↗</span>
+          </a>
+        </div>
+      </section>
     </main>
-
-    <footer class="footer">
-      <a
-        class="footer-link"
-        href="https://github.com/abdullahkhfb/animepahe-enhancer"
-        target="_blank"
-        rel="noopener"
-      >
-        <img src="../icons/github.svg" alt="" width="24" height="24" />
-        GitHub
-      </a>
-      <a
-        class="footer-link"
-        href="https://animepahe.pw"
-        target="_blank"
-        rel="noopener"
-      >
-        <img src="../icons/animepahe.svg" alt="" width="24" height="24" />
-        animepahe
-      </a>
-    </footer>
 
     <script type="module" src="popup.js"></script>
   </body>

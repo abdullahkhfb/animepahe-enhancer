@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.2.0.0",
+  "version": "0.2.0.1",
   "description": "Video progress tracking, DUB detection, Smart Search via AniList, and Intro/Outro Skipping for animepahe.",
   "browser_specific_settings": {
     "gecko": {
@@ -29,8 +29,7 @@
     "*://*.kwik.cx/*",
     "https://graphql.anilist.co/*",
     "https://relations.yuna.moe/*",
-    "https://raw.githubusercontent.com/Ellivers/open-anime-timestamps/*",
-    "https://api.anime-skip.com/*"
+    "https://raw.githubusercontent.com/Ellivers/open-anime-timestamps/*"
   ],
   "content_scripts": [
     {

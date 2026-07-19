@@ -224,10 +224,6 @@ export async function getAniDbIdForAnime(animeSession, animeTitle, ttlMs) {
 /**
  * Returns ALL the IDs we can resolve for a given animepahe animeSession +
  * animeTitle: AniDB, AniList, and MAL. Cached per animeSession with TTL.
- *
- * The AniList ID is reused by the AnimeSkip fallback (which uses AniList
- * IDs to look up anime), so we want it cached alongside the AniDB ID to
- * avoid re-querying AniList when the OAT dataset misses and we fall back.
  */
 export async function resolveIdsForAnime(animeSession, animeTitle, ttlMs) {
   const cacheKey = `${ID_CACHE_PREFIX}${ID_CACHE_VERSION}_${animeSession}`;
@@ -358,11 +354,8 @@ async function readMeta() {
 }
 
 /**
- * Look up intro/outro timestamps for a specific episode.
- *
- * First checks the local open-anime-timestamps dataset. If that misses
- * (the anime isn't in the dataset, or this episode isn't), falls back
- * to the AnimeSkip API (https://animeskip.org) — see helpers/animeskip.js.
+ * Look up intro/outro timestamps for a specific episode from the local
+ * open-anime-timestamps dataset.
  *
  * The dataset uses -1 to mean "unknown" and -2 to mean "explicitly none".
  * For start-only entries we extend with a default duration so users still
@@ -372,22 +365,18 @@ async function readMeta() {
  * @param {string|number} episodeNumber
  * @param {object} settings
  * @param {(msg: string) => void} [onProgress]
- * @param {{ anilistId?: number|null, idMal?: number|null }} [extraIds]
- * @returns {Promise<{ intro: {start:number,end:number}|null, outro: {start:number,end:number}|null, recap: {start:number,end:number}|null, previewStart: number|null, source: 'oat'|'animeskip'|null }>}
+ * @returns {Promise<{ intro: {start:number,end:number}|null, outro: {start:number,end:number}|null, recap: {start:number,end:number}|null, previewStart: number|null, source: 'oat'|null }>}
  */
 export async function getTimestampsForEpisode(
   anidbId,
   episodeNumber,
   settings,
   onProgress,
-  extraIds = {},
 ) {
   const refreshHours = settings?.introSkipDbRefreshHours ?? 168;
   const defaultOp = settings?.introSkipDefaultOpDuration ?? 90;
   const defaultEd = settings?.introSkipDefaultEdDuration ?? 90;
-  const useApiFallback = settings?.introSkipUseApiFallback !== false;
 
-  // ── 1. Try the local OAT dataset first. ──────────────────────────────
   if (anidbId != null) {
     let db = null;
     try {
@@ -410,40 +399,8 @@ export async function getTimestampsForEpisode(
           source: "oat",
         };
         if (result.intro || result.outro) return result;
-        // Episode found but no intro/outro — fall through to API fallback
-        // only if the user hasn't disabled it.
       }
     }
-  }
-
-  // ── 2. Fall back to the AnimeSkip API. ───────────────────────────────
-  if (!useApiFallback) {
-    return {
-      intro: null,
-      outro: null,
-      recap: null,
-      previewStart: null,
-      source: null,
-    };
-  }
-
-  if (onProgress) onProgress("Checking AnimeSkip…");
-  try {
-    const { queryAnimeSkipTimestamps } = await import("./animeskip.js");
-    const apiResult = await queryAnimeSkipTimestamps(
-      {
-        anilistId: extraIds.anilistId ?? null,
-        malId: extraIds.idMal ?? null,
-        episodeNumber,
-      },
-      defaultOp,
-      defaultEd,
-    );
-    if (apiResult && (apiResult.intro || apiResult.outro)) {
-      return { ...apiResult, source: "animeskip" };
-    }
-  } catch (err) {
-    console.warn("[IntroSkip] AnimeSkip fallback failed:", err);
   }
 
   return {

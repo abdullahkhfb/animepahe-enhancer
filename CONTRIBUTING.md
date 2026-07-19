@@ -40,7 +40,7 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - **One concern per PR.** Keep pull requests focused. A PR that fixes a bug and adds an unrelated feature is harder to review and slows everything down.
 - **No build step required.** The extension is plain ES2020+ JavaScript with no bundler, no TypeScript, and no external npm dependencies. Keep it that way.
 - **Minimal permissions.** Any change that would require adding a new entry to `permissions` or `host_permissions` in `manifest.json` needs strong justification and will be scrutinised carefully.
-- **Local-first data.** No feature should transmit user data to an external server beyond what is already documented (AniList title lookups for Smart Search, AniList/relations.yuna.moe/open-anime-timestamps/AnimeSkip requests for Intro/Outro Skip). New network targets require explicit discussion.
+- **Local-first data.** No feature should transmit user data to an external server beyond what is already documented (AniList title lookups for Smart Search, AniList/relations.yuna.moe/open-anime-timestamps requests for Intro/Outro Skip). New network targets require explicit discussion.
 - **Be respectful.** This project adheres to its [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
@@ -103,19 +103,25 @@ animepahe-enhancer/
 │       ├── cache.js              # DUB cache read/write/garbage collection (configurable TTL)
 │       ├── throttler.js          # RequestThrottler — concurrency, jitter, retry, back-off
 │       │                         #   (tunable at runtime via updateOptions())
-│       ├── timestamps-db.js      # open-anime-timestamps dataset access (IndexedDB cache,
-│       │                         #   AniList → AniDB ID resolution, episode lookup,
-│       │                         #   AnimeSkip API fallback)
-│       └── animeskip.js          # AnimeSkip API client — GraphQL queries for
-│                                 #   community-submitted intro/outro timestamps
+│       └── timestamps-db.js      # open-anime-timestamps dataset access (IndexedDB cache,
+│                                 #   AniList → AniDB ID resolution, episode lookup)
 │
 ├── popup/
-│   ├── popup.html
-│   ├── popup.css
-│   └── popup.js                  # ES module — imports ADVANCED_SETTINGS_SCHEMA from
-│                                 #   storage.js to render the Advanced Settings panel;
-│                                 #   imports clearTimestampsCache / getTimestampsCacheInfo
-│                                 #   from timestamps-db.js for Intro Skip cache management
+│   ├── popup.html                # Three tabs: Features, Advanced Settings, Quick Links
+│   ├── popup.js                  # Slim entry point — wires up the tab bar, hands off
+│   │                             #   to each tab's own module in scripts/
+│   ├── scripts/
+│   │   ├── common.js             #   Shared: tab switching, collapsible sections,
+│   │   │                         #   button feedback
+│   │   ├── features.js           #   Features tab — imports ADVANCED_SETTINGS_SCHEMA
+│   │   ├── advanced.js           #   Advanced Settings tab from storage.js; imports
+│   │   │                         #   clearTimestampsCache / getTimestampsCacheInfo
+│   │   └── links.js              #   Quick Links tab       from timestamps-db.js
+│   └── styles/
+│       ├── common.css            #   Shared reset, header, tab bar, panel shell
+│       ├── features.css
+│       ├── advanced.css
+│       └── links.css
 │
 ├── icons/
 │   ├── icon16.{png,svg}
@@ -259,7 +265,7 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 | **Naming**           | `camelCase` for variables and functions; `PascalCase` for classes; `SCREAMING_SNAKE_CASE` for module-level constants  |
 | **Indentation**      | 2 spaces                                                                                                              |
 | **Strings**          | Double quotes for HTML attribute strings; single or template literals for JavaScript                                  |
-| **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied, animepahe-sourced, AniList-sourced, or AnimeSkip-sourced data |
+| **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied, animepahe-sourced, or AniList-sourced data |
 | **Error handling**   | Wrap feature initialisation in `try/catch` and log to `console.error` with the `[animepahe-enhancer]` prefix          |
 | **Comments**         | JSDoc for exported classes and public methods; inline comments for non-obvious logic                                  |
 | **Storage keys**     | All keys must use the established prefixes (`ape_`, `d2_`, `h2_`, `ape_ss_`, `ape_isid_`, `ape_askip_`) and be documented in `storage.js` or the relevant helper |
@@ -301,7 +307,7 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 
 - [ ] Tested manually in at least one browser (Firefox or Chrome/Edge)
 - [ ] No new `permissions` or `host_permissions` added without justification
-- [ ] No `innerHTML` used with untrusted/third-party data (animepahe DOM, AniList responses, AnimeSkip responses)
+- [ ] No `innerHTML` used with untrusted/third-party data (animepahe DOM, AniList responses)
 - [ ] `DEFAULT_SETTINGS` updated if a new toggle was added
 - [ ] `ADVANCED_SETTINGS_SCHEMA` updated (with a matching `default`) if a new tunable was added, instead of hand-rolling popup UI
 - [ ] `manifest.json` `version` field **not** bumped (maintainer handles versioning)

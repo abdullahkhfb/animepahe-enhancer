@@ -166,14 +166,8 @@ export class IntroSkip {
     }
 
     const anidbId = ids?.anidbId ?? null;
-    const extraIds = {
-      anilistId: ids?.anilistId ?? null,
-      idMal: ids?.idMal ?? null,
-    };
 
-    // If we have no AniList/MAL ID at all, the AnimeSkip fallback can't
-    // help either — bail out early with a "not found" message.
-    if (!anidbId && !extraIds.anilistId && !extraIds.idMal) {
+    if (!anidbId) {
       this._showPill("⏭ Intro/Outro: not found in database", 4000);
       this._clearRanges();
       return;
@@ -188,7 +182,6 @@ export class IntroSkip {
         meta.epNumber,
         this._settings,
         (msg) => this._showPill(`⏭ ${msg}`),
-        extraIds,
       );
     } catch (err) {
       console.error("[IntroSkip] Failed to load timestamps:", err);
@@ -206,10 +199,8 @@ export class IntroSkip {
       return;
     }
 
-    const sourceLabel =
-      timestamps.source === "animeskip" ? "AnimeSkip" : "database";
     this._showPill(
-      `⏭ Intro/Outro (${sourceLabel}): ${hasIntro ? "OP ✓" : "OP —"} · ${
+      `⏭ Intro/Outro (database): ${hasIntro ? "OP ✓" : "OP —"} · ${
         hasOutro ? "ED ✓" : "ED —"
       }`,
       3500,

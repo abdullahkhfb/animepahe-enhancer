@@ -1,0 +1,219 @@
+/* ── Advanced Settings warning ───────────────────────────── */
+.advanced-warning {
+  font-size: 11px;
+  line-height: 1.45;
+  color: #e8b24a;
+  background: rgba(232, 178, 74, 0.08);
+  border: 1px solid rgba(232, 178, 74, 0.2);
+  border-radius: 6px;
+  padding: 7px 9px;
+}
+
+/* ── Advanced groups (collapsible accordion) ─────────────── */
+#advanced-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.advanced-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.advanced-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  transition: background 0.15s;
+}
+.advanced-group-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.advanced-group-title {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 700;
+  color: #e4e4f0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.advanced-group-count {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+.advanced-group-chevron {
+  width: 12px;
+  height: 12px;
+}
+
+.advanced-group-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.advanced-row {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: border-color 0.15s;
+}
+.advanced-row.dirty {
+  border-color: var(--accent);
+}
+
+.advanced-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.advanced-row-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #e4e4f0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dirty-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  display: none;
+}
+.advanced-row.dirty .dirty-dot {
+  display: block;
+}
+
+.advanced-reset-btn {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.advanced-reset-btn svg {
+  width: 12px;
+  height: 12px;
+}
+.advanced-reset-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.advanced-row-desc {
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.advanced-row-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.advanced-row-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.advanced-reset-all {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: #d0a0a0;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s;
+}
+.advanced-reset-all:hover {
+  background: var(--danger);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* ── Apply Changes footer ─────────────────────────────────── */
+.apply-status {
+  flex: 1;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+.apply-status.pending {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.apply-btn {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  transition:
+    background 0.18s,
+    transform 0.1s,
+    opacity 0.18s;
+}
+.apply-btn:hover:not(:disabled) {
+  background: #f57f14;
+}
+.apply-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.apply-btn:disabled {
+  background: var(--surface2);
+  color: var(--muted);
+  cursor: default;
+}
+.apply-btn.saved {
+  background: var(--on);
+}

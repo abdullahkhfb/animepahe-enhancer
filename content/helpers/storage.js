@@ -188,15 +188,6 @@ export const ADVANCED_SETTINGS_SCHEMA = [
         default: 0,
       },
       {
-        key: "introSkipUseApiFallback",
-        label: "Use online API fallback",
-        desc: "If the anime isn't in the local timestamps database, query the AnimeSkip API (https://animeskip.org) for community-submitted intro/outro times. Adds one network request per episode on cache miss.",
-        min: 0,
-        max: 1,
-        step: 1,
-        default: 1,
-      },
-      {
         key: "introSkipShowHighlights",
         label: "Highlight intro/outro on progress bar",
         desc: "Draws colored segments on the player's scrubber: blue = intro, orange = outro, purple = recap. Turn off if it clashes with the player UI.",
