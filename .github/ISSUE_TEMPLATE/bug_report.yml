@@ -1,0 +1,119 @@
+name: 🐛 Bug report
+description: Report something that isn't working correctly
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! The more detail you include, the faster this can get fixed — see [CONTRIBUTING.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/CONTRIBUTING.md#issue-guidelines) for what makes a good bug report.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I searched existing issues and this hasn't already been reported
+          required: true
+        - label: I'm running the latest version of the extension
+          required: true
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+      description: Visible in the popup's header, or in `manifest.json`
+      placeholder: e.g. 0.2.0.1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Firefox
+        - Chrome
+        - Edge
+        - Other Chromium-based browser
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser version
+      placeholder: e.g. 128.0
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: e.g. Windows 11, macOS 15, Ubuntu 24.04
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: animepahe URL or page type
+      description: The specific page this happens on — a `/play/...` episode page, an `/anime/...` episode list, the home page, etc.
+      placeholder: https://animepahe.pw/play/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps, as exact as you can make them
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you think would happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors
+      description: Open DevTools → Console on the affected page and paste anything relevant. This is often the single most useful thing you can include.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag and drop images here if they help explain the problem
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else?
+      description: Extensions you have installed alongside this one, anything unusual about your setup, etc.
+    validations:
+      required: false

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/abdullahkhfb/animepahe-enhancer/security/advisories/new
+    about: Please don't open a public issue for security vulnerabilities. Use this private advisory, or email rynvexa@proton.me — see SECURITY.md for details.
