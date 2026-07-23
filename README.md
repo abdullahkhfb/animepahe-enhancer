@@ -57,18 +57,32 @@ Each feature can be turned on or off separately from the extension's popup, and 
 
 <p align="center">
   <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
-    <img alt="Get animepahe Enhancer for Firefox" src="https://img.shields.io/badge/🦊 Get it on Firefox Add--ons-FF7139?style=for-the-badge&logo=firefox-browser&logoColor=white" />
+    <img alt="Get animepahe Enhancer for Firefox" src="https://img.shields.io/badge/Firefox-Get_it_now-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" />
   </a>
   <br />
   <sub>Free · takes about 10 seconds · no account needed</sub>
 </p>
 
-| Browser                                                                                                                                                      | Where to get it                                                                                    | Notes                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" width="16" height="16" valign="middle"> **Firefox**                  | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)              | Ready to install right now                                                                                           |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" width="16" height="16" valign="middle"> **Chrome** | Chrome Web Store                                                                                   | **Release date: TBA** — not published yet                                                                            |
-| <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" width="16" height="16" valign="middle"> **Edge**           | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | ⚠️ Store listing currently isn't working — see [docs/EDGE.md](docs/EDGE.md) for a manual install that takes a minute |
-| Any other Chromium browser                                                                                                                                   | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally)                        |
+<!-- Widget source: docs/widgets/chrome.md — edit there, then copy the block below -->
+
+<p align="center">
+  <img alt="Chrome Web Store — release date TBA" src="https://img.shields.io/badge/Chrome_Web_Store-Release_date%3A_TBA-6e6e6e?style=for-the-badge&logo=chromewebstore&logoColor=white" />
+</p>
+
+<!-- Widget source: docs/widgets/edge.md — edit there, then copy the block below -->
+
+<p align="center">
+  <a href="docs/EDGE.md">
+    <img alt="Microsoft Edge — see current status" src="https://img.shields.io/badge/Edge_Add--ons-See_current_status-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" />
+  </a>
+</p>
+
+| Browser                      | Where to get it                                                                            | Notes                                        |
+| ------------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| **Firefox**                  | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)         | Ready to install right now                    |
+| **Chrome**                   | Chrome Web Store                                                                             | **Release date: TBA** — not published yet     |
+| **Edge**                     | [docs/EDGE.md](docs/EDGE.md) — manual install recommended over the store for now | ⚠️ Store listing is stuck on v0.0.2, missing most current features |
+| Any other Chromium browser   | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally) |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -86,14 +100,16 @@ If you like tinkering, the popup has an **Advanced Settings** tab where you can 
 
 This README keeps things short on purpose. For anything more in-depth:
 
-| Guide                                        | What's in it                                                                     |
-| -------------------------------------------- | -------------------------------------------------------------------------------- |
-| [docs/FEATURES.md](docs/FEATURES.md)         | The full technical detail behind every feature                                   |
-| [docs/USAGE.md](docs/USAGE.md)               | Step-by-step instructions for using each feature and the popup                   |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How the code is organized, and how to add a new feature or setting               |
-| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)   | Exactly what the extension can access, and why                                   |
-| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)   | Running the extension locally and how releases are published                     |
-| [docs/EDGE.md](docs/EDGE.md)                 | The current situation with the Microsoft Edge listing, and how to install anyway |
+| Guide                                          | What's in it                                                                 |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical detail behind every feature                                    |
+| [docs/USAGE.md](docs/USAGE.md)                 | Step-by-step instructions for using each feature and the popup                     |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   | How the code is organized, and how to add a new feature or setting                |
+| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)     | Exactly what the extension can access, and why                                     |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)     | Running the extension locally and how releases are published                       |
+| [docs/EDGE.md](docs/EDGE.md)                   | The current situation with the Microsoft Edge listing, and how to install anyway   |
+| [RELEASE.md](RELEASE.md)                       | Release notes, mirrored from GitHub Releases                                       |
+| [docs/STORE_LISTING.md](docs/STORE_LISTING.md) | The description text used on the extension store listings                          |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
