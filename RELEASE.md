@@ -24,15 +24,19 @@ When you publish a new GitHub Release, paste the same notes here under a new hea
 One or two sentences on what this release is mainly about, in plain language.
 
 ### Added
+
 - New user-facing capability, described the way a user would notice it
 
 ### Changed
+
 - Existing behavior that's different now, and why
 
 ### Fixed
+
 - Bug that's no longer happening
 
 ### Removed
+
 - Something taken out, and what (if anything) replaced it
 
 [Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/vPREV...vNEW)
@@ -65,6 +69,7 @@ _Nothing staged yet._
 This release is mostly about the popup — it's now organized into tabs instead of one long page — plus a fix for a Smart Search caching bug and the removal of the AnimeSkip fallback.
 
 ### Added
+
 - **Quick Links tab** in the popup, with shortcuts to the GitHub repo, the issue tracker, the animepahe site, and a recommended companion tool ([MalSync](https://malsync.moe)) for syncing progress to MyAnimeList/AniList/Kitsu
 - **`docs/` folder** with in-depth guides (Features, Usage, Architecture, Permissions, Development) split out of the README
 - **`docs/EDGE.md`** explaining the current state of the Edge Add-ons listing, with a manual-install workaround
@@ -73,6 +78,7 @@ This release is mostly about the popup — it's now organized into tabs instead 
 - **`docs/STORE_LISTING.md`** — a ready-to-paste store listing description, with privacy called out as its own section rather than a trailing link
 
 ### Changed
+
 - Popup rebuilt around **three tabs** — Features, Advanced Settings, Quick Links — instead of one long scrolling page
 - Feature cards and Advanced Settings groups now **collapse by default** and expand on click, so the popup stays short
 - Advanced Settings edits are now **staged and applied together** via an "Apply Changes" button, instead of saving instantly per field
@@ -81,15 +87,15 @@ This release is mostly about the popup — it's now organized into tabs instead 
 - CI release pipeline now strips **every** Markdown file (not a hardcoded list) from the store package, so new docs never accidentally ship
 
 ### Fixed
+
 - Smart Search's cache counter and "Clear Cache" button in the popup were checking the wrong storage key prefix and never actually found the cached entries — fixed so the popup accurately reflects what's cached
 - README "Details →" links would occasionally break across two lines, stranding the arrow on its own — fixed with a non-breaking space
 
 ### Removed
+
 - **AnimeSkip API fallback** for Intro/Outro Skip — timestamps now come from the local open-anime-timestamps database only; an episode missing from that database simply isn't skippable, with no online fallback
 - Redundant "Refresh DB" button in the popup (it did exactly what "Clear Cache" already does)
 
 [Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.2.0.0...v0.2.0.1)
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
