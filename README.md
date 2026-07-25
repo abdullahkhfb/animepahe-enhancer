@@ -80,8 +80,8 @@ Each feature can be turned on or off separately from the extension's popup, and 
 | Browser                      | Where to get it                                                                            | Notes                                        |
 | ------------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------- |
 | **Firefox**                  | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)         | Ready to install right now                    |
-| **Chrome**                   | Chrome Web Store                                                                             | **Release date: TBA** — not published yet     |
-| **Edge**                     | [docs/EDGE.md](docs/EDGE.md) — manual install recommended over the store for now | ⚠️ Store listing is stuck on v0.0.2, missing most current features |
+| **Chrome**                   | Chrome Web Store                                                                             | **Release date: TBA** — not submitted yet; may face the same content-policy issue as Edge (see [docs/EDGE.md](docs/EDGE.md)) |
+| **Edge**                     | [docs/EDGE.md](docs/EDGE.md) — manual install recommended over the store | ⚠️ Store listing is stuck on v0.0.2; Microsoft has said the update can't be approved |
 | Any other Chromium browser   | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally) |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

@@ -4,9 +4,7 @@
 
 ## Short version
 
-**The Edge Add-ons listing is live, but it's stuck on version 0.0.2 — a very early build that predates most of what the extension does today.** If you install from the Edge store right now, don't expect Smart Search, Intro/Outro Skip, or the current popup to be there; you may hit bugs that have long since been fixed too. This isn't a small version gap, so **we'd recommend the manual install below over the store listing** until the update clears review.
-
-A newer update was submitted and got blocked by Microsoft's certification review (see below) — that's what's keeping 0.0.2 stuck as the public listing.
+**The Edge Add-ons listing is live, but it's stuck on version 0.0.2 — a very early build that predates most of what the extension does today.** If you install from the Edge store right now, don't expect Smart Search, Intro/Outro Skip, or the current popup to be there; you may hit bugs that have long since been fixed too. **Microsoft has since told us the update can't be approved at all**, for reasons unrelated to version — see below. **We'd recommend the manual install further down over the store listing**, and we don't currently expect that to change.
 
 <p align="center">
   <img src="../screenshots/edge_live_sc.png" alt="Screenshot showing the animepahe Enhancer listing is Live on the Edge Add-ons store at version 0.0.2" width="600" />
@@ -24,24 +22,34 @@ The version currently live (0.0.2) passed review fine. The problem is with the *
   <sub>The certification report for the blocked update.</sub>
 </p>
 
-| Field | Value |
-| --- | --- |
-| Status | ⚠️ Attention needed |
-| Policy cited | 2.7 Adult Content |
-| Reviewer's note | "The extension contains content that is pornographic or sexually explicit." |
-| Review completed | 2026-07-21 |
+| Field            | Value                                                                       |
+| ---------------- | --------------------------------------------------------------------------- |
+| Status           | ⚠️ Attention needed                                                         |
+| Policy cited     | 2.7 Adult Content                                                           |
+| Reviewer's note  | "The extension contains content that is pornographic or sexually explicit." |
+| Review completed | 2026-07-21                                                                  |
 
-The extension's own code doesn't include, generate, or display any adult content — it only adds UI features (progress tracking, dub badges, search, skip buttons) on top of whatever animepahe.pw itself shows a visitor. The most likely explanation is that animepahe's catalog includes a number of titles carrying an 18+/ecchi rating, and Microsoft's review is attributing that to the extension because it operates on that site — not because the extension adds, hosts, or promotes any of that content itself.
+The extension's own code doesn't include, generate, or display any adult content — it only adds UI features (progress tracking, dub badges, search, skip buttons) on top of whatever animepahe.pw itself shows a visitor. We asked Microsoft to clarify whether the flag was about a specific submitted asset or about the source site in general. On 2026-07-24, they gave a direct answer:
 
-**Status of the appeal:** we've reached out to Microsoft for clarification, referencing the Product ID and Store ID for this listing, and received an acknowledgement asking for those identifiers (which have since been provided). No resolution yet. This page will be updated as soon as there's something new to report.
+> "The extension works on/is designed for a website that contains content that is pornographic or sexually explicit. Product submitted to the store cannot be of sexually explicit or pornographic content nature or purpose."
+> — Microsoft Store Certification Team
 
-If you've navigated a similar Edge Add-ons rejection successfully, [open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) — we'd genuinely like to hear how.
+**This is a final determination, not a request for more info.** Microsoft isn't objecting to a specific screenshot or description anymore — they're saying no version of this extension can be approved, because of what site it operates on rather than anything the extension itself adds or contains. That's a different, harder blocker than the original review note suggested.
 
-If you were sent here from the main README or the popup's Quick Links tab, that's expected: we wanted to explain the version gap rather than leave people wondering why Edge is behind.
+**What this means practically:**
+
+- We don't expect the pending update to get approved, and don't plan to keep resubmitting it as-is.
+- The **currently live v0.0.2 listing could, in principle, be pulled** if Microsoft re-reviews it under the same reasoning — we have no indication that's imminent, but it's not something we can rule out or prevent.
+- The same reasoning would very plausibly apply to a **future Chrome Web Store submission** too, since Google's content policies raise similar concerns about extensions built around adult-content-adjacent sites. We haven't submitted to Chrome yet and don't have a Google-specific answer, but we're not assuming this is an Edge-only problem.
+- **Firefox (AMO) has already reviewed and approved the extension** without raising this, so for now Firefox remains the most reliable store option.
+
+If you've gotten a browser extension approved for a similar general-purpose-tool-on-an-adult-adjacent-site situation, [open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) — we'd like to know what worked.
+
+If you were sent here from the main README or the popup's Quick Links tab, that's expected: we wanted to explain the version gap and the reasoning behind it, rather than leave people wondering why Edge is behind.
 
 ## Installing manually instead
 
-Given the gap between what's live and what's actually in the extension now, this is the recommended way to get it on Edge until the update clears review. It gets you the exact current version — just loaded locally instead of through Edge's store pipeline.
+Given both the version gap and Microsoft's determination above, this is the recommended way to get the extension on Edge for the foreseeable future — not just a stopgap while an update clears review. It gets you the exact current version, just loaded locally instead of through Edge's store pipeline.
 
 1. Download the latest `Animepahe-Enhancer.zip` from the [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) page.
 2. Unzip it somewhere you won't accidentally delete it (Edge needs to keep reading from that folder).
