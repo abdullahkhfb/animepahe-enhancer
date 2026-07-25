@@ -77,12 +77,12 @@ Each feature can be turned on or off separately from the extension's popup, and 
   </a>
 </p>
 
-| Browser                      | Where to get it                                                                            | Notes                                        |
-| ------------------------------ | ---------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| **Firefox**                  | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)         | Ready to install right now                    |
-| **Chrome**                   | Chrome Web Store                                                                             | **Release date: TBA** — not submitted yet; may face the same content-policy issue as Edge (see [docs/EDGE.md](docs/EDGE.md)) |
-| **Edge**                     | [docs/EDGE.md](docs/EDGE.md) — manual install recommended over the store | ⚠️ Store listing is stuck on v0.0.2; Microsoft has said the update can't be approved |
-| Any other Chromium browser   | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally) |
+| Browser                    | Where to get it                                                                       | Notes                                                                                                                        |
+| -------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/) | Ready to install right now                                                                                                   |
+| **Chrome**                 | Chrome Web Store                                                                      | **Release date: TBA** — not submitted yet; may face the same content-policy issue as Edge (see [docs/EDGE.md](docs/EDGE.md)) |
+| **Edge**                   | [docs/EDGE.md](docs/EDGE.md) — manual install only, for now                           | ⚠️ No live store listing currently — see docs/EDGE.md for why                                                                |
+| Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)        | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally)                                |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -100,16 +100,16 @@ If you like tinkering, the popup has an **Advanced Settings** tab where you can 
 
 This README keeps things short on purpose. For anything more in-depth:
 
-| Guide                                          | What's in it                                                                 |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical detail behind every feature                                    |
-| [docs/USAGE.md](docs/USAGE.md)                 | Step-by-step instructions for using each feature and the popup                     |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   | How the code is organized, and how to add a new feature or setting                |
-| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)     | Exactly what the extension can access, and why                                     |
-| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)     | Running the extension locally and how releases are published                       |
-| [docs/EDGE.md](docs/EDGE.md)                   | The current situation with the Microsoft Edge listing, and how to install anyway   |
-| [RELEASE.md](RELEASE.md)                       | Release notes, mirrored from GitHub Releases                                       |
-| [docs/STORE_LISTING.md](docs/STORE_LISTING.md) | The description text used on the extension store listings                          |
+| Guide                                          | What's in it                                                                     |
+| ---------------------------------------------- | -------------------------------------------------------------------------------- |
+| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical detail behind every feature                                   |
+| [docs/USAGE.md](docs/USAGE.md)                 | Step-by-step instructions for using each feature and the popup                   |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   | How the code is organized, and how to add a new feature or setting               |
+| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)     | Exactly what the extension can access, and why                                   |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)     | Running the extension locally and how releases are published                     |
+| [docs/EDGE.md](docs/EDGE.md)                   | The current situation with the Microsoft Edge listing, and how to install anyway |
+| [RELEASE.md](RELEASE.md)                       | Release notes, mirrored from GitHub Releases                                     |
+| [docs/STORE_LISTING.md](docs/STORE_LISTING.md) | The description text used on the extension store listings                        |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

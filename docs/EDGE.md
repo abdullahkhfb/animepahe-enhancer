@@ -4,17 +4,17 @@
 
 ## Short version
 
-**The Edge Add-ons listing is live, but it's stuck on version 0.0.2 — a very early build that predates most of what the extension does today.** If you install from the Edge store right now, don't expect Smart Search, Intro/Outro Skip, or the current popup to be there; you may hit bugs that have long since been fixed too. **Microsoft has since told us the update can't be approved at all**, for reasons unrelated to version — see below. **We'd recommend the manual install further down over the store listing**, and we don't currently expect that to change.
+**There is currently no live Edge Add-ons listing at all.** The store page that used to serve v0.0.2 was unpublished, and the pending update remains unapproved (see below), so right now there's no way to install this extension from the Edge store in any form. **Use the manual install further down** — it's the only way to get it on Edge at the moment. This isn't expected to be a quick fix.
 
 <p align="center">
-  <img src="../screenshots/edge_live_sc.png" alt="Screenshot showing the animepahe Enhancer listing is Live on the Edge Add-ons store at version 0.0.2" width="600" />
+  <img src="../screenshots/edge_live_sc.png" alt="Screenshot showing the animepahe Enhancer listing was live on the Edge Add-ons store at version 0.0.2 (since unpublished)" width="600" />
   <br />
-  <sub>The listing itself: live, but stuck on version 0.0.2.</sub>
+  <sub>The listing as it looked when v0.0.2 was still live — since unpublished.</sub>
 </p>
 
 ## What's going on
 
-The version currently live (0.0.2) passed review fine. The problem is with the **update** submitted after it — Microsoft's certification review returned **"Attention needed"** and flagged that submission under one policy:
+The version that used to be live (0.0.2) had passed review fine. The problem was with the **update** submitted after it — Microsoft's certification review returned **"Attention needed"** and flagged that submission under one policy:
 
 <p align="center">
   <img src="../screenshots/edge_certification_sc.png" alt="Screenshot of the certification report showing the Adult Content policy flag" width="600" />
@@ -38,10 +38,11 @@ The extension's own code doesn't include, generate, or display any adult content
 
 **What this means practically:**
 
-- We don't expect the pending update to get approved, and don't plan to keep resubmitting it as-is.
-- The **currently live v0.0.2 listing could, in principle, be pulled** if Microsoft re-reviews it under the same reasoning — we have no indication that's imminent, but it's not something we can rule out or prevent.
+- The listing that used to serve v0.0.2 has since been unpublished, so there's currently **no live Edge listing in any version** — not even the old one.
+- We don't expect the pending update to get approved as-is, and don't plan to keep resubmitting it unchanged.
+- We're checking whether the original, already-approved v0.0.2 package can be republished — since Microsoft's blanket statement doesn't obviously square with the fact that version passed review in the first place. If that goes through, it'd at least restore a working (if outdated) store listing while the bigger question gets sorted out.
 - The same reasoning would very plausibly apply to a **future Chrome Web Store submission** too, since Google's content policies raise similar concerns about extensions built around adult-content-adjacent sites. We haven't submitted to Chrome yet and don't have a Google-specific answer, but we're not assuming this is an Edge-only problem.
-- **Firefox (AMO) has already reviewed and approved the extension** without raising this, so for now Firefox remains the most reliable store option.
+- **Firefox (AMO) has already reviewed and approved the extension** without raising this, so Firefox remains the most reliable store option by a wide margin right now.
 
 If you've gotten a browser extension approved for a similar general-purpose-tool-on-an-adult-adjacent-site situation, [open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) — we'd like to know what worked.
 
@@ -49,7 +50,7 @@ If you were sent here from the main README or the popup's Quick Links tab, that'
 
 ## Installing manually instead
 
-Given both the version gap and Microsoft's determination above, this is the recommended way to get the extension on Edge for the foreseeable future — not just a stopgap while an update clears review. It gets you the exact current version, just loaded locally instead of through Edge's store pipeline.
+This is currently the **only** way to get the extension on Edge — there's nothing live in the store to install from at all right now. It gets you the exact current version, just loaded locally instead of through Edge's store pipeline.
 
 1. Download the latest `Animepahe-Enhancer.zip` from the [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) page.
 2. Unzip it somewhere you won't accidentally delete it (Edge needs to keep reading from that folder).
@@ -57,7 +58,7 @@ Given both the version gap and Microsoft's determination above, this is the reco
 4. Turn on **Developer mode** (toggle, usually bottom-left or top-right of the page).
 5. Click **Load unpacked** and select the unzipped folder.
 
-The extension will now behave identically to a store install — it just needs to be reloaded manually if you move or delete the folder, and Edge may occasionally show a "Developer mode extensions" warning banner, which is expected and harmless. If you install this way, you may want to disable/remove the store version first to avoid running both at once.
+The extension will now behave identically to a store install — it just needs to be reloaded manually if you move or delete the folder, and Edge may occasionally show a "Developer mode extensions" warning banner, which is expected and harmless.
 
 ## Prefer a different browser?
 
