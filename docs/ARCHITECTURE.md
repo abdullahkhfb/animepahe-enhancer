@@ -68,8 +68,12 @@
 │   └── 📁 widgets/                # Reusable install-prompt snippets for README.md
 │
 └── 📁 .github/
+    ├── 📁 actions/
+    │   └── 📁 build-zip/             # Composite action: single source of truth
+    │       └── ⚙️  action.yml        #   for the store-zip exclusion list
     └── 📁 workflows/
-        └── ⚙️  deploy.yml         # CI/CD: Unified production deployment engine
+        ├── ⚙️  deploy-firefox.yml    # Auto-deploys to Firefox on release publish
+        └── ⚙️  deploy-edge.yml       # Manual-only deploy to Edge (workflow_dispatch)
 ```
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

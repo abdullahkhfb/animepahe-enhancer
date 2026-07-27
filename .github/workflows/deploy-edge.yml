@@ -1,0 +1,33 @@
+name: Deploy — Edge (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish to Edge"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  edge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the specified tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Build extension zip
+        id: zip
+        uses: ./.github/actions/build-zip
+
+      - name: Upload to Microsoft Edge Add-ons
+        uses: wdzeng/edge-addon@v2
+        with:
+          product-id: ${{ secrets.EDGE_PRODUCT_ID }}
+          client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          api-key: ${{ secrets.EDGE_CLIENT_SECRET }}
+          zip-path: ${{ steps.zip.outputs.zip-path }}

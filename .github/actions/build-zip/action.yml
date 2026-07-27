@@ -1,0 +1,21 @@
+name: Build extension zip
+description: >
+  Builds the store-ready extension zip. Single source of truth for what
+  gets excluded (docs, screenshots, dev-only files) — used by every
+  per-browser deploy workflow so the exclusion list never has to be kept
+  in sync across multiple files.
+
+outputs:
+  zip-path:
+    description: Path to the built zip, relative to the repo root
+    value: ${{ steps.build.outputs.zip-path }}
+
+runs:
+  using: composite
+  steps:
+    - id: build
+      shell: bash
+      run: |
+        zip -r Animepahe-Enhancer.zip . \
+          -x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*"
+        echo "zip-path=Animepahe-Enhancer.zip" >> "$GITHUB_OUTPUT"

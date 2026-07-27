@@ -1,0 +1,79 @@
+name: Release Notes
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify tag matches manifest.json version
+        id: version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          MANIFEST_VERSION=$(python3 -c "import json; print(json.load(open('manifest.json'))['version'])")
+
+          echo "Tag:      v$TAG_VERSION"
+          echo "Manifest: v$MANIFEST_VERSION"
+
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "::error::Tag v$TAG_VERSION doesn't match manifest.json's version ($MANIFEST_VERSION). Bump the version, commit, then tag."
+            exit 1
+          fi
+          echo "version=$TAG_VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Extract this version's section from RELEASE.md
+        run: |
+          python3 - "${{ steps.version.outputs.version }}" << 'PYEOF'
+          import re, sys
+
+          version = sys.argv[1]
+          with open("RELEASE.md", encoding="utf-8") as f:
+              lines = f.readlines()
+
+          # Match "## v0.2.0.1 ..." but not "## v0.2.0.10 ..."
+          heading_re = re.compile(r"^##\s+v" + re.escape(version) + r"(?:\s|$)")
+          start = next(
+              (i for i, l in enumerate(lines) if heading_re.match(l.strip())), None
+          )
+          if start is None:
+              print(
+                  f"::error::No '## v{version}' section found in RELEASE.md. "
+                  f"Add the release notes there before tagging.",
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+
+          end = next(
+              (i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")),
+              len(lines),
+          )
+
+          # Drop the heading (the release title already shows the version)
+          # and the "back to top" link line.
+          section = [l for l in lines[start + 1 : end] if "↑ Back to top" not in l]
+          while section and section[0].strip() == "":
+              section.pop(0)
+          while section and section[-1].strip() == "":
+              section.pop()
+
+          with open("release_notes.md", "w", encoding="utf-8") as f:
+              f.writelines(section)
+          PYEOF
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body_path: release_notes.md
+          # Publishing here (not draft) triggers deploy-firefox.yml
+          # automatically. It does NOT trigger Edge — that workflow is
+          # manual-only by design; see docs/DEVELOPMENT.md.

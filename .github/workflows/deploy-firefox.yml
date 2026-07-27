@@ -1,0 +1,33 @@
+name: Deploy — Firefox
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build extension zip
+        id: zip
+        uses: ./.github/actions/build-zip
+
+      - name: Upload to Firefox (AMO)
+        uses: browser-actions/release-firefox-addon@v0.2.1
+        with:
+          addon-id: "animepahe-enhancer@abdullahkhfb.github.io"
+          addon-path: ${{ steps.zip.outputs.zip-path }}
+          auth-api-issuer: ${{ secrets.AMO_JWT_ISSUER }}
+          auth-api-secret: ${{ secrets.AMO_JWT_SECRET }}
+          release-note: ${{ github.event.release.body }}
+
+      - name: Upload zip to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.zip.outputs.zip-path }}
