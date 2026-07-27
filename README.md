@@ -66,7 +66,7 @@ Each feature can be turned on or off separately from the extension's popup, and 
 <!-- Widget source: docs/widgets/chrome.md — edit there, then copy the block below -->
 
 <p align="center">
-  <img alt="Chrome Web Store — release date TBA" src="https://img.shields.io/badge/Chrome_Web_Store-Release_date%3A_TBA-6e6e6e?style=for-the-badge&logo=chromewebstore&logoColor=white" />
+  <img alt="Chrome Web Store — release date TBA" src="https://img.shields.io/badge/Chrome Web Store-Release date%3A TBA-lightgrey?style=for-the-badge&logo=googlechrome&logoColor=white" />
 </p>
 
 <!-- Widget source: docs/widgets/edge.md — edit there, then copy the block below -->
