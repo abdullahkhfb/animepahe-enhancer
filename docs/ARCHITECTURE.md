@@ -29,7 +29,9 @@
 │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
 │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
 │   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
-│   │   └── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   ├── 📄 auto-next.js          # Auto Next — follows animepahe's next episode link on video end
+│   │   └── 📄 auto-start.js         # Auto Start — clicks player load/play gates on episode open
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + DEFAULT_SETTINGS
@@ -68,12 +70,8 @@
 │   └── 📁 widgets/                # Reusable install-prompt snippets for README.md
 │
 └── 📁 .github/
-    ├── 📁 actions/
-    │   └── 📁 build-zip/             # Composite action: single source of truth
-    │       └── ⚙️  action.yml        #   for the store-zip exclusion list
     └── 📁 workflows/
-        ├── ⚙️  deploy-firefox.yml    # Auto-deploys to Firefox on release publish
-        └── ⚙️  deploy-edge.yml       # Manual-only deploy to Edge (workflow_dispatch)
+        └── ⚙️  deploy.yml         # CI/CD: Unified production deployment engine
 ```
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
@@ -95,10 +93,14 @@ flowchart TD
     CM -->|dubEnabled| DD["features/dub-detector.js"]
     CM -->|smartSearchEnabled| SS["features/smart-search.js"]
     CM -->|introSkipEnabled| IS["features/intro-skip.js"]
+    CM -->|autoNextEnabled| AN["features/auto-next.js"]
+    CM -->|autoStartEnabled| AS["features/auto-start.js"]
     CW --> CWI["new ContinueWatching(storage, settings)\n.init(pageType)"]
     DD --> DDI["new DubDetector(storage, settings)\n.init(pageType)"]
     SS --> SSI["new SmartSearch(storage, settings)\n.init(pageType)"]
     IS --> ISI["new IntroSkip(storage, settings)\n.init(pageType)"]
+    AN --> ANI["new AutoNext(storage, settings)\n.init(pageType)"]
+    AS --> ASI["new AutoStart(storage, settings)\n.init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules. Every feature constructor receives the same `settings` object (loaded once via `storage.getSettings()`), so reading a user-tuned value is just `settings.someKey ?? someDefault`.
@@ -132,6 +134,7 @@ sequenceDiagram
 | `AP_IS_SET_RANGES`   | parent → iframe | `{ ranges, autoSkip, pollMs, buttonAutoHideMs, showHighlights }` | Parent sends intro/outro skip ranges to iframe   |
 | `AP_IS_SEEK`         | parent → iframe | `{ time: number }`                                               | Parent instructs iframe to seek (reserved)       |
 | `AP_IS_READY`        | iframe → parent | —                                                                | Iframe signals it's ready to receive skip ranges |
+| `AP_AN_VIDEO_ENDED`  | iframe → parent | —                                                                | Iframe tells Auto Next that playback ended       |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -163,7 +166,7 @@ All settings and cache data are stored in `chrome.storage.local`. The large open
 
 | Key                     | Type                  | Description                                                                                                                                                                                                                                                                                                                                    |
 | ------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ape_settings`          | `object`              | `{ cwEnabled, dubEnabled, smartSearchEnabled, introSkipEnabled, ...23 advanced tunables }` — feature toggles plus every Advanced Settings value (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` in `helpers/storage.js`. |
+| `ape_settings`          | `object`              | `{ cwEnabled, dubEnabled, smartSearchEnabled, introSkipEnabled, autoNextEnabled, autoStartEnabled, ...23 advanced tunables }` — feature toggles plus every Advanced Settings value (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` in `helpers/storage.js`. |
 | `ape_cw_v1`             | `string` (JSON array) | Continue Watching list, up to 24 entries by default (configurable)                                                                                                                                                                                                                                                                             |
 | `d2_{epSession}`        | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"`                                                                                                                                                                                                                                                                      |
 | `h2_{animeSession}`     | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`                                                                                                                                                                                                                                                                        |
@@ -238,6 +241,8 @@ export const DEFAULT_SETTINGS = {
   dubEnabled: true,
   smartSearchEnabled: true,
   introSkipEnabled: true,
+  autoNextEnabled: false,
+  autoStartEnabled: false,
   myFeatureEnabled: true, // ← add here
 };
 ```

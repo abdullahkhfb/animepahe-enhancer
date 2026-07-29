@@ -10,6 +10,8 @@
 - [DUB Detector](#-dub-detector)
 - [Smart Search](#-smart-search)
 - [Intro / Outro Skip](#-intro--outro-skip)
+- [Auto Next](#auto-next)
+- [Auto Start](#auto-start)
 - [Advanced Settings](#-advanced-settings)
 
 ---
@@ -90,6 +92,32 @@ flowchart TD
     I -->|Yes| J["⏭ Send skip ranges to\nKwik iframe via postMessage"]
     I -->|No| G
 ```
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Auto Next
+
+Auto Next can move you into the next episode as soon as the current video ends.
+
+- Listens for the Kwik player's standard `ended` event through the existing `postMessage` bridge
+- Finds animepahe's `Play Next Episode` link on the player page and navigates to it
+- Refuses to navigate if the discovered next-episode URL is the same as the current URL, preventing accidental reload loops
+- Does not make any network requests of its own and does not store history or playback data
+- Is off by default and can be toggled from the popup's Features tab
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Auto Start
+
+Auto Start removes the two manual clicks normally needed when an episode opens.
+
+- On the animepahe player page, it looks for the site's load/play prompt and clicks it
+- Inside the Kwik iframe, it clicks the visible play overlay and calls the video element's `play()` method
+- Retries briefly while the player UI is still loading, then stops once playback starts
+- Does not navigate away from the current episode and skips next-episode links
+- Is off by default and can be toggled from the popup's Features tab
+
+Browsers can still block fully unmuted autoplay depending on site permissions, but the extension will perform the same load/play actions automatically whenever the browser allows them.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

@@ -10,6 +10,8 @@
 - [DUB Detector](#dub-detector)
 - [Smart Search](#smart-search)
 - [Intro / Outro Skip](#intro--outro-skip)
+- [Auto Next](#auto-next)
+- [Auto Start](#auto-start)
 - [Popup Settings Panel](#popup-settings-panel)
 
 ---
@@ -90,6 +92,32 @@ The Intro / Outro Skip feature activates automatically on the player page (`/pla
 - The open-anime-timestamps database (~27 MB) is downloaded from GitHub and cached in **IndexedDB** (too large for `chrome.storage.local`'s default quota). It's refreshed on a configurable schedule (7 days by default) using conditional GET with ETag headers to avoid re-downloading unchanged data.
 - AniList → AniDB ID mappings are cached per anime session in `chrome.storage.local` (configurable TTL, default 7 days).
 - You can see whether the database is currently cached, or clear all cached data, from the popup.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Auto Next
+
+Auto Next is disabled by default. To use it:
+
+1. Open the extension popup.
+2. Turn on **Auto Next** in the Features tab.
+3. Reload the animepahe player page.
+4. When the video ends, the extension follows animepahe's **Play Next Episode** link if one is available.
+
+If no next-episode link exists, or if the link points back to the current episode, the extension leaves the page in place.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Auto Start
+
+Auto Start is disabled by default. To use it:
+
+1. Open the extension popup.
+2. Turn on **Auto Start** in the Features tab.
+3. Reload the animepahe player page.
+4. The extension tries to click the page's load-player prompt, then the Kwik player's play overlay.
+
+For a fully hands-off chain between episodes, turn on both **Auto Next** and **Auto Start**.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

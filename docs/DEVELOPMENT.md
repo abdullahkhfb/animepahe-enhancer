@@ -46,25 +46,25 @@ The extension will be active until Firefox is restarted. To persist it across re
 
 ## Releasing a New Version
 
-Firefox and Edge deploy through **separate workflows** on purpose — Firefox publishes automatically, Edge requires a deliberate manual step. This split exists because publishing a release used to submit to both stores at once, which made it too easy to accidentally trigger an Edge submission (including while Edge's certification status is unresolved — see [docs/EDGE.md](EDGE.md)) just by tagging a routine release.
+The release pipeline is fully automated via GitHub Actions:
 
 1. Bump the `version` field in `manifest.json`.
-2. Add a `## v0.x.x.x — YYYY-MM-DD` section to [`RELEASE.md`](../RELEASE.md) describing what changed (see that file's own template).
-3. Commit, then create and publish a **GitHub Release** tagged to match (`v0.x.x.x`).
-4. **Firefox happens automatically** — [`deploy-firefox.yml`](../.github/workflows/deploy-firefox.yml) triggers on the release being published, builds the zip, submits to AMO using the release body as the release notes, and attaches the zip to the GitHub Release.
-5. **Edge does not happen automatically.** When you're ready to submit to Edge specifically, go to the Actions tab → **Deploy — Edge (manual)** → **Run workflow**, and enter the tag you want to publish (e.g. `v0.2.0.1`). This runs [`deploy-edge.yml`](../.github/workflows/deploy-edge.yml) against that exact tag.
+2. Create and publish a new **GitHub Release** (tag it `v0.x.x`).
+3. The [`deploy.yml`](../.github/workflows/deploy.yml) workflow triggers automatically:
+   - Packages the extension into `Animepahe-Enhancer.zip` and attaches it to the release (documentation files are stripped out first — see below).
+   - Pushes to the Firefox AMO queue and the Microsoft Edge Add-ons dashboard simultaneously.
 
-Both workflows build the zip the same way, via a shared composite action ([`build-zip`](../.github/actions/build-zip/action.yml)) — the exclusion list (every `.md` file, `docs/`, `screenshots/`) lives in exactly one place instead of being duplicated per workflow. If you add a new `.md` file anywhere in the repo, you don't need to touch either workflow — the `*.md` wildcard already covers it.
+Every Markdown file — the READMEs, `docs/`, `docs/widgets/`, everything — is excluded from the store package automatically, along with the `screenshots/` folder. None of that is needed by the running extension, so it never ships. If you add a new `.md` file anywhere in the repo, you don't need to touch `deploy.yml` — the exclusion pattern already covers it.
 
 **Required repository secrets:**
 
-| Secret               | Used by        | Description                                              |
-| -------------------- | -------------- | -------------------------------------------------------- |
-| `AMO_JWT_ISSUER`     | deploy-firefox | AMO API key issuer (from addons.mozilla.org credentials) |
-| `AMO_JWT_SECRET`     | deploy-firefox | AMO API key secret                                       |
-| `EDGE_PRODUCT_ID`    | deploy-edge    | Microsoft Partner Center Application UUID                |
-| `EDGE_CLIENT_ID`     | deploy-edge    | Microsoft Partner Center App API Client ID               |
-| `EDGE_CLIENT_SECRET` | deploy-edge    | Microsoft Partner Center API client secret               |
+| Secret               | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| `AMO_JWT_ISSUER`     | AMO API key issuer (from addons.mozilla.org credentials) |
+| `AMO_JWT_SECRET`     | AMO API key secret                                       |
+| `EDGE_PRODUCT_ID`    | Microsoft Partner Center Application UUID                |
+| `EDGE_CLIENT_ID`     | Microsoft Partner Center App API Client ID               |
+| `EDGE_CLIENT_SECRET` | Microsoft Partner Center API client secret               |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

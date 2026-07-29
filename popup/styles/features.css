@@ -65,6 +65,14 @@
   background: rgba(46, 204, 113, 0.15);
   color: #2ecc71;
 }
+.an-icon {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+.as-icon {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0ea5e9;
+}
 
 .feature-name {
   flex: 1;

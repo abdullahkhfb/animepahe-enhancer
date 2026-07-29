@@ -321,6 +321,16 @@
       export: "IntroSkip",
       enabled: settings.introSkipEnabled,
     },
+    {
+      module: "content/features/auto-next.js",
+      export: "AutoNext",
+      enabled: settings.autoNextEnabled,
+    },
+    {
+      module: "content/features/auto-start.js",
+      export: "AutoStart",
+      enabled: settings.autoStartEnabled,
+    },
     //  to add a new feature, append an entry here
     // {
     //   module:  "content/features/my-feature.js",

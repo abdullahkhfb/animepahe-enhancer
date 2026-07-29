@@ -15,10 +15,14 @@ export async function initFeaturesTab() {
   const toggleDub = document.getElementById("toggle-dub");
   const toggleSs = document.getElementById("toggle-ss");
   const toggleIs = document.getElementById("toggle-is");
+  const toggleAn = document.getElementById("toggle-an");
+  const toggleAs = document.getElementById("toggle-as");
   const cwCount = document.getElementById("cw-count");
   const dubCacheCount = document.getElementById("dub-cache-count");
   const ssCacheCount = document.getElementById("ss-cache-count");
   const isStatusChip = document.getElementById("is-status-chip");
+  const anStatusChip = document.getElementById("an-status-chip");
+  const asStatusChip = document.getElementById("as-status-chip");
   const btnClearCw = document.getElementById("cw-clear");
   const btnClearDub = document.getElementById("dub-clear-cache");
   const btnClearSs = document.getElementById("ss-clear-cache");
@@ -28,6 +32,8 @@ export async function initFeaturesTab() {
   const dubCard = document.getElementById("dub-card");
   const ssCard = document.getElementById("ss-card");
   const isCard = document.getElementById("is-card");
+  const anCard = document.getElementById("an-card");
+  const asCard = document.getElementById("as-card");
 
   let settings = await storage.getSettings();
 
@@ -35,8 +41,12 @@ export async function initFeaturesTab() {
   toggleDub.checked = settings.dubEnabled;
   toggleSs.checked = settings.smartSearchEnabled;
   toggleIs.checked = settings.introSkipEnabled;
+  toggleAn.checked = settings.autoNextEnabled;
+  toggleAs.checked = settings.autoStartEnabled;
 
   updateCardStyles();
+  updateAutoNextStats();
+  updateAutoStartStats();
 
   const data = await chrome.storage.local.get([CW_KEY]);
   updateCwStats(data[CW_KEY]);
@@ -70,10 +80,18 @@ export async function initFeaturesTab() {
   toggleIs.addEventListener("change", () => {
     saveSettings({ introSkipEnabled: toggleIs.checked });
   });
+  toggleAn.addEventListener("change", () => {
+    saveSettings({ autoNextEnabled: toggleAn.checked });
+  });
+  toggleAs.addEventListener("change", () => {
+    saveSettings({ autoStartEnabled: toggleAs.checked });
+  });
 
   async function saveSettings(patch) {
     settings = await storage.setSettings(patch);
     updateCardStyles();
+    updateAutoNextStats();
+    updateAutoStartStats();
     reloadNotice.hidden = false;
   }
 
@@ -82,6 +100,20 @@ export async function initFeaturesTab() {
     dubCard.classList.toggle("disabled", !settings.dubEnabled);
     ssCard.classList.toggle("disabled", !settings.smartSearchEnabled);
     isCard.classList.toggle("disabled", !settings.introSkipEnabled);
+    anCard.classList.toggle("disabled", !settings.autoNextEnabled);
+    asCard.classList.toggle("disabled", !settings.autoStartEnabled);
+  }
+
+  function updateAutoNextStats() {
+    anStatusChip.textContent = settings.autoNextEnabled
+      ? "Ready on player pages"
+      : "Off";
+  }
+
+  function updateAutoStartStats() {
+    asStatusChip.textContent = settings.autoStartEnabled
+      ? "Loads and plays"
+      : "Off";
   }
 
   btnClearCw.addEventListener("click", () =>
