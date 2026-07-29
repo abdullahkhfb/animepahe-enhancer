@@ -139,12 +139,8 @@ animepahe-enhancer/
 │   └── notice.svg
 │
 └── .github/
-    ├── actions/
-    │   └── build-zip/
-    │       └── action.yml        # Shared: builds the store-ready zip
     └── workflows/
-        ├── deploy-firefox.yml    # Auto-deploys to Firefox on release publish
-        └── deploy-edge.yml       # Manual-only deploy to Edge
+        └── deploy.yml            # CI/CD: packages and publishes to Firefox AMO and Edge store
 ```
 
 ---
@@ -362,8 +358,11 @@ When a release is ready:
 
 1. The `version` field in `manifest.json` is bumped following [Semantic Versioning](https://semver.org/).
 2. A GitHub Release is published with a tag matching `v<version>`.
-3. [`deploy-firefox.yml`](.github/workflows/deploy-firefox.yml) triggers automatically: packages the extension into `Animepahe-Enhancer.zip`, submits to the Firefox AMO review queue, and attaches the zip to the GitHub Release.
-4. Edge is **not** automatic — it's a separate, deliberate step run manually from the Actions tab (see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#releasing-a-new-version) for why).
+3. The [`deploy.yml`](.github/workflows/deploy.yml) workflow automatically:
+   - Packages the extension into `Animepahe-Enhancer.zip`
+   - Submits to the Firefox AMO review queue
+   - Submits to the Microsoft Edge Add-ons dashboard
+   - Attaches the zip to the GitHub Release
 
 ---
 

@@ -255,6 +255,84 @@
                 </button>
               </div>
             </div>
+
+            <div class="feature-card" id="an-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon an-icon" style="background: transparent">
+                    <img
+                      src="../icons/auto-next.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">Auto Next</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle Auto Next"
+                    onclick="event.stopPropagation()"
+                  >
+                    <input type="checkbox" id="toggle-an" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc">Opens the next episode</span>
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-stats" id="an-stats" hidden>
+                <span class="stat-chip" id="an-status-chip">Off</span>
+              </div>
+            </div>
+
+            <div class="feature-card" id="as-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon as-icon" style="background: transparent">
+                    <img
+                      src="../icons/auto-start.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">Auto Start</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle Auto Start"
+                    onclick="event.stopPropagation()"
+                  >
+                    <input type="checkbox" id="toggle-as" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc">Loads and starts video</span>
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-stats" id="as-stats" hidden>
+                <span class="stat-chip" id="as-status-chip">Off</span>
+              </div>
+            </div>
           </div>
 
           <div class="notice" id="reload-notice" hidden>

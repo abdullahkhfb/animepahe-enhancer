@@ -7,6 +7,8 @@ const MSG = {
   IS_SET_RANGES: "AP_IS_SET_RANGES",
   IS_SEEK: "AP_IS_SEEK",
   IS_READY: "AP_IS_READY",
+  // Auto Next messages (paired with content/features/auto-next.js).
+  AN_VIDEO_ENDED: "AP_AN_VIDEO_ENDED",
 };
 
 const DEFAULT_UPDATE_INTERVAL = 2_000;
@@ -14,22 +16,24 @@ const SKIP_BTN_ID = "ape-is-skip-btn";
 
 (async function init() {
   let updateInterval = DEFAULT_UPDATE_INTERVAL;
+  let autoStartEnabled = false;
   try {
     const { ape_settings } = await chrome.storage.local.get("ape_settings");
     if (ape_settings?.playerUpdateInterval) {
       updateInterval = ape_settings.playerUpdateInterval;
     }
+    autoStartEnabled = !!ape_settings?.autoStartEnabled;
   } catch {}
 
   const video = findVideo();
   if (video) {
-    setup(video, updateInterval);
+    setup(video, updateInterval, autoStartEnabled);
   } else {
     const observer = new MutationObserver(() => {
       const v = findVideo();
       if (v) {
         observer.disconnect();
-        setup(v, updateInterval);
+        setup(v, updateInterval, autoStartEnabled);
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
@@ -40,7 +44,7 @@ function findVideo() {
   return document.querySelector("video") ?? null;
 }
 
-function setup(video, updateInterval) {
+function setup(video, updateInterval, autoStartEnabled) {
   // ── Continue Watching: ask the parent for the saved time and start
   // reporting playback progress. ────────────────────────────────────────
   window.parent.postMessage({ type: MSG.REQUEST_TIME }, "*");
@@ -48,6 +52,7 @@ function setup(video, updateInterval) {
   // ── Intro / Outro Skip controller (created early so it's available
   // to the message listener below). ────────────────────────────────────
   const introSkip = createIntroSkipController(video);
+  const autoStart = autoStartEnabled ? createAutoStartController(video) : null;
 
   window.addEventListener("message", (event) => {
     if (event.data?.type === MSG.RESTORE_TIME) {
@@ -87,6 +92,7 @@ function setup(video, updateInterval) {
     if (updateTimer) return;
     updateTimer = setInterval(reportProgress, updateInterval);
     introSkip.onPlay();
+    autoStart?.onPlay();
   });
 
   video.addEventListener("pause", () => {
@@ -101,6 +107,7 @@ function setup(video, updateInterval) {
     updateTimer = null;
     reportProgress();
     introSkip.onStop();
+    window.parent.postMessage({ type: MSG.AN_VIDEO_ENDED }, "*");
   });
 
   // `timeupdate` is the standard video event for cheap playback-position
@@ -138,6 +145,214 @@ function setup(video, updateInterval) {
   fireReady();
   setTimeout(fireReady, 800);
   setTimeout(fireReady, 2500);
+
+  autoStart?.start();
+}
+
+function createAutoStartController(video) {
+  const state = {
+    attempts: 0,
+    maxAttempts: 24,
+    stopped: false,
+    timer: null,
+    mutedAutoplayAttempts: 0,
+    temporarilyMuted: false,
+    restoreAudioTimer: null,
+    restoreMuted: false,
+    restoreVolume: 1,
+  };
+
+  const delays = [80, 250, 500, 900, 1300];
+
+  function start() {
+    queue(0);
+    video.addEventListener("loadedmetadata", tryStart);
+    video.addEventListener("canplay", tryStart);
+  }
+
+  function onPlay() {
+    state.stopped = true;
+    clearTimeout(state.timer);
+    restoreAudioSoon();
+  }
+
+  function queue(delay = 450) {
+    clearTimeout(state.timer);
+    state.timer = setTimeout(tryStart, delay);
+  }
+
+  function tryStart() {
+    if (state.stopped || !document.contains(video)) return;
+    if (!video.paused || video.ended) {
+      onPlay();
+      return;
+    }
+
+    clickPlayOverlay();
+    tryPlayVideo();
+
+    state.attempts += 1;
+    if (state.attempts < state.maxAttempts) {
+      queue(delays[state.attempts] ?? 500);
+    }
+  }
+
+  function tryPlayVideo() {
+    video.autoplay = true;
+    video.playsInline = true;
+    video.setAttribute("autoplay", "");
+    video.setAttribute("playsinline", "");
+
+    try {
+      const promise = video.play();
+      if (promise?.catch) {
+        promise.catch(() => {
+          tryMutedAutoplay();
+        });
+      }
+    } catch {
+      tryMutedAutoplay();
+    }
+
+    setTimeout(() => {
+      if (video.paused && !video.ended) {
+        tryMutedAutoplay();
+      }
+    }, 180);
+  }
+
+  function tryMutedAutoplay() {
+    if (state.mutedAutoplayAttempts >= 8 || !video.paused || video.ended) {
+      return;
+    }
+
+    state.mutedAutoplayAttempts += 1;
+    state.restoreMuted = video.muted;
+    state.restoreVolume = video.volume;
+    state.temporarilyMuted = !state.restoreMuted;
+
+    try {
+      video.muted = true;
+      video.setAttribute("muted", "");
+      const promise = video.play();
+      if (promise?.then) {
+        promise.then(restoreAudioSoon).catch(() => {});
+      }
+    } catch {}
+  }
+
+  function restoreAudioSoon() {
+    if (!state.temporarilyMuted) return;
+    if (state.restoreMuted) return;
+    clearTimeout(state.restoreAudioTimer);
+    state.restoreAudioTimer = setTimeout(() => {
+      try {
+        video.muted = false;
+        video.removeAttribute("muted");
+        video.volume = state.restoreVolume;
+        state.temporarilyMuted = false;
+      } catch {}
+    }, 650);
+  }
+
+  function clickPlayOverlay() {
+    const candidates = [
+      ...document.querySelectorAll(
+        [
+          'button[data-plyr="play"]',
+          '.plyr__control[data-plyr="play"]',
+          ".plyr__control--overlaid",
+          ".vjs-big-play-button",
+          ".jw-display-icon-container",
+          ".jw-icon-playback",
+          ".plyr__poster",
+          ".play-button",
+          ".playbtn",
+          ".play",
+          "button",
+          '[role="button"]',
+          '[aria-label*="Play"]',
+          '[title*="Play"]',
+        ].join(","),
+      ),
+    ];
+
+    const target = candidates.find((el) => {
+      if (el.id === SKIP_BTN_ID || el.closest(`#${SKIP_BTN_ID}`)) return false;
+      if (!isVisible(el)) return false;
+      const text = `${el.textContent || ""} ${el.getAttribute("aria-label") || ""} ${el.getAttribute("title") || ""}`;
+      return /play|start|resume/i.test(text) || hasPlayableClass(el);
+    });
+
+    if (target) {
+      clickElement(target);
+      const plyrButton = findPlyrPlayButton();
+      if (plyrButton && plyrButton !== target) clickElement(plyrButton);
+    } else {
+      clickElement(video);
+    }
+  }
+
+  function findPlyrPlayButton() {
+    return (
+      document.querySelector('button[data-plyr="play"]') ||
+      document.querySelector('.plyr__control[data-plyr="play"]') ||
+      document.querySelector(".plyr__control--overlaid")
+    );
+  }
+
+  function hasPlayableClass(el) {
+    const className = String(el.className || "");
+    return (
+      /(^|[-_\s])(big-)?play(button|back)?($|[-_\s])/i.test(className) ||
+      /\bplyr__poster\b/i.test(className)
+    );
+  }
+
+  return { start, onPlay };
+}
+
+function isVisible(el) {
+  const rect = el.getBoundingClientRect();
+  const style = getComputedStyle(el);
+  return (
+    rect.width > 4 &&
+    rect.height > 4 &&
+    style.visibility !== "hidden" &&
+    style.display !== "none" &&
+    Number(style.opacity || 1) > 0.01
+  );
+}
+
+function clickElement(el) {
+  const rect = el.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const opts = {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    clientX: x,
+    clientY: y,
+  };
+
+  try {
+    if (el instanceof HTMLButtonElement || el.matches?.('[data-plyr="play"]')) {
+      el.click();
+    }
+    el.dispatchEvent(new PointerEvent("pointerdown", opts));
+    el.dispatchEvent(new MouseEvent("mousedown", opts));
+    el.dispatchEvent(new PointerEvent("pointerup", opts));
+    el.dispatchEvent(new MouseEvent("mouseup", opts));
+    el.dispatchEvent(new MouseEvent("click", opts));
+    if (!(el instanceof HTMLButtonElement)) {
+      el.click?.();
+    }
+  } catch {
+    try {
+      el.click();
+    } catch {}
+  }
 }
 
 // ────────────────────────────────────────────────────────────────────────
@@ -759,4 +974,3 @@ function attachFullscreenWatcher(btn, video) {
     if (resizeObs) resizeObs.disconnect();
   };
 }
-

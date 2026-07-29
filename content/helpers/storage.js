@@ -265,6 +265,8 @@ export const DEFAULT_SETTINGS = {
   dubEnabled: true,
   smartSearchEnabled: true,
   introSkipEnabled: true,
+  autoNextEnabled: false,
+  autoStartEnabled: false,
   ...ADVANCED_DEFAULTS,
 };
 
