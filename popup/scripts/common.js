@@ -55,6 +55,18 @@ export function makeCollapsible({
 }
 
 /**
+ * Wires an info button to a note: `title` gives a native hover tooltip,
+ * clicking toggles the note visible inline (so it also works without a
+ * mouse). Used for every sub-feature row.
+ */
+export function makeInfoNote(button, note) {
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    note.hidden = !note.hidden;
+  });
+}
+
+/**
  * Runs `actionFn`, showing a brief "busy" then "done" label on `btn`
  * before restoring its original text. Used for every destructive/async
  * button across tabs (clear cache, clear list, etc.).

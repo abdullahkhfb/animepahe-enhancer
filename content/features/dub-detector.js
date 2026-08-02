@@ -6,8 +6,8 @@ import {
   homeCacheKey,
 } from "../helpers/cache.js";
 import { throttler } from "../helpers/throttler.js";
-
-const PILL_ID = "ape-dub-pill";
+import { injectStylesheet } from "../helpers/styles.js";
+import { showPill } from "../helpers/pill.js";
 
 const AUDIO_DUB_VALUES = new Set(["eng", "english", "dub", "dubbed"]);
 
@@ -121,6 +121,8 @@ export class DubDetector {
     this._parallelProbes = settings.dubParallelProbes ?? 12;
     this._batchDelay = settings.dubBatchDelay ?? 2000;
     this._homeBatchSize = settings.dubHomeBatchSize ?? 2;
+    // Sub-feature: also scan homepage cards, not just episode lists.
+    this._homeScanEnabled = settings.dubHomeScanEnabled !== false;
     this._cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
     this._itemsScanned = 0;
     this._totalItems = 0;
@@ -157,6 +159,7 @@ export class DubDetector {
   }
 
   async init(_initialPageType) {
+    injectStylesheet("ape-dub-styles", "content/features/dub-detector.css");
     this._handleRoute();
     let currentUrl = location.href;
     new MutationObserver(() => {
@@ -177,7 +180,7 @@ export class DubDetector {
         await this._initPlayer();
         break;
       case PAGE.HOME:
-        await this._initHome();
+        if (this._homeScanEnabled) await this._initHome();
         break;
       default:
         break;
@@ -232,7 +235,7 @@ export class DubDetector {
         0,
         Math.min(this._itemsScanned === this._totalItems ? 100 : 99, pct),
       );
-      this._showPill(`${this._pillBaseText}  ·  ${pct}%`, 0, true);
+      showPill(`${this._pillBaseText}  ·  ${pct}%`, 0, true);
       return;
     }
 
@@ -260,14 +263,14 @@ export class DubDetector {
       pctStr = `  ·  ${pct}%`;
     }
 
-    this._showPill(`${this._pillBaseText}${pctStr}`, 0, true);
+    showPill(`${this._pillBaseText}${pctStr}`, 0, true);
   }
 
   async _initEpisodeList() {
     const sessions = getPageSessions();
     if (!sessions) return;
 
-    this._showPill("🎙 DUB: Scanning…");
+    showPill("🎙 DUB: Scanning…");
     await this._scanEpisodeList(sessions.animeSession);
 
     if (!this._episodeListObserver) {
@@ -321,7 +324,7 @@ export class DubDetector {
     const dubCount = await this._binarySearchAndBadge(animeSession, episodes);
 
     this._stopEta();
-    this._showPill(
+    showPill(
       dubCount > 0
         ? `🎙 DUB: ${dubCount} episode${dubCount === 1 ? "" : "s"} dubbed ✓`
         : "🎙 DUB: no dub found",
@@ -363,10 +366,10 @@ export class DubDetector {
 
     if (dubbed) {
       this._addPlayerBadge();
-      this._showPill("🎙 DUB: Dubbed ✓", 5000);
+      showPill("🎙 DUB: Dubbed ✓", 5000);
     } else {
       this._addSubPlayerBadge();
-      this._showPill("🎙 DUB: Sub only", 4000);
+      showPill("🎙 DUB: Sub only", 4000);
     }
   }
 
@@ -376,10 +379,6 @@ export class DubDetector {
     const badge = document.createElement("span");
     badge.className = "ape-dub-inline";
     badge.textContent = "DUB";
-    badge.style.cssText =
-      "background:#d92558;color:#fff;font:700 11px system-ui,sans-serif;" +
-      "padding:3px 9px;border-radius:3px;margin-left:10px;vertical-align:middle;" +
-      "display:inline-block;box-shadow:0 1px 5px rgba(0,0,0,.5);letter-spacing:.5px;";
     h1.appendChild(badge);
   }
 
@@ -394,10 +393,6 @@ export class DubDetector {
     const badge = document.createElement("span");
     badge.className = "ape-sub-inline";
     badge.textContent = "SUB ONLY";
-    badge.style.cssText =
-      "background:#e8710a;color:#fff;font:700 11px system-ui,sans-serif;" +
-      "padding:3px 9px;border-radius:3px;margin-left:10px;vertical-align:middle;" +
-      "display:inline-block;box-shadow:0 1px 5px rgba(0,0,0,.5);letter-spacing:.5px;";
     h1.appendChild(badge);
   }
 
@@ -447,7 +442,7 @@ export class DubDetector {
           this._batchDelay,
         );
         this._stopEta();
-        this._showPill("🎙 DUB: scan complete ✓", 4000);
+        showPill("🎙 DUB: scan complete ✓", 4000);
       }
       this._homeBusy = false;
     };
@@ -615,7 +610,6 @@ export class DubDetector {
     const badge = document.createElement("span");
     badge.className = "ape-dub-badge ape-sub-badge-ep";
     badge.textContent = "SUB ONLY";
-    badge.style.setProperty("background", "#e8710a", "important");
     if (getComputedStyle(el).position === "static")
       el.style.setProperty("position", "relative", "important");
     el.appendChild(badge);
@@ -630,7 +624,7 @@ export class DubDetector {
       badge.textContent = `🎙 ${dubs}/${total}`;
     } else {
       badge.textContent = `SUB ONLY`;
-      badge.style.setProperty("background", "#e8710a", "important");
+      badge.classList.add("ape-sub-badge-home");
     }
 
     if (getComputedStyle(el).position === "static")
@@ -651,46 +645,6 @@ export class DubDetector {
     }
   }
 
-  _getOrCreatePill() {
-    let pill = document.getElementById(PILL_ID);
-    if (!pill) {
-      pill = document.createElement("div");
-      pill.id = PILL_ID;
-      Object.assign(pill.style, {
-        position: "fixed",
-        bottom: "14px",
-        right: "14px",
-        zIndex: "2147483647",
-        background: "rgba(8,8,22,0.92)",
-        color: "#e8e8f8",
-        font: "700 11px/1.5 system-ui,sans-serif",
-        padding: "6px 14px",
-        borderRadius: "20px",
-        pointerEvents: "none",
-        transition: "opacity 0.45s",
-        maxWidth: "360px",
-        textAlign: "right",
-        border: "1px solid rgba(255,255,255,0.08)",
-        backdropFilter: "blur(6px)",
-        opacity: "0",
-        fontVariantNumeric: "tabular-nums",
-      });
-      document.body.appendChild(pill);
-    }
-    return pill;
-  }
-
-  _showPill(text, autohideMs = 0, live = false) {
-    const pill = this._getOrCreatePill();
-    if (!live) clearTimeout(this._pillTimer);
-    pill.textContent = text;
-    pill.style.opacity = "1";
-    if (autohideMs > 0)
-      this._pillTimer = setTimeout(
-        () => (pill.style.opacity = "0"),
-        autohideMs,
-      );
-  }
 
   async _apiFetch(url, wantJson = true) {
     const result = await throttler.fetch(url, wantJson);

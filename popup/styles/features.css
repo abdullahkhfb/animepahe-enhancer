@@ -65,6 +65,13 @@
   background: rgba(46, 204, 113, 0.15);
   color: #2ecc71;
 }
+.bw-icon {
+  background: rgba(168, 85, 247, 0.15);
+}
+.bw-icon img {
+  width: 20px;
+  height: 20px;
+}
 
 .feature-name {
   flex: 1;
@@ -99,16 +106,21 @@
   margin-top: 2px;
 }
 
-/* Stats row (collapsible content) */
+/* Collapsible content wrapper (stats + sub-feature toggles) */
+.feature-body {
+  border-top: 1px solid var(--border);
+  padding: 9px 10px 10px;
+  margin-top: -1px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .feature-stats {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  padding: 0 10px 10px;
-  border-top: 1px solid var(--border);
-  padding-top: 9px;
-  margin-top: -1px;
 }
 
 .stat-chip {
@@ -117,6 +129,69 @@
   font-size: 10px;
   color: var(--muted);
   font-variant-numeric: tabular-nums;
+}
+
+.feature-note-block {
+  margin: 0;
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* ── Sub-feature rows ────────────────────────────────────── */
+.feature-subopts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.subopt-row + .subopt-row {
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.subopt-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.subopt-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 10.5px;
+  color: #d8d8ea;
+  line-height: 1.3;
+}
+
+.subopt-info {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--muted);
+  font: italic 700 9px/1 Georgia, serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.subopt-info:hover {
+  color: #f0f0f8;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.subopt-note {
+  margin: 0;
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.4;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 6px 8px;
 }
 
 /* ── Toggle switch ───────────────────────────────────────── */
@@ -162,6 +237,18 @@
 }
 .toggle input:checked + .toggle-track .toggle-thumb {
   transform: translateX(13px);
+}
+
+.toggle-sm .toggle-track {
+  width: 26px;
+  height: 15px;
+}
+.toggle-sm .toggle-thumb {
+  width: 10px;
+  height: 10px;
+}
+.toggle-sm input:checked + .toggle-track .toggle-thumb {
+  transform: translateX(11px);
 }
 
 /* Disabled card appearance */

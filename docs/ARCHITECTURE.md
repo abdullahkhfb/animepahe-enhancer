@@ -10,6 +10,7 @@
 - [How It Works](#how-it-works)
 - [Adding a New Feature](#adding-a-new-feature)
 - [Adding an Advanced Setting](#adding-an-advanced-setting)
+- [Adding a Sub-Feature](#adding-a-sub-feature)
 
 ---
 
@@ -22,22 +23,31 @@
 ├── 📁 content/
 │   ├── 📄 main.js                 # Entry point — loads settings, detects page,
 │   │                              #   dynamically imports and initializes features
+│   ├── 🎨 main.css                # Shared base styles (currently: the status pill)
 │   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge for
 │   │                              #   Continue Watching + Intro/Outro Skip controller
 │   │
-│   ├── 📁 features/               # One file per feature
+│   ├── 📁 features/               # One .js + one .css per feature
 │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
+│   │   ├── 🎨 continue-watching.css
 │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
+│   │   ├── 🎨 dub-detector.css
 │   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
-│   │   └── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   ├── 🎨 intro-skip.css        #   (also loaded inside the kwik iframe, see iframe-player.js)
+│   │   ├── 📄 binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
+│   │   └── 🎨 binge-watch.css
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + DEFAULT_SETTINGS
-│       │                          #   + ADVANCED_SETTINGS_SCHEMA (drives the popup's panel)
+│       │                          #   + ADVANCED_SETTINGS_SCHEMA + FEATURE_SUBOPTIONS
 │       ├── 📄 router.js           # Page-type detection from the current URL
 │       ├── 📄 cache.js            # DUB cache read/write/GC (configurable TTL)
 │       ├── 📄 throttler.js        # RequestThrottler — rate-limiting, jitter, retry
 │       │                          #   (tunable at runtime via updateOptions())
+│       ├── 📄 styles.js           # injectStylesheet() — one-line CSS loading, shared
+│       │                          #   by every feature so none of them duplicate it
+│       ├── 📄 pill.js             # showPill() — the shared bottom-right status toast
 │       └── 📄 timestamps-db.js    # open-anime-timestamps dataset access (IndexedDB
 │                                  #   cache, ID resolution, episode lookup)
 │
@@ -230,7 +240,17 @@ export class MyFeature {
 }
 ```
 
-2. Add a settings key and default in `content/helpers/storage.js`:
+2. If it needs any styling, give it its own `content/features/my-feature.css` and inject it from `init()` using the shared helper (don't hand-roll a `<style>` tag or reuse another feature's CSS file):
+
+```js
+import { injectStylesheet } from "../helpers/styles.js";
+// ...
+injectStylesheet("ape-mf-styles", "content/features/my-feature.css");
+```
+
+Add the new `.css` file to `web_accessible_resources` in `manifest.json`. Anything the new feature's CSS has in common with another feature's belongs in `content/main.css` instead (loaded once by `main.js`), not copy-pasted — same goes for the shared status pill, see `content/helpers/pill.js`.
+
+3. Add a settings key and default in `content/helpers/storage.js`:
 
 ```js
 export const DEFAULT_SETTINGS = {
@@ -238,11 +258,14 @@ export const DEFAULT_SETTINGS = {
   dubEnabled: true,
   smartSearchEnabled: true,
   introSkipEnabled: true,
+  bingeWatchEnabled: false,
   myFeatureEnabled: true, // ← add here
+  ...FEATURE_SUBOPTIONS_DEFAULTS,
+  ...ADVANCED_DEFAULTS,
 };
 ```
 
-3. Register the feature in `content/main.js`:
+4. Register the feature in `content/main.js`:
 
 ```js
 const FEATURES = [
@@ -255,7 +278,9 @@ const FEATURES = [
 ];
 ```
 
-That's it — no other files need to change.
+5. Add a matching card to `popup/popup.html` (icon + toggle) — copy the Binge Watch card as a template if the feature has no stats to show, or the DUB Detector card if it does.
+
+If any of the feature's toggleable options are everyday options rather than tuning knobs, give it entries in `FEATURE_SUBOPTIONS` (see below) instead of `ADVANCED_SETTINGS_SCHEMA` — they'll render right on the feature's own card.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -284,5 +309,26 @@ this._myValue = settings.myNewTunable ?? 10;
 ```
 
 The popup automatically renders a labeled input, description, and its own **↺ reset** button for the new setting, and folds it into **Reset All Advanced Settings** — for free.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Adding a Sub-Feature
+
+Sub-features are toggleable options that belong to a specific feature but aren't "advanced" (no timing/caching/request tuning) — they render directly on that feature's own card in the popup instead of the Advanced Settings tab. Add an entry to `FEATURE_SUBOPTIONS` in `content/helpers/storage.js`, keyed by the feature card's id (`dub`, `is`, `bw`, ...):
+
+```js
+export const FEATURE_SUBOPTIONS = {
+  dub: [
+    {
+      key: "dubHomeScanEnabled",
+      label: "Scan homepage cards",
+      note: "Shown when the info button is hovered or clicked.",
+      default: true,
+    },
+  ],
+};
+```
+
+`popup/scripts/features.js` renders every card's list generically, so no popup markup or JS needs to change. Read the setting in the feature module the same way as any other: `settings.dubHomeScanEnabled !== false`.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.2.0.1",
+  "version": "0.3.0.0",
   "description": "Video progress tracking, DUB detection, Smart Search via AniList, and Intro/Outro Skipping for animepahe.",
   "browser_specific_settings": {
     "gecko": {
@@ -51,13 +51,22 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["content/features/*.js", "content/helpers/*.js"],
+      "resources": [
+        "content/features/*.js",
+        "content/helpers/*.js",
+        "content/main.css",
+        "content/features/*.css"
+      ],
       "matches": [
         "*://*.animepahe.pw/*",
         "*://*.animepahe.org/*",
         "*://*.animepahe.com/*",
         "*://*.animepahe.ru/*"
       ]
+    },
+    {
+      "resources": ["content/helpers/styles.js", "content/features/intro-skip.css"],
+      "matches": ["*://*.kwik.cx/*"]
     }
   ],
   "action": {

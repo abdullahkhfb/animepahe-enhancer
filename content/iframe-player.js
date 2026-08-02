@@ -7,6 +7,8 @@ const MSG = {
   IS_SET_RANGES: "AP_IS_SET_RANGES",
   IS_SEEK: "AP_IS_SEEK",
   IS_READY: "AP_IS_READY",
+  // Fired on every "ended" regardless of settings; Binge Watch decides.
+  BW_ENDED: "AP_BW_ENDED",
 };
 
 const DEFAULT_UPDATE_INTERVAL = 2_000;
@@ -21,26 +23,115 @@ const SKIP_BTN_ID = "ape-is-skip-btn";
     }
   } catch {}
 
-  const video = findVideo();
-  if (video) {
-    setup(video, updateInterval);
-  } else {
-    const observer = new MutationObserver(() => {
-      const v = findVideo();
-      if (v) {
-        observer.disconnect();
-        setup(v, updateInterval);
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
+  // kwik's player (video.js) can swap out or rebuild the <video> element
+  // while it initializes its tech/source — most noticeable right after a
+  // script-driven navigation (e.g. Binge Watch), which doesn't leave as
+  // much settle time as a normal click-through would. If we grab the
+  // first <video> we see and stop watching, we can end up wiring
+  // ensurePlayback() to a node that gets discarded a moment later, and
+  // nothing ever re-attaches to the real one — so the video silently
+  // never plays. Keep the observer alive for the page's lifetime and
+  // re-run setup whenever a *different* video element shows up.
+  let currentVideo = null;
+
+  const tryAttach = () => {
+    const v = findVideo();
+    if (v && v !== currentVideo) {
+      currentVideo = v;
+      setup(v, updateInterval);
+    }
+  };
+
+  tryAttach();
+
+  const observer = new MutationObserver(tryAttach);
+  observer.observe(document.body, { childList: true, subtree: true });
 })();
 
 function findVideo() {
   return document.querySelector("video") ?? null;
 }
 
+/**
+ * A real click carries "user activation" into the page it navigates to,
+ * which is what normally lets the video autoplay. A script-triggered
+ * navigation (Binge Watch) has no such gesture, so play() can be silently
+ * blocked — or, since kwik's player (Plyr, backed by hls.js) can defer
+ * actually attaching its media source until its own play-button overlay
+ * has been interacted with, "loadeddata"/"canplay" may never fire on
+ * their own without that interaction. So this doesn't wait around for
+ * readiness — it starts immediately and keeps retrying for a while,
+ * since kwik loads jQuery/hls.js/plyr.js off a CDN which can take a few
+ * seconds:
+ *   1. video.play() normally
+ *   2. muted, if (1) was rejected by the browser's autoplay policy
+ *   3. a simulated click on the player's own play button/overlay,
+ *      repeated for up to ~15s while the video stays paused
+ */
+function ensurePlayback(video) {
+  const MAX_ATTEMPTS = 30; // 30 * 500ms ≈ 15s
+  let attempts = 0;
+  let clickInterval = null;
+
+  const attemptNativePlay = () => {
+    video.play()?.catch(() => {
+      const wasMuted = video.muted;
+      video.muted = true;
+      video
+        .play()
+        ?.then(() => {
+          if (!wasMuted) {
+            video.addEventListener(
+              "playing",
+              () => {
+                video.muted = false;
+              },
+              { once: true },
+            );
+          }
+        })
+        .catch(() => {});
+    });
+  };
+
+  // Try right away, and again whenever the video actually becomes
+  // playable — we can't assume either of those events will fire without
+  // the play button being clicked first, so we don't gate anything on
+  // them; they're just extra chances to succeed sooner.
+  attemptNativePlay();
+  video.addEventListener("loadeddata", attemptNativePlay, { once: true });
+  video.addEventListener("canplay", attemptNativePlay, { once: true });
+
+  clickInterval = setInterval(() => {
+    attempts++;
+    if (!video.paused) {
+      clearInterval(clickInterval);
+      return;
+    }
+    if (attempts > MAX_ATTEMPTS) {
+      clearInterval(clickInterval);
+      console.warn(
+        "[animepahe-enhancer] Could not auto-start playback — the player may need a different selector for its play button. Please report this with your browser + video host in the console.",
+      );
+      return;
+    }
+    clickPlayOverlay();
+    attemptNativePlay();
+  }, 500);
+}
+
+function clickPlayOverlay() {
+  const btn = document.querySelector(
+    ".vjs-big-play-button, .vjs-play-control, .jw-icon-display, .plyr__control--overlaid",
+  );
+  btn?.dispatchEvent(
+    new MouseEvent("click", { bubbles: true, cancelable: true, view: window }),
+  );
+}
+
 function setup(video, updateInterval) {
+  ensurePlayback(video);
+
   // ── Continue Watching: ask the parent for the saved time and start
   // reporting playback progress. ────────────────────────────────────────
   window.parent.postMessage({ type: MSG.REQUEST_TIME }, "*");
@@ -101,6 +192,9 @@ function setup(video, updateInterval) {
     updateTimer = null;
     reportProgress();
     introSkip.onStop();
+    try {
+      window.parent.postMessage({ type: MSG.BW_ENDED }, "*");
+    } catch {}
   });
 
   // `timeupdate` is the standard video event for cheap playback-position
@@ -552,109 +646,13 @@ function createIntroSkipController(video) {
 // ────────────────────────────────────────────────────────────────────────
 
 function injectButtonStyles() {
-  if (document.getElementById("ape-is-styles")) return;
-  const s = document.createElement("style");
-  s.id = "ape-is-styles";
-  s.textContent = `
-    #${SKIP_BTN_ID} {
-      position: fixed;
-      bottom: 64px;
-      right: 18px;
-      z-index: 2147483647;
-      display: none;
-      align-items: center;
-      gap: 7px;
-      background: rgba(8, 8, 22, 0.85);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 8px;
-      padding: 8px 16px 8px 11px;
-      font: 700 13px/1 system-ui, -apple-system, sans-serif;
-      cursor: pointer;
-      letter-spacing: 0.02em;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition:
-        transform 0.18s ease,
-        background 0.18s ease,
-        border-color 0.18s ease,
-        opacity 0.25s ease;
-      opacity: 0;
-      transform: translateY(10px);
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    #${SKIP_BTN_ID}.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    #${SKIP_BTN_ID}:hover {
-      background: rgba(59, 130, 246, 0.95);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(0) scale(1.05);
-    }
-    #${SKIP_BTN_ID}:active {
-      transform: translateY(0) scale(0.97);
-    }
-    #${SKIP_BTN_ID} .ape-is-skip-icon {
-      width: 16px;
-      height: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    #${SKIP_BTN_ID} .ape-is-skip-icon svg {
-      width: 100%;
-      height: 100%;
-    }
-    #${SKIP_BTN_ID} .ape-is-skip-label {
-      white-space: nowrap;
-    }
-    /* When a fullscreen element is active, the button lives INSIDE that
-       element (which is in the top layer). Absolute positioning relative
-       to the fullscreen element keeps it pinned to the bottom-right of
-       the video instead of being left behind in the normal layout. */
-    :fullscreen #${SKIP_BTN_ID},
-    :-webkit-full-screen #${SKIP_BTN_ID} {
-      position: absolute;
-    }
-
-    /* ── Progress-bar highlight segments ──────────────────────────────
-       These are injected DIRECTLY INTO the kwik player's scrubber
-       element as absolutely-positioned children. They inherit the
-       scrubber's position, size, and stacking context, so they:
-         - sit exactly on top of the scrubber track (not floating above)
-         - follow the scrubber into fullscreen automatically
-         - resize with the scrubber when the player resizes
-
-       z-index is set high so they render above the kwik "played" fill
-       but below the scrubber handle (which is typically z-index 2-3
-       in video.js-based players).
-    */
-    .ape-is-hl-segment {
-      position: absolute !important;
-      top: 0 !important;
-      height: 100% !important;
-      border-radius: 3px !important;
-      opacity: 0.85 !important;
-      pointer-events: none !important;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.6) !important;
-      z-index: 1 !important;
-      mix-blend-mode: screen !important;
-    }
-    .ape-is-hl-intro {
-      background: #3b82f6 !important;
-    }
-    .ape-is-hl-outro {
-      background: #e8710a !important;
-    }
-    .ape-is-hl-recap {
-      background: #a855f7 !important;
-    }
-  `;
-  document.head.appendChild(s);
+  // Classic (non-module) script, so no top-level import — dynamic
+  // import() still works, same trick main.js uses for its helpers.
+  import(chrome.runtime.getURL("content/helpers/styles.js")).then(
+    ({ injectStylesheet }) => {
+      injectStylesheet("ape-is-styles", "content/features/intro-skip.css");
+    },
+  );
 }
 
 function createButton() {

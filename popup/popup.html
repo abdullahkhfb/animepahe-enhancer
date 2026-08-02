@@ -87,7 +87,6 @@
                   <label
                     class="toggle"
                     aria-label="Toggle Continue Watching"
-                    onclick="event.stopPropagation()"
                   >
                     <input type="checkbox" id="toggle-cw" />
                     <span class="toggle-track"
@@ -106,15 +105,17 @@
                   />
                 </div>
               </button>
-              <div class="feature-stats" id="cw-stats" hidden>
-                <span class="stat-chip" id="cw-count">— items</span>
-                <button
-                  class="action-btn danger"
-                  id="cw-clear"
-                  title="Clear Continue Watching list"
-                >
-                  Clear List
-                </button>
+              <div class="feature-body" id="cw-body" hidden>
+                <div class="feature-stats" id="cw-stats">
+                  <span class="stat-chip" id="cw-count">— items</span>
+                  <button
+                    class="action-btn danger"
+                    id="cw-clear"
+                    title="Clear Continue Watching list"
+                  >
+                    Clear List
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -133,7 +134,6 @@
                   <label
                     class="toggle"
                     aria-label="Toggle DUB Detector"
-                    onclick="event.stopPropagation()"
                   >
                     <input type="checkbox" id="toggle-dub" />
                     <span class="toggle-track"
@@ -152,15 +152,18 @@
                   />
                 </div>
               </button>
-              <div class="feature-stats" id="dub-stats" hidden>
-                <span class="stat-chip" id="dub-cache-count">— cached</span>
-                <button
-                  class="action-btn"
-                  id="dub-clear-cache"
-                  title="Clear DUB detection cache"
-                >
-                  Clear Cache
-                </button>
+              <div class="feature-body" id="dub-body" hidden>
+                <div class="feature-stats" id="dub-stats">
+                  <span class="stat-chip" id="dub-cache-count">— cached</span>
+                  <button
+                    class="action-btn"
+                    id="dub-clear-cache"
+                    title="Clear DUB detection cache"
+                  >
+                    Clear Cache
+                  </button>
+                </div>
+                <div class="feature-subopts" id="dub-subopts"></div>
               </div>
             </div>
 
@@ -179,7 +182,6 @@
                   <label
                     class="toggle"
                     aria-label="Toggle Smart Search"
-                    onclick="event.stopPropagation()"
                   >
                     <input type="checkbox" id="toggle-ss" />
                     <span class="toggle-track"
@@ -198,15 +200,17 @@
                   />
                 </div>
               </button>
-              <div class="feature-stats" id="ss-stats" hidden>
-                <span class="stat-chip" id="ss-cache-count">— cached</span>
-                <button
-                  class="action-btn"
-                  id="ss-clear-cache"
-                  title="Clear Smart Search cache"
-                >
-                  Clear Cache
-                </button>
+              <div class="feature-body" id="ss-body" hidden>
+                <div class="feature-stats" id="ss-stats">
+                  <span class="stat-chip" id="ss-cache-count">— cached</span>
+                  <button
+                    class="action-btn"
+                    id="ss-clear-cache"
+                    title="Clear Smart Search cache"
+                  >
+                    Clear Cache
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -225,7 +229,6 @@
                   <label
                     class="toggle"
                     aria-label="Toggle Intro/Outro Skip"
-                    onclick="event.stopPropagation()"
                   >
                     <input type="checkbox" id="toggle-is" />
                     <span class="toggle-track"
@@ -244,15 +247,61 @@
                   />
                 </div>
               </button>
-              <div class="feature-stats" id="is-stats" hidden>
-                <span class="stat-chip" id="is-status-chip">— unknown</span>
-                <button
-                  class="action-btn danger"
-                  id="is-clear-cache"
-                  title="Clear cached ID lookups + timestamp database"
-                >
-                  Clear Cache
-                </button>
+              <div class="feature-body" id="is-body" hidden>
+                <div class="feature-stats" id="is-stats">
+                  <span class="stat-chip" id="is-status-chip">— unknown</span>
+                  <button
+                    class="action-btn danger"
+                    id="is-clear-cache"
+                    title="Clear cached ID lookups + timestamp database"
+                  >
+                    Clear Cache
+                  </button>
+                </div>
+                <div class="feature-subopts" id="is-subopts"></div>
+              </div>
+            </div>
+
+            <div class="feature-card" id="bw-card">
+              <button class="feature-header" aria-expanded="false">
+                <div class="feature-top">
+                  <div class="feature-icon bw-icon">
+                    <img
+                      src="../icons/binge-watch.svg"
+                      alt=""
+                      width="22"
+                      height="22"
+                    />
+                  </div>
+                  <span class="feature-name">Binge Watch</span>
+                  <label
+                    class="toggle"
+                    aria-label="Toggle Binge Watch"
+                  >
+                    <input type="checkbox" id="toggle-bw" />
+                    <span class="toggle-track"
+                      ><span class="toggle-thumb"></span
+                    ></span>
+                  </label>
+                </div>
+                <div class="feature-bottom">
+                  <span class="feature-desc"
+                    >Auto-plays the next episode</span
+                  >
+                  <img
+                    class="feature-chevron chevron-icon"
+                    src="../icons/chevron.svg"
+                    alt=""
+                    width="12"
+                    height="12"
+                  />
+                </div>
+              </button>
+              <div class="feature-body" id="bw-body" hidden>
+                <p class="feature-note-block">
+                  Off by default. Shows a countdown pill when an episode
+                  ends — click it to cancel.
+                </p>
               </div>
             </div>
           </div>

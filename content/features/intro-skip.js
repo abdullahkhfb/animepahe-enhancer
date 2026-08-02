@@ -27,14 +27,14 @@ import {
   getTimestampsForEpisode,
   resolveIdsForAnime,
 } from "../helpers/timestamps-db.js";
+import { injectStylesheet } from "../helpers/styles.js";
+import { showPill } from "../helpers/pill.js";
 
 const MSG = {
   SET_RANGES: "AP_IS_SET_RANGES",
   SEEK: "AP_IS_SEEK",
   READY: "AP_IS_READY",
 };
-
-const PILL_ID = "ape-is-pill";
 
 export class IntroSkip {
   /**
@@ -47,7 +47,8 @@ export class IntroSkip {
 
     this._idCacheTtlMs =
       (settings.introSkipIdCacheHours ?? 168) * 60 * 60 * 1_000;
-    this._autoSkip = (settings.introSkipAutoSkip ?? 0) === 1;
+    // Sub-features, see FEATURE_SUBOPTIONS in helpers/storage.js.
+    this._autoSkip = settings.introSkipAutoSkip === true;
     this._pollMs = settings.introSkipPollMs ?? 250;
     this._buttonAutoHideMs = settings.introSkipButtonAutoHideMs ?? 8000;
     this._showHighlights = settings.introSkipShowHighlights !== false;
@@ -59,7 +60,7 @@ export class IntroSkip {
   }
 
   async init(_initialPageType) {
-    this._injectStyles();
+    injectStylesheet("ape-is-styles", "content/features/intro-skip.css");
 
     window.addEventListener("message", this._boundOnMessage);
 
@@ -71,34 +72,6 @@ export class IntroSkip {
         this._handleRoute();
       }
     }).observe(document.body, { childList: true, subtree: true });
-  }
-
-  _injectStyles() {
-    if (document.getElementById("ape-is-styles")) return;
-    const s = document.createElement("style");
-    s.id = "ape-is-styles";
-    s.textContent = `
-      #${PILL_ID} {
-        position: fixed;
-        bottom: 14px;
-        right: 14px;
-        z-index: 2147483647;
-        background: rgba(8, 8, 22, 0.92);
-        color: #e8e8f8;
-        font: 700 11px/1.5 system-ui, sans-serif;
-        padding: 6px 14px;
-        border-radius: 20px;
-        pointer-events: none;
-        transition: opacity 0.45s;
-        max-width: 360px;
-        text-align: right;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(6px);
-        opacity: 0;
-        font-variant-numeric: tabular-nums;
-      }
-    `;
-    document.head.appendChild(s);
   }
 
   async _handleRoute() {
@@ -152,7 +125,7 @@ export class IntroSkip {
     if (rangeKey === this._currentRangeKey) return;
     this._currentRangeKey = rangeKey;
 
-    this._showPill("⏭ Resolving anime…");
+    showPill("⏭ Resolving anime…");
 
     let ids = null;
     try {
@@ -168,12 +141,12 @@ export class IntroSkip {
     const anidbId = ids?.anidbId ?? null;
 
     if (!anidbId) {
-      this._showPill("⏭ Intro/Outro: not found in database", 4000);
+      showPill("⏭ Intro/Outro: not found in database", 4000);
       this._clearRanges();
       return;
     }
 
-    this._showPill("⏭ Looking up timestamps…");
+    showPill("⏭ Looking up timestamps…");
 
     let timestamps;
     try {
@@ -181,11 +154,11 @@ export class IntroSkip {
         anidbId,
         meta.epNumber,
         this._settings,
-        (msg) => this._showPill(`⏭ ${msg}`),
+        (msg) => showPill(`⏭ ${msg}`),
       );
     } catch (err) {
       console.error("[IntroSkip] Failed to load timestamps:", err);
-      this._showPill("⏭ Intro/Outro: DB fetch failed", 5000);
+      showPill("⏭ Intro/Outro: DB fetch failed", 5000);
       this._clearRanges();
       return;
     }
@@ -194,12 +167,12 @@ export class IntroSkip {
     const hasOutro = timestamps.outro && timestamps.outro.start != null;
 
     if (!hasIntro && !hasOutro) {
-      this._showPill("⏭ Intro/Outro: no data for this episode", 4000);
+      showPill("⏭ Intro/Outro: no data for this episode", 4000);
       this._clearRanges();
       return;
     }
 
-    this._showPill(
+    showPill(
       `⏭ Intro/Outro (database): ${hasIntro ? "OP ✓" : "OP —"} · ${
         hasOutro ? "ED ✓" : "ED —"
       }`,
@@ -316,21 +289,4 @@ export class IntroSkip {
     };
   }
 
-  _showPill(text, autohideMs = 0) {
-    let pill = document.getElementById(PILL_ID);
-    if (!pill) {
-      pill = document.createElement("div");
-      pill.id = PILL_ID;
-      document.body.appendChild(pill);
-    }
-    clearTimeout(this._pillTimer);
-    pill.textContent = text;
-    pill.style.opacity = "1";
-    if (autohideMs > 0) {
-      this._pillTimer = setTimeout(
-        () => (pill.style.opacity = "0"),
-        autohideMs,
-      );
-    }
-  }
 }

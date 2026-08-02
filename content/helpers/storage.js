@@ -5,6 +5,42 @@ export const KEYS = {
 
 export const CW_MAX_ENTRIES = 24;
 
+// ── Sub-features ─────────────────────────────────────────────────────────
+// Toggles that belong to a feature but aren't "advanced" (no timing/
+// caching/request tuning) render directly inside that feature's own card
+// in the Features tab, keyed by the card's short id (dub, is, bw, ...).
+export const FEATURE_SUBOPTIONS = {
+  dub: [
+    {
+      key: "dubHomeScanEnabled",
+      label: "Scan homepage cards",
+      note: "Also checks homepage cards for dub status, not just episode lists. Off = fewer requests.",
+      default: true,
+    },
+  ],
+  is: [
+    {
+      key: "introSkipAutoSkip",
+      label: "Auto-skip automatically",
+      note: "Jumps past intros/outros instantly. Off shows a Skip button instead.",
+      default: false,
+    },
+    {
+      key: "introSkipShowHighlights",
+      label: "Highlight on progress bar",
+      note: "Colors the scrubber: blue = intro, orange = outro, purple = recap.",
+      default: true,
+    },
+  ],
+  bw: [],
+};
+
+const FEATURE_SUBOPTIONS_DEFAULTS = Object.fromEntries(
+  Object.values(FEATURE_SUBOPTIONS).flatMap((items) =>
+    items.map((item) => [item.key, item.default]),
+  ),
+);
+
 export const ADVANCED_SETTINGS_SCHEMA = [
   {
     group: "Continue Watching",
@@ -179,24 +215,6 @@ export const ADVANCED_SETTINGS_SCHEMA = [
     group: "Intro / Outro Skip",
     items: [
       {
-        key: "introSkipAutoSkip",
-        label: "Auto-skip intros & outros",
-        desc: "If on, the player jumps past the opening/ending automatically. If off, a Skip button is shown instead and you choose when to jump.",
-        min: 0,
-        max: 1,
-        step: 1,
-        default: 0,
-      },
-      {
-        key: "introSkipShowHighlights",
-        label: "Highlight intro/outro on progress bar",
-        desc: "Draws colored segments on the player's scrubber: blue = intro, orange = outro, purple = recap. Turn off if it clashes with the player UI.",
-        min: 0,
-        max: 1,
-        step: 1,
-        default: 1,
-      },
-      {
         key: "introSkipButtonAutoHideMs",
         label: "Skip button auto-hide (ms)",
         desc: "How long the manual Skip button stays visible after it appears. 0 keeps it on screen for the whole intro/outro.",
@@ -265,6 +283,10 @@ export const DEFAULT_SETTINGS = {
   dubEnabled: true,
   smartSearchEnabled: true,
   introSkipEnabled: true,
+  // Navigates on its own with no click required, so unlike the rest
+  // above, it defaults to off.
+  bingeWatchEnabled: false,
+  ...FEATURE_SUBOPTIONS_DEFAULTS,
   ...ADVANCED_DEFAULTS,
 };
 

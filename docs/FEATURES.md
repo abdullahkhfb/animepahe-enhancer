@@ -10,6 +10,7 @@
 - [DUB Detector](#-dub-detector)
 - [Smart Search](#-smart-search)
 - [Intro / Outro Skip](#-intro--outro-skip)
+- [Binge Watch](#-binge-watch)
 - [Advanced Settings](#-advanced-settings)
 
 ---
@@ -45,6 +46,8 @@ Detection uses a two-method strategy with a local cache (24 hours by default, co
 
 A smart **binary search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. This cuts the number of network requests from O(n) to O(log n). The number of parallel probes and the delay between scan batches are both configurable.
 
+Scanning the home page's `N/total` cards is a sub-feature, toggleable directly from the DUB Detector card in the popup (default **on**) — turn it off to only scan episode lists and player pages, which uses fewer requests.
+
 All network requests are routed through a **`RequestThrottler`** — a built-in rate-limiting layer that enforces configurable concurrency limits, per-request jitter, and exponential back-off with automatic retry on HTTP 429/503/403 responses, keeping scans polite without sacrificing speed. Every one of these knobs is exposed in the popup's [Advanced Settings](#-advanced-settings) panel.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
@@ -67,10 +70,10 @@ Can't find an anime because you only know its English dub title, a common nickna
 
 Automatically skip anime openings and endings — or show a manual Skip button when you're ready. This feature uses the community-maintained [open-anime-timestamps](https://github.com/jonbarrow/open-anime-timestamps) dataset (~27 MB, cached locally in IndexedDB) to look up intro and outro timestamps per episode.
 
-- **Two modes:**
-  - **Auto-skip** (opt-in): The player automatically jumps past intros and outros without any interaction
-  - **Manual skip** (default): A styled **Skip Intro** / **Skip Outro** button appears on top of the video when the playback enters an intro or outro range; clicking it seeks past the segment
-- **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps — giving you a visual map of non-story content at a glance
+- **Two modes**, toggled directly from the Intro/Outro Skip card in the popup (not buried in Advanced Settings):
+  - **Auto-skip** (off by default): The player automatically jumps past intros and outros without any interaction
+  - **Manual skip** (on by default when auto-skip is off): A styled **Skip Intro** / **Skip Outro** button appears on top of the video when the playback enters an intro or outro range; clicking it seeks past the segment
+- **Progress bar highlights** (on by default, toggleable as its own sub-feature): Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps — giving you a visual map of non-story content at a glance
 - **ID resolution chain**: To bridge animepahe's session-based URLs to AniDB IDs, the extension queries the AniList GraphQL API for a title match, then resolves the AniDB ID via [relations.yuna.moe](https://relations.yuna.moe). Results are cached per anime session
 - **Smart defaults**: When the database only provides a start time (no end), the intro/outro is extended by a configurable default duration (90 seconds by default), so the skip button always has a valid target
 - **Fullscreen-aware**: The skip button and progress bar highlights work correctly in both normal and fullscreen playback, automatically reparenting into the fullscreen element
@@ -93,6 +96,17 @@ flowchart TD
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## 🔁 Binge Watch
+
+Automatically opens and plays the next episode when the current one ends — no clicking required. **Off by default**, since it changes browser navigation on its own.
+
+- Listens for the video's native `ended` event inside the Kwik player
+- Resolves the next episode using animepahe's own release API (the same endpoint DUB Detector uses to enumerate episodes)
+- Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`) before navigating — click it any time to cancel
+- Works purely off of the current episode's session id and animepahe's own episode ordering, so it doesn't depend on any third-party database
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## ⚙ Advanced Settings
 
 For anyone who wants to fine-tune exactly how the extension behaves, every internal timing, caching, and request-throttling value is exposed in a collapsible **Advanced Settings** tab inside the popup — no code editing required.
@@ -104,7 +118,9 @@ For anyone who wants to fine-tune exactly how the extension behaves, every inter
 | **Network Throttler**  | Min request interval · jitter · max concurrent requests · max retries · base backoff                                                        |
 | **Smart Search**       | Minimum query length · debounce delay · max alternate titles queried · synonym query delay                                                  |
 | **Player**             | Progress-save interval                                                                                                                       |
-| **Intro / Outro Skip** | Auto-skip toggle · progress bar highlights · skip button auto-hide · poll interval · default OP/ED duration · timestamp DB refresh interval · ID lookup cache duration |
+| **Intro / Outro Skip** | Skip button auto-hide · poll interval · default OP/ED duration · timestamp DB refresh interval · ID lookup cache duration |
+
+- Auto-skip and progress-bar highlights are no longer here — they're sub-feature toggles on the Intro/Outro Skip card itself (see above), since they're everyday options, not tuning knobs.
 
 - Every group is collapsed by default so the tab stays short — click a group's header to expand it
 - Each setting has its own plain-language description, a numeric input clamped to a sane range, and an individual **↺ reset** button

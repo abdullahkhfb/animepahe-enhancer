@@ -1,0 +1,23 @@
+/* main.css — shared base styles. Only rules used by more than one
+ * feature live here (currently just the status pill); everything
+ * feature-specific lives in that feature's own CSS file. */
+
+.ape-pill {
+  position: fixed;
+  bottom: 14px;
+  right: 14px;
+  z-index: 2147483647;
+  background: rgba(8, 8, 22, 0.92);
+  color: #e8e8f8;
+  font: 700 11px/1.5 system-ui, sans-serif;
+  padding: 6px 14px;
+  border-radius: 20px;
+  pointer-events: none;
+  transition: opacity 0.45s;
+  max-width: 360px;
+  text-align: right;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  font-variant-numeric: tabular-nums;
+}

@@ -1,5 +1,6 @@
 import { PAGE, getPageType } from "../helpers/router.js";
 import { CW_MAX_ENTRIES } from "../helpers/storage.js";
+import { injectStylesheet } from "../helpers/styles.js";
 
 const MSG = {
   REQUEST_TIME: "AP_CW_REQUEST_TIME",
@@ -18,6 +19,10 @@ export class ContinueWatching {
   }
 
   async init(initialPageType) {
+    injectStylesheet(
+      "ape-cw-styles",
+      "content/features/continue-watching.css",
+    );
     this._handleRoute();
 
     let currentUrl = location.href;

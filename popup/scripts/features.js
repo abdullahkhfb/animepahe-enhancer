@@ -1,9 +1,12 @@
-import { storage } from "../../content/helpers/storage.js";
+import {
+  storage,
+  FEATURE_SUBOPTIONS,
+} from "../../content/helpers/storage.js";
 import {
   clearTimestampsCache,
   getTimestampsCacheInfo,
 } from "../../content/helpers/timestamps-db.js";
-import { makeCollapsible, animateButton } from "./common.js";
+import { makeCollapsible, animateButton, makeInfoNote } from "./common.js";
 
 const CW_KEY = "ape_cw_v1";
 // Must match CACHE_PFX in content/features/smart-search.js — smart search
@@ -15,6 +18,7 @@ export async function initFeaturesTab() {
   const toggleDub = document.getElementById("toggle-dub");
   const toggleSs = document.getElementById("toggle-ss");
   const toggleIs = document.getElementById("toggle-is");
+  const toggleBw = document.getElementById("toggle-bw");
   const cwCount = document.getElementById("cw-count");
   const dubCacheCount = document.getElementById("dub-cache-count");
   const ssCacheCount = document.getElementById("ss-cache-count");
@@ -28,6 +32,7 @@ export async function initFeaturesTab() {
   const dubCard = document.getElementById("dub-card");
   const ssCard = document.getElementById("ss-card");
   const isCard = document.getElementById("is-card");
+  const bwCard = document.getElementById("bw-card");
 
   let settings = await storage.getSettings();
 
@@ -35,8 +40,20 @@ export async function initFeaturesTab() {
   toggleDub.checked = settings.dubEnabled;
   toggleSs.checked = settings.smartSearchEnabled;
   toggleIs.checked = settings.introSkipEnabled;
+  toggleBw.checked = settings.bingeWatchEnabled;
 
   updateCardStyles();
+
+  // The toggle switch sits inside each card's clickable header; without
+  // this it would also trigger the header's expand/collapse.
+  document.querySelectorAll(".feature-top .toggle").forEach((toggle) => {
+    toggle.addEventListener("click", (e) => e.stopPropagation());
+  });
+
+  // Sub-feature toggles render inside their parent feature's card
+  // (FEATURE_SUBOPTIONS in helpers/storage.js), not under Advanced.
+  renderSubopts("dub", settings);
+  renderSubopts("is", settings);
 
   const data = await chrome.storage.local.get([CW_KEY]);
   updateCwStats(data[CW_KEY]);
@@ -44,15 +61,15 @@ export async function initFeaturesTab() {
   await updateSsStats();
   await updateIsStats();
 
-  // Every card starts collapsed so the tab is as short as the number of
-  // features actually needs; clicking a card reveals its stats/actions.
+  // Every card starts collapsed to keep the tab short.
   document.querySelectorAll(".feature-card").forEach((card) => {
     const header = card.querySelector(".feature-header");
-    const stats = card.querySelector(".feature-stats");
+    const body = card.querySelector(".feature-body");
+    if (!body) return;
     makeCollapsible({
       container: card,
       header,
-      body: stats,
+      body,
       expandedClass: "expanded",
       startExpanded: false,
     });
@@ -70,6 +87,9 @@ export async function initFeaturesTab() {
   toggleIs.addEventListener("change", () => {
     saveSettings({ introSkipEnabled: toggleIs.checked });
   });
+  toggleBw.addEventListener("change", () => {
+    saveSettings({ bingeWatchEnabled: toggleBw.checked });
+  });
 
   async function saveSettings(patch) {
     settings = await storage.setSettings(patch);
@@ -82,6 +102,73 @@ export async function initFeaturesTab() {
     dubCard.classList.toggle("disabled", !settings.dubEnabled);
     ssCard.classList.toggle("disabled", !settings.smartSearchEnabled);
     isCard.classList.toggle("disabled", !settings.introSkipEnabled);
+    bwCard.classList.toggle("disabled", !settings.bingeWatchEnabled);
+  }
+
+  /**
+   * Builds the sub-feature toggle rows for one card from
+   * FEATURE_SUBOPTIONS[cardId], if any are defined. Each row gets its own
+   * switch (saved immediately, same as a top-level feature toggle) and an
+   * info button whose note shows on hover (native title tooltip) or on
+   * click (toggled inline, so it also works without a mouse).
+   */
+  function renderSubopts(cardId, currentSettings) {
+    const items = FEATURE_SUBOPTIONS[cardId];
+    const container = document.getElementById(`${cardId}-subopts`);
+    if (!items?.length || !container) return;
+
+    container.innerHTML = "";
+
+    for (const item of items) {
+      const row = document.createElement("div");
+      row.className = "subopt-row";
+
+      const main = document.createElement("div");
+      main.className = "subopt-main";
+
+      const infoBtn = document.createElement("button");
+      infoBtn.type = "button";
+      infoBtn.className = "subopt-info";
+      infoBtn.title = item.note;
+      infoBtn.setAttribute("aria-label", `About: ${item.label}`);
+      infoBtn.textContent = "i";
+
+      const label = document.createElement("span");
+      label.className = "subopt-label";
+      label.textContent = item.label;
+
+      const toggleLabel = document.createElement("label");
+      toggleLabel.className = "toggle toggle-sm";
+      toggleLabel.setAttribute("aria-label", `Toggle ${item.label}`);
+      toggleLabel.addEventListener("click", (e) => e.stopPropagation());
+
+      const input = document.createElement("input");
+      input.type = "checkbox";
+      input.checked = currentSettings[item.key] ?? item.default;
+
+      const track = document.createElement("span");
+      track.className = "toggle-track";
+      const thumb = document.createElement("span");
+      thumb.className = "toggle-thumb";
+      track.appendChild(thumb);
+
+      toggleLabel.append(input, track);
+      main.append(infoBtn, label, toggleLabel);
+
+      const note = document.createElement("p");
+      note.className = "subopt-note";
+      note.textContent = item.note;
+      note.hidden = true;
+
+      row.append(main, note);
+      container.appendChild(row);
+
+      makeInfoNote(infoBtn, note);
+
+      input.addEventListener("change", () => {
+        saveSettings({ [item.key]: input.checked });
+      });
+    }
   }
 
   btnClearCw.addEventListener("click", () =>

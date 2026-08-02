@@ -18,6 +18,7 @@ animepahe Enhancer makes watching anime on animepahe a bit nicer.
 - **DUB Detector** — shows which episodes have an English dub before you open them
 - **Smart Search** — finds a show even if you only know a nickname or a title in a different language
 - **Intro / Outro Skip** — skips openings and endings automatically, or with one click
+- **Binge Watch** — automatically plays the next episode when one ends, with a few seconds to cancel first (off by default)
 
 Every feature can be switched on or off individually.
 

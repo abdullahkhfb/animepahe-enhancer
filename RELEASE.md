@@ -64,6 +64,22 @@ _Nothing staged yet._
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.0.0 — 2026-08-02
+
+Adds Binge Watch — automatic next-episode playback, off by default.
+
+### Added
+
+- **Binge Watch**: automatically opens and plays the next episode when the current one ends, no clicking required
+  - Listens for the video's native `ended` event inside the Kwik player
+  - Resolves the next episode via animepahe's own release API (the same endpoint DUB Detector uses to enumerate episodes)
+  - Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`) before navigating — click it any time to cancel
+  - Off by default, since it changes browser navigation on its own; getting reliable autoplay working meant working around a few quirks in animepahe/Kwik's own page — their embed only loads once its "Click to load" placeholder is clicked (which Binge Watch now triggers itself), and Kwik's player can rebuild or defer loading its video element in ways a plain `video.play()` call doesn't anticipate on its own
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.2.0.1...v0.3.0.0)
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.2.0.1 — 2026-07-20
 
 This release is mostly about the popup — it's now organized into tabs instead of one long page — plus a fix for a Smart Search caching bug and the removal of the AnimeSkip fallback.

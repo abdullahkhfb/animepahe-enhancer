@@ -31,6 +31,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 - **🎙 DUB Detector** — Puts a badge on every episode that's dubbed, so you don't have to open it to find out. [Details&nbsp;→](docs/FEATURES.md#-dub-detector)
 - **🔍 Smart Search** — Finds a show even if you search by a nickname or a title in a different language. [Details&nbsp;→](docs/FEATURES.md#-smart-search)
 - **⏭ Intro / Outro Skip** — Skips the opening and ending automatically, or gives you a one-click Skip button. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
+- **🔁 Binge Watch** — Auto-plays the next episode when one ends, with a click to cancel. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
 
 Each feature can be turned on or off separately from the extension's popup, and everything runs locally in your browser — see [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
 
