@@ -94,7 +94,8 @@ animepahe-enhancer/
 │   │   ├── continue-watching.js
 │   │   ├── dub-detector.js
 │   │   ├── smart-search.js
-│   │   └── intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   ├── intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   └── binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
 │   │
 │   └── helpers/                  # Shared utilities imported by any feature
 │       ├── storage.js            # chrome.storage.local wrapper + DEFAULT_SETTINGS
@@ -103,6 +104,9 @@ animepahe-enhancer/
 │       ├── cache.js              # DUB cache read/write/garbage collection (configurable TTL)
 │       ├── throttler.js          # RequestThrottler — concurrency, jitter, retry, back-off
 │       │                         #   (tunable at runtime via updateOptions())
+│       ├── styles.js             # injectStylesheet() — shared one-line CSS loading, used
+│       │                         #   by every feature instead of duplicating it
+│       ├── pill.js                # showPill() — shared bottom-right status toast
 │       └── timestamps-db.js      # open-anime-timestamps dataset access (IndexedDB cache,
 │                                 #   AniList → AniDB ID resolution, episode lookup)
 │
@@ -128,6 +132,7 @@ animepahe-enhancer/
 │   ├── icon48.{png,svg}
 │   ├── icon128.{png,svg}
 │   ├── intro-skip.svg            # Intro/Outro Skip feature icon
+│   ├── binge-watch.svg           # Binge Watch feature icon
 │   ├── logo.svg
 │   ├── continue-watching.svg
 │   ├── dub-detector.svg
@@ -136,7 +141,9 @@ animepahe-enhancer/
 │   ├── chevron.svg
 │   ├── github.svg
 │   ├── animepahe.svg
-│   └── notice.svg
+│   ├── malsync.svg
+│   ├── notice.svg
+│   └── notice-white.svg
 │
 └── .github/
     ├── actions/

@@ -72,7 +72,8 @@
 │   ├── 🖼️  icon16.{png,svg}
 │   ├── 🖼️  icon48.{png,svg}
 │   ├── 🖼️  icon128.{png,svg}
-│   └── 🖼️  intro-skip.svg         # Intro/Outro Skip feature icon
+│   ├── 🖼️  intro-skip.svg         # Intro/Outro Skip feature icon
+│   └── 🖼️  binge-watch.svg        # Binge Watch feature icon
 │
 ├── 📁 docs/                       # Detailed documentation (this file lives here)
 │   └── 📁 widgets/                # Reusable install-prompt snippets for README.md
@@ -105,10 +106,12 @@ flowchart TD
     CM -->|dubEnabled| DD["features/dub-detector.js"]
     CM -->|smartSearchEnabled| SS["features/smart-search.js"]
     CM -->|introSkipEnabled| IS["features/intro-skip.js"]
+    CM -->|bingeWatchEnabled| BW["features/binge-watch.js"]
     CW --> CWI["new ContinueWatching(storage, settings)\n.init(pageType)"]
     DD --> DDI["new DubDetector(storage, settings)\n.init(pageType)"]
     SS --> SSI["new SmartSearch(storage, settings)\n.init(pageType)"]
     IS --> ISI["new IntroSkip(storage, settings)\n.init(pageType)"]
+    BW --> BWI["new BingeWatch(storage, settings)\n.init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules. Every feature constructor receives the same `settings` object (loaded once via `storage.getSettings()`), so reading a user-tuned value is just `settings.someKey ?? someDefault`.
