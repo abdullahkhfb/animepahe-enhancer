@@ -11,7 +11,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 <p align="center">
   <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Version" src="https://img.shields.io/badge/version-0.2.0.1-blue" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.0-blue" />
 </p>
 
 ## Contents
