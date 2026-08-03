@@ -120,6 +120,7 @@ For anyone who wants to fine-tune exactly how the extension behaves, every inter
 | **Smart Search**       | Minimum query length · debounce delay · max alternate titles queried · synonym query delay                                                  |
 | **Player**             | Progress-save interval                                                                                                                       |
 | **Intro / Outro Skip** | Skip button auto-hide · poll interval · default OP/ED duration · timestamp DB refresh interval · ID lookup cache duration |
+| **Binge Watch**       | Countdown before next episode (0 = skip it entirely)                                                                                        |
 
 - Auto-skip and progress-bar highlights are no longer here — they're sub-feature toggles on the Intro/Outro Skip card itself (see above), since they're everyday options, not tuning knobs.
 
