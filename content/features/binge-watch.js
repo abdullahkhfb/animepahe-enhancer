@@ -12,18 +12,13 @@ import { showPill } from "../helpers/pill.js";
 
 const MSG = { ENDED: "AP_BW_ENDED" };
 
-// Lets a "no thanks" click cancel before it auto-navigates.
-const COUNTDOWN_MS = 5000;
-
 // animepahe doesn't embed the kwik iframe on page load — it renders a
 // "Click to load" placeholder (div.click-to-load) and only injects the
-// real <iframe> once that's clicked. A manual visitor clicks it without
-// thinking about it, but a Binge Watch navigation is scripted, so nobody
-// ever clicks it — meaning the kwik iframe (and therefore
-// iframe-player.js, which only runs *inside* that iframe) never loads at
-// all. We leave a flag in sessionStorage right before navigating, then
-// on the next page auto-click the placeholder ourselves.
-const AUTOSTART_KEY = "ape_bw_autostart";
+// real <iframe> once that's clicked. Since this class only runs at all
+// when Binge Watch is switched on, we auto-click that placeholder on
+// every player page we land on — however we got there (a scripted
+// Binge Watch navigation, or just a normal click on an episode) — so
+// the whole point of the feature (no clicking required) actually holds.
 const CLICK_TO_LOAD_SELECTOR = ".click-to-load";
 const CLICK_TO_LOAD_WAIT_MS = 8000;
 
@@ -31,6 +26,7 @@ export class BingeWatch {
   /** @param {import("../helpers/storage.js").storage} storage */
   constructor(storage, settings = {}) {
     this._storage = storage;
+    this._countdownMs = settings.bingeWatchCountdownMs ?? 5000;
     this._cancelled = false;
     this._navigateTimer = null;
     this._boundOnMessage = this._onMessage.bind(this);
@@ -40,7 +36,6 @@ export class BingeWatch {
     injectStylesheet("ape-bw-styles", "content/features/binge-watch.css");
     window.addEventListener("message", this._boundOnMessage);
     this._handleRoute();
-    this._maybeAutoStartEmbed();
 
     let currentUrl = location.href;
     new MutationObserver(() => {
@@ -51,18 +46,9 @@ export class BingeWatch {
     }).observe(document.body, { childList: true, subtree: true });
   }
 
-  /** If we just arrived here via a Binge Watch auto-navigation, click
-   *  animepahe's own embed placeholder so the kwik iframe actually loads. */
-  _maybeAutoStartEmbed() {
-    if (getPageType() !== PAGE.PLAYER) return;
-
-    let pending = false;
-    try {
-      pending = sessionStorage.getItem(AUTOSTART_KEY) === "1";
-      sessionStorage.removeItem(AUTOSTART_KEY);
-    } catch {}
-    if (!pending) return;
-
+  /** Clicks animepahe's own embed placeholder so the kwik iframe loads
+   *  without the user having to click it themselves. */
+  _maybeAutoLoadEmbed() {
     const tryClick = () => {
       const el = document.querySelector(CLICK_TO_LOAD_SELECTOR);
       if (!el) return false;
@@ -86,6 +72,7 @@ export class BingeWatch {
     if (getPageType() === PAGE.PLAYER) {
       this._cancelled = false;
       clearTimeout(this._navigateTimer);
+      this._maybeAutoLoadEmbed();
     }
   }
 
@@ -117,7 +104,14 @@ export class BingeWatch {
 
   _showCountdownPill(nextUrl) {
     this._cancelled = false;
-    let secondsLeft = Math.ceil(COUNTDOWN_MS / 1000);
+
+    if (this._countdownMs <= 0) {
+      showPill("🔁 Binge Watch: playing next episode…", 2000);
+      location.href = nextUrl;
+      return;
+    }
+
+    let secondsLeft = Math.ceil(this._countdownMs / 1000);
 
     const pill = showPill(this._countdownText(secondsLeft), 0, true);
     pill.classList.add("ape-bw-pill");
@@ -148,11 +142,8 @@ export class BingeWatch {
       clearInterval(tickInterval);
       if (this._cancelled) return;
       pill.style.pointerEvents = "none";
-      try {
-        sessionStorage.setItem(AUTOSTART_KEY, "1");
-      } catch {}
       location.href = nextUrl;
-    }, COUNTDOWN_MS);
+    }, this._countdownMs);
   }
 
   _countdownText(secondsLeft) {

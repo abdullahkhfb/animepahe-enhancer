@@ -270,6 +270,20 @@ export const ADVANCED_SETTINGS_SCHEMA = [
       },
     ],
   },
+  {
+    group: "Binge Watch",
+    items: [
+      {
+        key: "bingeWatchCountdownMs",
+        label: "Countdown before next episode (ms)",
+        desc: "How long the cancelable countdown pill shows before auto-navigating to the next episode. Set to 0 to skip the countdown entirely and jump straight there.",
+        min: 0,
+        max: 30000,
+        step: 500,
+        default: 5000,
+      },
+    ],
+  },
 ];
 
 const ADVANCED_DEFAULTS = Object.fromEntries(

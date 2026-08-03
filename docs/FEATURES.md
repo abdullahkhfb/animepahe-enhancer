@@ -102,7 +102,8 @@ Automatically opens and plays the next episode when the current one ends — no 
 
 - Listens for the video's native `ended` event inside the Kwik player
 - Resolves the next episode using animepahe's own release API (the same endpoint DUB Detector uses to enumerate episodes)
-- Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`) before navigating — click it any time to cancel
+- Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`) before navigating — click it any time to cancel. The countdown length is tunable in Advanced Settings, and can be set to 0 to skip it entirely and jump straight to the next episode
+- While the feature is on, animepahe's "Click to load" placeholder over the embed is clicked automatically on every episode page — including ones you open yourself, not just ones Binge Watch navigates to — so nothing ever sits waiting for a click
 - Works purely off of the current episode's session id and animepahe's own episode ordering, so it doesn't depend on any third-party database
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

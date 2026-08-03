@@ -64,6 +64,19 @@ _Nothing staged yet._
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.0 — 2026-08-03
+
+### Changed
+
+- **Binge Watch's countdown is now tunable (including "off").** The 5-second cancelable pill before auto-navigating to the next episode is now an Advanced Settings value (`Countdown before next episode`) instead of a fixed constant — set it to 0 to skip the wait entirely and jump straight to the next episode.
+- **Binge Watch now bypasses "Click to load" on every episode, not just ones it auto-navigates to.** Previously the embed placeholder was only auto-clicked right after a Binge Watch navigation; now it's clicked automatically any time you land on a player page while the feature is on — including episodes you open yourself from an episode list — so playback never sits waiting for a click.
+
+### Fixed
+
+- Broken Edge badge in the README/docs — the shields.io badge URL had unencoded spaces in its label/message segments, which broke the image.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.0.0 — 2026-08-02
 
 Adds Binge Watch — automatic next-episode playback, off by default.
