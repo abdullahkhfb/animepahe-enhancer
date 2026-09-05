@@ -78,15 +78,6 @@ export const ADVANCED_SETTINGS_SCHEMA = [
         default: 24,
       },
       {
-        key: "dubParallelProbes",
-        label: "Binary-search probes",
-        desc: "How many points are probed per step when narrowing down which episodes are dubbed. Higher finds the answer in fewer rounds but fires more requests at once.",
-        min: 2,
-        max: 30,
-        step: 1,
-        default: 12,
-      },
-      {
         key: "dubBatchDelay",
         label: "Delay between batches (ms)",
         desc: "Pause inserted between scan batches/rounds so the site isn't hammered.",

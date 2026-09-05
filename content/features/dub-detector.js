@@ -118,7 +118,6 @@ export class DubDetector {
     this._activeSearches = new Map();
     this._searchIdCounter = 0;
     this._maxTotalReqs = 0;
-    this._parallelProbes = settings.dubParallelProbes ?? 12;
     this._batchDelay = settings.dubBatchDelay ?? 2000;
     this._homeBatchSize = settings.dubHomeBatchSize ?? 2;
     // Sub-feature: also scan homepage cards, not just episode lists.
@@ -241,11 +240,11 @@ export class DubDetector {
 
     let searchPending = 0;
     for (const size of this._activeSearches.values()) {
+      // The search is a sequential gallop-then-binary-search, so a bracket
+      // of `size` remaining episodes takes roughly 2*log2(size) more
+      // one-at-a-time requests to resolve (gallop out, then narrow).
       if (size > 1) {
-        const depth = Math.ceil(
-          Math.log(size) / Math.log(this._parallelProbes),
-        );
-        searchPending += depth * (this._parallelProbes - 1);
+        searchPending += 2 * Math.ceil(Math.log2(size));
       }
     }
 
@@ -535,51 +534,40 @@ export class DubDetector {
       await this._delay(this._batchDelay);
     }
 
+    // Dubs are almost always a contiguous run starting at the oldest
+    // episode, with only the most recent handful still sub-only, so gallop
+    // backward from the newest episode -- one request at a time, never in
+    // parallel -- to find that cutoff quickly without bursting the API.
     const searchId = ++this._searchIdCounter;
-    let left = 0;
-    let right = eps.length - 1;
+    let notDubbedIdx = eps.length - 1;
+    let dubbedIdx = 0;
+    let step = 1;
+    this._activeSearches.set(searchId, notDubbedIdx - dubbedIdx);
+    this._tickEta();
 
+    let cursor = notDubbedIdx - step;
+    while (cursor > dubbedIdx) {
+      if (await check(cursor)) {
+        dubbedIdx = cursor;
+        break;
+      }
+      notDubbedIdx = cursor;
+      step *= 2;
+      cursor = notDubbedIdx - step;
+      this._activeSearches.set(searchId, notDubbedIdx - dubbedIdx);
+      this._tickEta();
+    }
+
+    // Binary search narrows the now-small remaining bracket to the exact
+    // split, still one request at a time.
+    let left = dubbedIdx;
+    let right = notDubbedIdx;
     while (right - left > 1) {
+      const mid = Math.floor((left + right) / 2);
+      if (await check(mid)) left = mid;
+      else right = mid;
       this._activeSearches.set(searchId, right - left);
       this._tickEta();
-
-      const step = (right - left) / this._parallelProbes;
-      const probeIndices = [];
-
-      for (let i = 1; i < this._parallelProbes; i++) {
-        const mid = Math.floor(left + step * i);
-        if (mid > left && mid < right && !probeIndices.includes(mid))
-          probeIndices.push(mid);
-      }
-
-      if (probeIndices.length === 0) {
-        const mid = Math.floor((left + right) / 2);
-        if (mid > left && mid < right) probeIndices.push(mid);
-        else break;
-      }
-
-      const reqsBeforeProbes = this._reqCompleted;
-      const results = await Promise.all(probeIndices.map(check));
-      const probesWereCached = this._reqCompleted === reqsBeforeProbes;
-
-      let lastTrueIdx = -1;
-      for (let i = 0; i < results.length; i++) {
-        if (results[i]) lastTrueIdx = i;
-        else break;
-      }
-
-      if (lastTrueIdx === -1) {
-        right = probeIndices[0];
-      } else if (lastTrueIdx === probeIndices.length - 1) {
-        left = probeIndices[lastTrueIdx];
-      } else {
-        left = probeIndices[lastTrueIdx];
-        right = probeIndices[lastTrueIdx + 1];
-      }
-
-      if (right - left > 1 && !probesWereCached) {
-        await this._delay(this._batchDelay);
-      }
     }
 
     this._activeSearches.delete(searchId);

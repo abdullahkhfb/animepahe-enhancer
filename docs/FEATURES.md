@@ -44,7 +44,7 @@ Detection uses a two-method strategy with a local cache (24 hours by default, co
 1. **Lightweight JSON API check** — hits animepahe's `/api?m=links` endpoint
 2. **HTML page fallback** — parses the play page if the API check is inconclusive
 
-A smart **binary search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. This cuts the number of network requests from O(n) to O(log n). The number of parallel probes and the delay between scan batches are both configurable.
+A smart **gallop-then-binary-search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. It steps backward from the newest episode in doubling strides to bracket the dub/sub cutoff, then binary-searches within that bracket — one request at a time, never in parallel — cutting the number of network requests from O(n) to O(log n) without bursting the API. The delay between scan batches is configurable.
 
 Scanning the home page's `N/total` cards is a sub-feature, toggleable directly from the DUB Detector card in the popup (default **on**) — turn it off to only scan episode lists and player pages, which uses fewer requests.
 
@@ -115,7 +115,7 @@ For anyone who wants to fine-tune exactly how the extension behaves, every inter
 | Group                  | What's tunable                                                                                                                             |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Continue Watching**  | Max saved entries · cards shown before "Show More"                                                                                          |
-| **DUB Detector**       | Cache duration · binary-search probe count · delay between scan batches · homepage batch size                                              |
+| **DUB Detector**       | Cache duration · delay between scan batches · homepage batch size                                                                           |
 | **Network Throttler**  | Min request interval · jitter · max concurrent requests · max retries · base backoff                                                        |
 | **Smart Search**       | Minimum query length · debounce delay · max alternate titles queried · synonym query delay                                                  |
 | **Player**             | Progress-save interval                                                                                                                       |
