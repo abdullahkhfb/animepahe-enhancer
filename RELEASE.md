@@ -64,6 +64,22 @@ _Nothing staged yet._
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.1 — 2026-09-05
+
+DUB Detector's episode scan is now gentler on animepahe's servers, with no user-facing behavior change.
+
+### Changed
+
+- **DUB Detector's scanning algorithm** now checks episodes one at a time instead of firing several requests in parallel per round. It gallops backward from the newest episode in doubling strides to bracket the dub/sub boundary, then binary-searches within that bracket — still O(log n) requests overall, just never more than one in flight at once. This mirrors the approach used by the `animepahe-dub-detector-plus` userscript and reduces the chance of tripping Cloudflare's rate limiting mid-scan.
+
+### Removed
+
+- The **"Binary-search probes"** Advanced Setting — there's no longer a per-round probe count to tune, since scanning is sequential.
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.0...v0.3.1.1)
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.1.0 — 2026-08-03
 
 ### Changed
