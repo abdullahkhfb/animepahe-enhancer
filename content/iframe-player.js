@@ -73,26 +73,72 @@ function ensurePlayback(video) {
   let attempts = 0;
   let clickInterval = null;
 
+  // Tracks whether we muted the video ourselves purely to get autoplay
+  // past the browser's policy (as opposed to the user/player muting it
+  // on purpose). Only ever unmute a video we auto-muted, and only once
+  // we have a real user gesture to back it up — see below.
+  let autoMuted = false;
+  // The automatic (non-gesture) unmute attempt below can fail and cause
+  // a brief pause/resume; if we retried it on every subsequent "playing"
+  // event that would loop forever and stutter the video. Only take that
+  // free shot once — after that, only a real user gesture gets to retry.
+  let triedAutoUnmute = false;
+
   const attemptNativePlay = () => {
     video.play()?.catch(() => {
-      const wasMuted = video.muted;
-      video.muted = true;
-      video
-        .play()
-        ?.then(() => {
-          if (!wasMuted) {
-            video.addEventListener(
-              "playing",
-              () => {
-                video.muted = false;
-              },
-              { once: true },
-            );
-          }
-        })
-        .catch(() => {});
+      if (!video.muted) {
+        autoMuted = true;
+        video.muted = true;
+      }
+      video.play()?.catch(() => {});
     });
   };
+
+  // Unmuting is itself an autoplay action from the browser's point of
+  // view, gated by the same policy as play(): with no user gesture or
+  // engagement to back it up, the browser doesn't throw — it silently
+  // re-pauses the video instead (that's the "Unmuting failed..." console
+  // message). The video lives in its own (often cross-origin) iframe, so
+  // waiting for a click inside THIS document specifically may never
+  // happen — the gesture that started the episode usually happened on
+  // the parent page instead. So: try to unmute opportunistically at
+  // every good opportunity, but always check right after whether that
+  // left the video paused, and if so put it back to muted+playing rather
+  // than leaving the user stuck on a paused frame.
+  const tryUnmute = (isGesture) => {
+    if (!autoMuted || !video.muted) return;
+    if (!isGesture) {
+      if (triedAutoUnmute) return;
+      triedAutoUnmute = true;
+    }
+    video.muted = false;
+    autoMuted = false;
+    setTimeout(() => {
+      if (video.paused && !video.ended) {
+        autoMuted = true;
+        video.muted = true;
+        video.play()?.catch(() => {});
+      }
+    }, 60);
+  };
+
+  // Best odds for the one free automatic attempt: right as our muted
+  // autoplay actually starts playing — the browser/kwik has already
+  // agreed to play *something*, so this is the cheapest moment to try
+  // upgrading it to audible.
+  video.addEventListener("playing", () => tryUnmute(false));
+
+  // Beyond that, retry on any real click/tap/keypress that lands inside
+  // this iframe (e.g. the user interacting with the player itself) — a
+  // genuine gesture always carries enough activation to allow it, and
+  // these are naturally spaced out by actual human interaction so they
+  // can't spiral into a pause/resume loop.
+  document.addEventListener("pointerdown", () => tryUnmute(true), {
+    capture: true,
+  });
+  document.addEventListener("keydown", () => tryUnmute(true), {
+    capture: true,
+  });
 
   // Try right away, and again whenever the video actually becomes
   // playable — we can't assume either of those events will fire without

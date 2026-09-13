@@ -6,7 +6,38 @@
   background: rgba(232, 178, 74, 0.08);
   border: 1px solid rgba(232, 178, 74, 0.2);
   border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.advanced-warning-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
   padding: 7px 9px;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+}
+.advanced-warning-header:hover {
+  background: rgba(232, 178, 74, 0.06);
+}
+
+.advanced-warning-title {
+  flex: 1;
+  font-weight: 600;
+}
+
+.advanced-warning-chevron {
+  width: 12px;
+  height: 12px;
+  color: #e8b24a;
+}
+
+.advanced-warning-body {
+  padding: 0 9px 8px 29px;
 }
 
 /* ── Advanced groups (collapsible accordion) ─────────────── */
@@ -21,6 +52,7 @@
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .advanced-group-header {

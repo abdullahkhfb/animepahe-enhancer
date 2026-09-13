@@ -265,7 +265,7 @@
             <div class="feature-card" id="bw-card">
               <button class="feature-header" aria-expanded="false">
                 <div class="feature-top">
-                  <div class="feature-icon bw-icon">
+                  <div class="feature-icon bw-icon" style="background: transparent">
                     <img
                       src="../icons/binge-watch.svg"
                       alt=""
@@ -322,10 +322,30 @@
         hidden
       >
         <div class="panel-scroll">
-          <div class="advanced-warning">
-            These control internal timing, caching, and request behavior.
-            Defaults work well for almost everyone - change with care. Edits
-            below aren't saved until you press Apply Changes.
+          <div class="advanced-warning" id="advanced-warning">
+            <button
+              type="button"
+              class="advanced-warning-header"
+              id="advanced-warning-toggle"
+              aria-expanded="false"
+            >
+              <img src="../icons/notice.svg" alt="" width="14" height="14" />
+              <span class="advanced-warning-title"
+                >Advanced settings — change with care</span
+              >
+              <img
+                class="advanced-warning-chevron chevron-icon"
+                src="../icons/chevron.svg"
+                alt=""
+                width="12"
+                height="12"
+              />
+            </button>
+            <div class="advanced-warning-body" id="advanced-warning-body" hidden>
+              These control internal timing, caching, and request behavior.
+              Defaults work well for almost everyone. Edits below aren't
+              saved until you press Apply Changes.
+            </div>
           </div>
 
           <div id="advanced-groups"></div>

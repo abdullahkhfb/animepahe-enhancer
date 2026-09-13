@@ -64,6 +64,24 @@ _Nothing staged yet._
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.2 — 2026-09-13
+
+Fixes videos starting muted, and cleans up a couple of rough edges in the popup.
+
+### Fixed
+
+- **Videos could start (and stay) muted on autoplay.** `ensurePlayback()`'s mute/retry fallback only unmuted the video from inside a `.catch()` that ran after the *first* unmuted `play()` call was rejected — but kwik's player can start the `<video>` already muted on its own, in which case that first `play()` call succeeds immediately and the fallback (and its unmute step) never runs at all, leaving the video silently muted with nothing to undo it. Reported in [#5](https://github.com/abdullahkhfb/animepahe-enhancer/issues/5).
+- **Binge Watch's icon rendered inside an oversized square frame**, with visible empty padding around the artwork instead of filling its slot like the other feature icons do.
+
+### Changed
+
+- **Binge Watch icon redesigned** — the "NEXT" text badge was unreadable at the icon's actual small display size; replaced with a simple checkmark badge, and dropped a drop-shadow filter that blurred edges at that size.
+- **Advanced Settings warning banner is now collapsible** (collapsed by default) instead of a fixed block of text always taking up space at the top of the tab.
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.1...v0.3.1.2)
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.1.1 — 2026-09-05
 
 DUB Detector's episode scan is now gentler on animepahe's servers, with no user-facing behavior change.
