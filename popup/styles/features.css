@@ -65,12 +65,9 @@
   background: rgba(46, 204, 113, 0.15);
   color: #2ecc71;
 }
-.bw-icon {
-  background: rgba(168, 85, 247, 0.15);
-}
 .bw-icon img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
 .feature-name {

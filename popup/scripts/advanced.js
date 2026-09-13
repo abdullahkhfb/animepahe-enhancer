@@ -10,6 +10,23 @@ export async function initAdvancedTab() {
   const advancedApply = document.getElementById("advanced-apply");
   const applyStatus = document.getElementById("apply-status");
 
+  const advancedWarning = document.getElementById("advanced-warning");
+  const advancedWarningToggle = document.getElementById(
+    "advanced-warning-toggle",
+  );
+  const advancedWarningBody = document.getElementById(
+    "advanced-warning-body",
+  );
+  if (advancedWarning && advancedWarningToggle && advancedWarningBody) {
+    makeCollapsible({
+      container: advancedWarning,
+      header: advancedWarningToggle,
+      body: advancedWarningBody,
+      expandedClass: "open",
+      startExpanded: false,
+    });
+  }
+
   let settings = await storage.getSettings();
   // Staged edits made in this tab. Nothing here is persisted until the
   // user presses "Apply Changes".
