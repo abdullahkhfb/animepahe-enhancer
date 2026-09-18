@@ -8,6 +8,8 @@ body:
       value: |
         Got a question about using the extension? You're in the right place — see [CONTRIBUTING.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/CONTRIBUTING.md#issue-guidelines) if you're not sure whether this or a different template fits better.
 
+        If this is about a possible privacy *problem* (data going somewhere it shouldn't), please use the private security channel instead — see [SECURITY.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/SECURITY.md). This template is for general questions only.
+
         Before asking, a quick check of [docs/USAGE.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/docs/USAGE.md) or [docs/FEATURES.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/docs/FEATURES.md) might already answer it.
 
   - type: checkboxes
@@ -40,6 +42,7 @@ body:
         - Intro / Outro Skip
         - Binge Watch
         - Advanced Settings
+        - Privacy / data handling
         - Popup / settings UI
         - Something else / not sure
     validations:
