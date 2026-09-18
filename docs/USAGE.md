@@ -10,6 +10,7 @@
 - [DUB Detector](#dub-detector)
 - [Smart Search](#smart-search)
 - [Intro / Outro Skip](#intro--outro-skip)
+- [Binge Watch](#binge-watch)
 - [Popup Settings Panel](#popup-settings-panel)
 
 ---
@@ -90,6 +91,21 @@ The Intro / Outro Skip feature activates automatically on the player page (`/pla
 - The open-anime-timestamps database (~27 MB) is downloaded from GitHub and cached in **IndexedDB** (too large for `chrome.storage.local`'s default quota). It's refreshed on a configurable schedule (7 days by default) using conditional GET with ETag headers to avoid re-downloading unchanged data.
 - AniList → AniDB ID mappings are cached per anime session in `chrome.storage.local` (configurable TTL, default 7 days).
 - You can see whether the database is currently cached, or clear all cached data, from the popup.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Binge Watch
+
+Binge Watch auto-plays the next episode when the current one ends. It's **off by default** since it navigates your browser on its own — turn it on from its card in the popup's Features tab.
+
+1. Once enabled, nothing changes until an episode actually finishes playing.
+2. When the video hits its native "ended" event, the extension looks up the next episode via animepahe's own release listing.
+3. A short countdown pill appears (`▶ Binge Watch: next episode in 5s`) in the bottom-right corner. Click it any time before it finishes to cancel and stay on the current episode.
+4. If you don't cancel, the browser navigates to the next episode automatically once the countdown ends.
+5. While the feature is on, animepahe's "Click to load" placeholder over the embed is clicked automatically on **every** episode page you land on — not just ones Binge Watch navigates to — so nothing sits waiting for a click.
+6. If there's no next episode (you're on the latest one), nothing happens — playback just ends normally.
+
+**Tuning:** The countdown length is configurable in Advanced Settings (`Countdown before next episode`) and can be set to **0** to skip the pill entirely and jump straight to the next episode.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

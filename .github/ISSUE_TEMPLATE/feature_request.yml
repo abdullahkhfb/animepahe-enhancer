@@ -51,6 +51,7 @@ body:
         - DUB Detector
         - Smart Search
         - Intro / Outro Skip
+        - Binge Watch
         - Popup / settings UI
         - Something else / not sure
     validations:

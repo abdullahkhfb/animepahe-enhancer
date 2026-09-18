@@ -1,0 +1,54 @@
+name: ❓ Question
+description: Ask about how something works or how to do something
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got a question about using the extension? You're in the right place — see [CONTRIBUTING.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/CONTRIBUTING.md#issue-guidelines) if you're not sure whether this or a different template fits better.
+
+        Before asking, a quick check of [docs/USAGE.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/docs/USAGE.md) or [docs/FEATURES.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/docs/FEATURES.md) might already answer it.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I checked the README and the docs/ guides and couldn't find an answer
+          required: true
+        - label: I searched existing issues and this hasn't already been asked
+          required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: What's your question?
+      description: Be as specific as you can — what are you trying to do, and where are you stuck?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which part of the extension is this about?
+      multiple: true
+      options:
+        - Continue Watching
+        - DUB Detector
+        - Smart Search
+        - Intro / Outro Skip
+        - Binge Watch
+        - Advanced Settings
+        - Popup / settings UI
+        - Something else / not sure
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else?
+      description: Browser/OS, extension version, screenshots — anything that adds useful context.
+    validations:
+      required: false

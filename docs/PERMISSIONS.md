@@ -11,7 +11,7 @@ The extension requests the minimum permissions necessary:
 | Permission                                         | Reason                                                                                                            |
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `storage`                                          | Save settings, Continue Watching progress, and various caches to `chrome.storage.local` and IndexedDB             |
-| Host permissions for `*.animepahe.{pw,org,com,ru}` | Inject the main content script into animepahe pages                                                               |
+| Host permissions for `*.animepahe.{pw,org,com}`    | Inject the main content script into animepahe pages                                                               |
 | Host permissions for `*.kwik.cx`                   | Inject the iframe player script into the embedded Kwik video player                                               |
 | Host permissions for `graphql.anilist.co`          | Fetch alternative anime titles for Smart Search and resolve IDs for Intro/Outro Skip (no account data exchanged) |
 | Host permissions for `relations.yuna.moe`          | Resolve AniList/MAL IDs to AniDB IDs for the Intro/Outro Skip timestamp database lookup                            |
@@ -30,7 +30,6 @@ All network requests to external services (AniList, relations.yuna.moe, open-ani
 - `animepahe.pw`
 - `animepahe.org`
 - `animepahe.com`
-- `animepahe.ru`
 
 **Kwik video player (iframe script):**
 

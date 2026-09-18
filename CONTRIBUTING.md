@@ -348,16 +348,22 @@ Good issues save everyone time. Please include:
 - Your proposed solution (optional but helpful)
 - Any alternative approaches you considered
 
+**For questions about usage:**
+
+- Use the ❓ Question template — it prompts for what you're stuck on and which part of the extension it relates to
+
+The issue tracker offers three templates (🐛 Bug report, 💡 Feature request, ❓ Question) plus a **blank issue**, for anything — a doc fix, a process suggestion, a security-adjacent question that isn't a vulnerability report, or anything else that doesn't fit the three templates above.
+
 Use the existing issue labels to help triage:
 
-| Label              | Meaning                              |
-| ------------------ | ------------------------------------ |
-| `bug`              | Confirmed misbehaviour               |
-| `enhancement`      | New feature or improvement           |
-| `documentation`    | Docs-only change                     |
-| `question`         | Not yet triaged or unclear           |
-| `good first issue` | Suitable for a first contribution    |
-| `help wanted`      | Maintainer is open to a community PR |
+| Label              | Meaning                                            |
+| ------------------ | --------------------------------------------------- |
+| `bug`              | Confirmed misbehaviour                             |
+| `enhancement`      | New feature or improvement                         |
+| `documentation`    | Docs-only change                                   |
+| `question`         | General question about usage (via the ❓ Question template) |
+| `good first issue` | Suitable for a first contribution                  |
+| `help wanted`      | Maintainer is open to a community PR               |
 
 ---
 
@@ -376,6 +382,6 @@ When a release is ready:
 
 ## Questions
 
-For general questions about usage, open a [GitHub Discussion](https://github.com/abdullahkhfb/animepahe-enhancer/discussions) or an issue labelled `question`.
+For general questions about usage, open an issue using the ❓ Question template (it applies the `question` label for you). If it doesn't fit a bug report, feature request, or question, a blank issue is fine too.
 
 For security concerns, follow the process in [`SECURITY.md`](SECURITY.md).
