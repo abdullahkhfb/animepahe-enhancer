@@ -1,12 +1,15 @@
 <!--
-  Edge widget — status badge, not an install prompt.
-  The Edge Add-ons listing is currently broken, so this points to
-  docs/EDGE.md (the full explanation + manual install steps) instead of
-  encouraging people to install straight from the store.
+  Edge widget — install badge.
+  The Edge Add-ons listing is live again as of v0.3.1.2 (approved,
+  listed under Entertainment / Mature content).
 -->
 
 <p align="center">
-  <a href="../EDGE.md">
-    <img alt="Microsoft Edge — see current status" src="https://img.shields.io/badge/Edge_Add--ons-see_current_status-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" />
+  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
+    <img alt="Get animepahe Enhancer for Microsoft Edge" src="https://img.shields.io/badge/Edge_Add--ons-Get_it_now-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" />
   </a>
+  <br />
+  <sub>Free · takes about 10 seconds · no account needed</sub>
 </p>
+
+**Store ID:** `0RDCKD4MDFZC` · **CRX ID:** `omdenhapffjpbafkliiedijooomljbgd`

@@ -73,17 +73,19 @@ Each feature can be turned on or off separately from the extension's popup, and 
 <!-- Widget source: docs/widgets/edge.md — edit there, then copy the block below -->
 
 <p align="center">
-  <a href="docs/EDGE.md">
-    <img alt="Microsoft Edge — see current status" src="https://img.shields.io/badge/Edge_Add--ons-see_current_status-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" />
+  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
+    <img alt="Get animepahe Enhancer for Microsoft Edge" src="https://img.shields.io/badge/Edge_Add--ons-Get_it_now-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" />
   </a>
+  <br />
+  <sub>Free · takes about 10 seconds · no account needed</sub>
 </p>
 
-| Browser                    | Where to get it                                                                       | Notes                                                                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/) | Ready to install right now                                                                                                   |
-| **Chrome**                 | Chrome Web Store                                                                      | **Release date: TBA** — not submitted yet; may face the same content-policy issue as Edge (see [docs/EDGE.md](docs/EDGE.md)) |
-| **Edge**                   | [docs/EDGE.md](docs/EDGE.md) — manual install only, for now                           | ⚠️ No live store listing currently — see docs/EDGE.md for why                                                                |
-| Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)        | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally)                                |
+| Browser                    | Where to get it                                                                                    | Notes                                                                                                                                        |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)              | Ready to install right now                                                                                                                   |
+| **Chrome**                 | Chrome Web Store                                                                                   | **Release date: TBA** — not submitted yet; may face a similar review process to the one Edge went through (see [docs/EDGE.md](docs/EDGE.md)) |
+| **Edge**                   | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Ready to install right now                                                                                                                   |
+| Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally)                                                |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
