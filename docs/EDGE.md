@@ -7,7 +7,7 @@
 **The Edge Add-ons listing is live again**, at v0.3.1.2. After being unpublished and then blocked for a while (see below), a new submission passed certification and is now up on the store — link and details below. The manual-install steps further down still work if you'd rather not wait on store updates, but they're no longer the only option.
 
 <p align="center">
-  <img src="../screenshots/edge_live_sc.png" alt="Screenshot of the animepahe Enhancer listing, live on the Edge Add-ons store at version 0.3.1.2" width="600" />
+  <img src="../screenshots/edge_live_sc.jpeg" alt="Screenshot of the animepahe Enhancer listing, live on the Edge Add-ons store at version 0.3.1.2" width="600" />
   <br />
   <sub>The listing as it looks now, live at v0.3.1.2.</sub>
 </p>
