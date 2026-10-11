@@ -133,8 +133,7 @@ animepahe-enhancer/
 │   └── fonts/                    # Bundled Bricolage Grotesque + DM Mono (OFL)
 │
 ├── icons/
-│   ├── icon16.{png,svg}, icon48.{png,svg}, icon128.{png,svg}   # the "ap" mark
-│   ├── logo.svg
+│   ├── icon16.png, icon48.png, icon128.png   # the "ap" mark
 │   ├── animepahe-wordmark.svg    # Real animepahe site logo
 │   └── malsync.svg               # Real MalSync logo
 │

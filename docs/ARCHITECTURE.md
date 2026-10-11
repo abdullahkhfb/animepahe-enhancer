@@ -89,10 +89,9 @@
 │   └── 📁 fonts/                  # Bricolage Grotesque + DM Mono (OFL), bundled offline
 │
 ├── 📁 icons/
-│   ├── 🖼️  icon16.{png,svg}       # Toolbar / store icons (the "ap" mark)
-│   ├── 🖼️  icon48.{png,svg}
-│   ├── 🖼️  icon128.{png,svg}
-│   ├── 🖼️  logo.svg               # The "ap" mark on its magenta tile
+│   ├── 🖼️  icon16.png             # Toolbar / store icons (the "ap" mark)
+│   ├── 🖼️  icon48.png
+│   ├── 🖼️  icon128.png
 │   ├── 🖼️  animepahe-wordmark.svg # The real animepahe site logo (Links tab)
 │   └── 🖼️  malsync.svg            # The real MalSync logo (Links tab)
 │
