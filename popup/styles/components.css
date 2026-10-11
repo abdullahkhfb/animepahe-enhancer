@@ -1,0 +1,142 @@
+/* ── Shared UI components ──────────────────────────────────────────────── */
+
+/* Toggle — --c is the accent colour, set by the parent feature */
+.toggle {
+  width: 48px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.toggle__track {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--line-2);
+  transition: background 0.18s;
+}
+.toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: transform 0.18s, background 0.18s;
+}
+.toggle[aria-checked="true"] .toggle__track { background: var(--c, var(--brand-2)); }
+.toggle[aria-checked="true"] .toggle__thumb {
+  background: var(--bg);
+  transform: translateX(16px);
+}
+.toggle--sm { width: 44px; }
+.toggle--sm .toggle__track { width: 34px; height: 20px; }
+.toggle--sm .toggle__thumb { width: 14px; height: 14px; }
+.toggle--sm[aria-checked="true"] .toggle__thumb { transform: translateX(14px); }
+
+/* Buttons */
+.btn {
+  height: 34px;
+  padding: 0 13px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+}
+.btn--outline { border: 1px solid var(--line-2); }
+.btn--outline:hover { background: #1b1a23; border-color: var(--line-3); }
+.btn--dashed {
+  height: 44px;
+  border: 1px dashed var(--line-3);
+  border-radius: 12px;
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+.btn--dashed:hover { background: #1b1a23; }
+.btn--block { width: 100%; }
+.btn--primary {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--brand);
+  color: #fff;
+}
+.btn--primary:hover:not(:disabled) { background: #e8026a; }
+.btn--primary:disabled {
+  background: var(--raised);
+  color: var(--dim);
+  cursor: default;
+}
+
+/* Stat chip */
+.stat-chip {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-2);
+  background: var(--raised);
+  padding: 5px 10px;
+  border-radius: 999px;
+}
+
+/* Stepper */
+.stepper {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+}
+.stepper__btn {
+  width: 34px;
+  height: 36px;
+  font-size: 16px;
+  color: var(--text-2);
+}
+.stepper__btn:hover { background: #1b1a23; }
+.stepper__input {
+  width: 60px;
+  height: 36px;
+  padding: 0 2px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.stepper__input::-webkit-outer-spin-button,
+.stepper__input::-webkit-inner-spin-button { appearance: none; margin: 0; }
+.stepper__input.is-dirty { color: var(--brand-2); }
+
+/* Reload notice */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 22px;
+  margin: 0;
+  padding: 0 10px;
+  width: max-content;
+  background: var(--raised);
+  border: 1px solid var(--line-3);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.notice__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-2);
+  flex-shrink: 0;
+}

@@ -45,8 +45,7 @@ Each feature can be turned on or off separately from the extension's popup, and 
 <img src="screenshots/sc2.png" alt="Episode list showing DUB and SUB ONLY badges" width="100%" />
 <img src="screenshots/sc3.png" alt="Player page with the Skip Intro button" width="100%" />
 <img src="screenshots/sc4.png" alt="Smart Search showing extra results for an alternative title" width="100%" />
-<img src="screenshots/sc5.png" alt="The extension's popup, Features tab" width="100%" />
-<img src="screenshots/sc6.png" alt="The extension's popup, Advanced Settings tab" width="100%" />
+<img src="screenshots/sc5.png" alt="The redesigned popup, three tabs side by side: Features with Continue Watching expanded, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" width="100%" />
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -93,7 +92,7 @@ Each feature can be turned on or off separately from the extension's popup, and 
 
 ## Want more control?
 
-If you like tinkering, the popup has an **Advanced Settings** tab where you can adjust things like cache duration, scan speed, and skip timing — all with plain-language descriptions, so you don't need to touch any code. Everything has a sensible default, so this is entirely optional. [See what's tunable →](docs/FEATURES.md#-advanced-settings)
+If you like tinkering, the popup has an **Advanced** tab where you can adjust things like cache duration, scan speed, and skip timing — all with plain-language descriptions, so you don't need to touch any code. Everything has a sensible default, so this is entirely optional. [See what's tunable →](docs/FEATURES.md#-advanced-settings)
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

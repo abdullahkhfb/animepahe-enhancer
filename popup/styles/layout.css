@@ -1,0 +1,101 @@
+/* ── App shell: header, timeline strip, tabs, panels ───────────────────── */
+.app { padding-bottom: 4px; }
+
+/* The popup has a fixed 600px budget (Chrome's popup max) and must never
+   scroll — every tab is sized to fit inside it. */
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px 8px;
+}
+.header__mark { display: flex; flex-shrink: 0; }
+.header__titles {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.header__name {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.header__sub {
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+/* Echoes the wordmark: "anime" light, "pahe" bold */
+.header__sub-light { font-weight: 400; color: var(--wordmark-light); }
+.header__sub-bold  { font-weight: 700; color: var(--brand-2); }
+.header__version {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+
+/* Timeline strip — one segment per feature */
+.timeline { position: relative; padding: 0 20px 10px; }
+.timeline__bar { display: flex; gap: 3px; height: 6px; }
+.timeline__seg {
+  flex-basis: 0;
+  border-radius: 3px;
+  background: var(--raised);
+  transition: background 0.2s;
+}
+.timeline__seg.is-on { background: var(--c); }
+.timeline__readout {
+  margin-top: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin: 0 20px 6px;
+  padding: 3px;
+  background: var(--surface);
+  border-radius: 12px;
+}
+.tabs__btn {
+  flex: 1;
+  height: 32px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+.tabs__btn[aria-selected="true"] {
+  background: var(--raised-2);
+  color: var(--text);
+}
+
+/* Panels */
+.panel { padding: 4px 12px 0; }
+.panel-intro {
+  margin: 2px 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Reload notice rides on the readout line ("N of 5 active"), right-aligned */
+.timeline .notice {
+  position: absolute;
+  right: 20px;
+  bottom: 6px;
+}

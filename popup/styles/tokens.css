@@ -1,0 +1,88 @@
+/* ── Fonts (bundled in popup/fonts — no network requests) ──────────────── */
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 400; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 500; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 600; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 700; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "DM Mono"; font-weight: 400; font-display: swap; src: url("../fonts/dm-mono-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "DM Mono"; font-weight: 500; font-display: swap; src: url("../fonts/dm-mono-latin-500-normal.woff2") format("woff2"); }
+
+/* ── Design tokens ─────────────────────────────────────────────────────── */
+:root {
+  /* Surfaces (darkest → lightest) */
+  --bg: #0f0e14;
+  --surface: #17161e;
+  --surface-2: #1f1e28;
+  --raised: #23222d;
+  --raised-2: #2a2833;
+
+  /* Lines */
+  --line: #2a2833;
+  --line-2: #2f2d3a;
+  --line-3: #3a3846;
+
+  /* Text */
+  --text: #f1eef6;
+  --text-2: #c9c4d6;
+  --text-3: #b5b0c4;
+  --muted: #9a95aa;
+  --dim: #6e6a7c;
+
+  /* Brand — taken from the animepahe wordmark */
+  --brand: #d5015b;
+  --brand-2: #ff4d94;
+  --wordmark-light: #f1f1f1;
+
+  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* ── Reset & base ──────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* The popup is 400px wide and as tall as its content — no inner scroll. */
+body {
+  width: 400px;
+  background: var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--brand-2);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  flex-shrink: 0;
+}

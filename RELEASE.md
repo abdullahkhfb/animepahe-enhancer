@@ -60,7 +60,25 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 Changes staged for the next version, not yet tagged as a GitHub Release.
 
-_Nothing staged yet._
+A redesigned popup, a new icon, and a tidier source tree.
+
+### Added
+
+- **Redesigned popup**: a status strip in the header lights one colour-coded segment per enabled feature, features are single rows with one switch each, and every tab fits its content with no inner scrolling.
+- **New "ap" icon** for the toolbar and stores — a thin "a" beside a bold "p" whose counter is a play button, drawn in the site's own colours.
+- **Real logos in Links**: the animepahe wordmark and the MalSync logo now appear on their quick links.
+- **Offline fonts**: the popup bundles Bricolage Grotesque and DM Mono (SIL OFL) instead of loading anything from the network.
+
+### Changed
+
+- Advanced settings show one group at a time (pill selector) with steppers instead of a long accordion; the unsaved-changes bar sits at the bottom of the tab.
+- Tab names are now **Features / Advanced / Links**.
+- The popup is built from small components (`popup/components/`), with one file per icon, instead of one large `popup.html`.
+- `content/features/` is split into `js/` and `css/` folders. No behaviour change; internal paths and `manifest.json` globs were updated to match.
+
+### Removed
+
+- The old per-feature icon SVGs in `icons/` that only the previous popup used.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

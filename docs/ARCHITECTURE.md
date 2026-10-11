@@ -27,16 +27,19 @@
 │   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge for
 │   │                              #   Continue Watching + Intro/Outro Skip controller
 │   │
-│   ├── 📁 features/               # One .js + one .css per feature
-│   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
-│   │   ├── 🎨 continue-watching.css
-│   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
-│   │   ├── 🎨 dub-detector.css
-│   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
-│   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
-│   │   ├── 🎨 intro-skip.css        #   (also loaded inside the kwik iframe, see iframe-player.js)
-│   │   ├── 📄 binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
-│   │   └── 🎨 binge-watch.css
+│   ├── 📁 features/               # One class + one stylesheet per feature,
+│   │   │                          #   kept in separate css/ and js/ folders
+│   │   ├── 📁 js/
+│   │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
+│   │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
+│   │   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
+│   │   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   │   └── 📄 binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
+│   │   └── 📁 css/
+│   │       ├── 🎨 continue-watching.css
+│   │       ├── 🎨 dub-detector.css
+│   │       ├── 🎨 intro-skip.css        # Also loaded inside the kwik iframe (see iframe-player.js)
+│   │       └── 🎨 binge-watch.css
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + DEFAULT_SETTINGS
@@ -51,29 +54,47 @@
 │       └── 📄 timestamps-db.js    # open-anime-timestamps dataset access (IndexedDB
 │                                  #   cache, ID resolution, episode lookup)
 │
-├── 📁 popup/
-│   ├── 🌐 popup.html              # Settings popup markup (three tabs: Features,
-│   │                              #   Advanced Settings, Quick Links)
-│   ├── 📄 popup.js                # Slim entry point — wires up the tab bar and
-│   │                              #   hands off to each tab's own module
-│   ├── 📁 scripts/                # One JS module per tab, plus shared helpers
-│   │   ├── 📄 common.js           #   Tab switching, collapsible sections, button
-│   │   │                          #   feedback — shared by every tab (DRY)
-│   │   ├── 📄 features.js         #   Features tab logic
-│   │   ├── 📄 advanced.js         #   Advanced Settings tab logic
-│   │   └── 📄 links.js            #   Quick Links tab logic
-│   └── 📁 styles/                 # One CSS file per tab, plus shared base styles
-│       ├── 🎨 common.css          #   Reset, header, tab bar, panel shell, notice
-│       ├── 🎨 features.css
-│       ├── 🎨 advanced.css
-│       └── 🎨 links.css
+├── 📁 popup/                      # The toolbar popup — built from small components
+│   ├── 🌐 popup.html              # Empty shell: stylesheets + <div id="app">
+│   ├── 📄 popup.js                # Entry point — mounts the header, timeline strip,
+│   │                              #   tab bar and the three tab panels
+│   ├── 📁 components/             # One file per component, grouped by role
+│   │   ├── 📄 dom.js              #   h() element builder shared by every component
+│   │   ├── 📁 icons/              #   One file per icon (and per real logo image)
+│   │   │   ├── 📄 ContinueWatchingIcon.js, DubDetectorIcon.js, SmartSearchIcon.js,
+│   │   │   │      IntroSkipIcon.js, BingeWatchIcon.js     # the five feature icons
+│   │   │   ├── 📄 SourceCodeIcon.js, ReportIssueIcon.js, ExternalLinkIcon.js
+│   │   │   ├── 📄 ApMark.js       #   The extension's logo tile
+│   │   │   ├── 📄 SiteLogo.js     #   Real animepahe wordmark (icons/animepahe-wordmark.svg)
+│   │   │   ├── 📄 MalSyncLogo.js  #   Real MalSync logo (icons/malsync.svg)
+│   │   │   ├── 📄 svg.js          #   SVG helpers (line-icon frame, path/circle)
+│   │   │   └── 📄 index.js        #   Single import point for all icons
+│   │   ├── 📁 ui/                 #   Toggle, Button, StatChip, Stepper, Notice
+│   │   ├── 📁 layout/             #   Header, Timeline (status strip), Tabs
+│   │   ├── 📁 features/           #   FeatureRow + feature-config.js (name, colour, icon)
+│   │   ├── 📁 advanced/           #   SettingRow, GroupChips
+│   │   └── 📁 links/              #   LinkRow, SiteCard
+│   ├── 📁 scripts/                # Data wiring — connects components to storage
+│   │   ├── 📄 common.js           #   Button feedback shared by every tab (DRY)
+│   │   ├── 📄 features.js         #   Features tab: toggles, stats, clear actions
+│   │   ├── 📄 advanced.js         #   Advanced tab: staged edits, Apply, Reset all
+│   │   └── 📄 links.js            #   Links tab
+│   ├── 📁 styles/                 # Design tokens + one stylesheet per concern
+│   │   ├── 🎨 tokens.css          #   Fonts, colours, reset, base
+│   │   ├── 🎨 components.css      #   Toggle, buttons, stepper, notice
+│   │   ├── 🎨 layout.css          #   Header, timeline strip, tabs, panels
+│   │   ├── 🎨 features.css
+│   │   ├── 🎨 advanced.css
+│   │   └── 🎨 links.css
+│   └── 📁 fonts/                  # Bricolage Grotesque + DM Mono (OFL), bundled offline
 │
 ├── 📁 icons/
-│   ├── 🖼️  icon16.{png,svg}
+│   ├── 🖼️  icon16.{png,svg}       # Toolbar / store icons (the "ap" mark)
 │   ├── 🖼️  icon48.{png,svg}
 │   ├── 🖼️  icon128.{png,svg}
-│   ├── 🖼️  intro-skip.svg         # Intro/Outro Skip feature icon
-│   └── 🖼️  binge-watch.svg        # Binge Watch feature icon
+│   ├── 🖼️  logo.svg               # The "ap" mark on its magenta tile
+│   ├── 🖼️  animepahe-wordmark.svg # The real animepahe site logo (Links tab)
+│   └── 🖼️  malsync.svg            # The real MalSync logo (Links tab)
 │
 ├── 📁 docs/                       # Detailed documentation (this file lives here)
 │   └── 📁 widgets/                # Reusable install-prompt snippets for README.md
@@ -102,11 +123,11 @@ flowchart TD
     CM --> HR["helpers/router.js"]
     CM --> HCache["helpers/cache.js"]
     CM --> TH["helpers/throttler.js\nthrottler.updateOptions(settings)"]
-    CM -->|cwEnabled| CW["features/continue-watching.js"]
-    CM -->|dubEnabled| DD["features/dub-detector.js"]
-    CM -->|smartSearchEnabled| SS["features/smart-search.js"]
-    CM -->|introSkipEnabled| IS["features/intro-skip.js"]
-    CM -->|bingeWatchEnabled| BW["features/binge-watch.js"]
+    CM -->|cwEnabled| CW["features/js/continue-watching.js"]
+    CM -->|dubEnabled| DD["features/js/dub-detector.js"]
+    CM -->|smartSearchEnabled| SS["features/js/smart-search.js"]
+    CM -->|introSkipEnabled| IS["features/js/intro-skip.js"]
+    CM -->|bingeWatchEnabled| BW["features/js/binge-watch.js"]
     CW --> CWI["new ContinueWatching(storage, settings)\n.init(pageType)"]
     DD --> DDI["new DubDetector(storage, settings)\n.init(pageType)"]
     SS --> SSI["new SmartSearch(storage, settings)\n.init(pageType)"]
@@ -230,7 +251,7 @@ All outbound DUB detection requests are routed through `helpers/throttler.js`, w
 
 ## Adding a New Feature
 
-1. Create `content/features/my-feature.js` and export a class that satisfies the feature contract:
+1. Create `content/features/js/my-feature.js` and export a class that satisfies the feature contract:
 
 ```js
 export class MyFeature {
@@ -243,12 +264,12 @@ export class MyFeature {
 }
 ```
 
-2. If it needs any styling, give it its own `content/features/my-feature.css` and inject it from `init()` using the shared helper (don't hand-roll a `<style>` tag or reuse another feature's CSS file):
+2. If it needs any styling, give it its own `content/features/css/my-feature.css` and inject it from `init()` using the shared helper (don't hand-roll a `<style>` tag or reuse another feature's CSS file):
 
 ```js
-import { injectStylesheet } from "../helpers/styles.js";
+import { injectStylesheet } from "../../helpers/styles.js";
 // ...
-injectStylesheet("ape-mf-styles", "content/features/my-feature.css");
+injectStylesheet("ape-mf-styles", "content/features/css/my-feature.css");
 ```
 
 Add the new `.css` file to `web_accessible_resources` in `manifest.json`. Anything the new feature's CSS has in common with another feature's belongs in `content/main.css` instead (loaded once by `main.js`), not copy-pasted — same goes for the shared status pill, see `content/helpers/pill.js`.
@@ -274,14 +295,17 @@ export const DEFAULT_SETTINGS = {
 const FEATURES = [
   // ...existing entries...
   {
-    module: "content/features/my-feature.js",
+    module: "content/features/js/my-feature.js",
     export: "MyFeature",
     enabled: settings.myFeatureEnabled,
   },
 ];
 ```
 
-5. Add a matching card to `popup/popup.html` (icon + toggle) — copy the Binge Watch card as a template if the feature has no stats to show, or the DUB Detector card if it does.
+5. Give it a row in the popup, with no markup to write:
+   - Add an icon component, e.g. `popup/components/icons/MyFeatureIcon.js` (copy `BingeWatchIcon.js`; they are all a few lines) and export it from `popup/components/icons/index.js`.
+   - Add an entry to `FEATURES` in `popup/components/features/feature-config.js` — `id`, `settingKey`, `name`, `desc`, `color`/`tint`, timeline `weight` and the `Icon`. The row, its switch and its segment in the status strip are generated from that.
+   - If it has a cache to show or clear, add a `read()`/`clear()` pair for its `id` in `STATS` in `popup/scripts/features.js`.
 
 If any of the feature's toggleable options are everyday options rather than tuning knobs, give it entries in `FEATURE_SUBOPTIONS` (see below) instead of `ADVANCED_SETTINGS_SCHEMA` — they'll render right on the feature's own card.
 
@@ -289,7 +313,7 @@ If any of the feature's toggleable options are everyday options rather than tuni
 
 ## Adding an Advanced Setting
 
-The Advanced Settings tab in the popup isn't hand-written markup — it's generated entirely from one schema, so adding a new tunable doesn't touch `popup.html` or any popup CSS/JS.
+The Advanced tab in the popup isn't hand-written markup — it's generated entirely from one schema, so adding a new tunable doesn't touch `popup.html` or any popup CSS/JS.
 
 1. Add an entry to `ADVANCED_SETTINGS_SCHEMA` in `content/helpers/storage.js`, under an existing `group` or a new one:
 
@@ -311,7 +335,7 @@ The Advanced Settings tab in the popup isn't hand-written markup — it's genera
 this._myValue = settings.myNewTunable ?? 10;
 ```
 
-The popup automatically renders a labeled input, description, and its own **↺ reset** button for the new setting, and folds it into **Reset All Advanced Settings** — for free.
+The popup automatically renders a labeled stepper, description, and its own **Default N** reset link for the new setting, and folds it into **Reset All Advanced Settings** — for free.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -332,6 +356,6 @@ export const FEATURE_SUBOPTIONS = {
 };
 ```
 
-`popup/scripts/features.js` renders every card's list generically, so no popup markup or JS needs to change. Read the setting in the feature module the same way as any other: `settings.dubHomeScanEnabled !== false`.
+`popup/scripts/features.js` renders every row's list generically (through `FeatureRow`), so no popup markup or JS needs to change. Read the setting in the feature module the same way as any other: `settings.dubHomeScanEnabled !== false`.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

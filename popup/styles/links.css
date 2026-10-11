@@ -1,57 +1,70 @@
+/* ── Quick Links tab ───────────────────────────────────────────────────── */
+.group-label {
+  padding: 18px 10px 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Hero card: the real animepahe wordmark */
+.site-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 18px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.site-card:hover { background: #1b1a23; border-color: var(--line-3); }
+.site-card__logo { display: flex; }
+.site-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--muted);
+}
+.site-card__desc { font-size: 12px; }
+
 .link-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: var(--muted);
+  transition: background 0.15s, border-color 0.15s;
 }
-.link-row:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  background: var(--surface2);
-}
+.link-row:hover { background: #1b1a23; border-color: var(--line-3); }
+.link-row--accent { border-color: var(--line); }
 
-.link-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 7px;
-  background: rgba(255, 255, 255, 0.06);
+.link-row__tile {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  background: var(--surface-2);
+  color: var(--text);
+  overflow: hidden;
 }
-
-.link-text {
+.link-row__text {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
-.link-name {
-  font-size: 12.5px;
+.link-row__name {
+  font-size: 14px;
   font-weight: 600;
-  color: #f0f0f8;
+  color: var(--text);
 }
-.link-desc {
-  font-size: 10.5px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.link-arrow {
-  flex-shrink: 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.section-label-spaced {
-  margin-top: 4px;
-}
+.link-row__desc { font-size: 12px; color: var(--muted); }

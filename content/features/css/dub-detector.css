@@ -1,0 +1,65 @@
+/* dub-detector.css — badges + spinner for DUB Detector. */
+
+@keyframes ape-dub-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ape-dub-badge,
+.ape-dub-badge-home {
+  position: absolute !important;
+  top: 5px !important;
+  right: 5px !important;
+  left: auto !important;
+  z-index: 9999 !important;
+  color: #fff !important;
+  font: 700 10px/1 system-ui, sans-serif !important;
+  padding: 3px 7px !important;
+  border-radius: 3px !important;
+  letter-spacing: 0.5px !important;
+  pointer-events: none !important;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65) !important;
+  display: inline-block !important;
+  text-indent: 0 !important;
+  white-space: nowrap !important;
+  background: #d92558 !important;
+}
+
+.ape-sub-badge-ep,
+.ape-dub-badge-home.ape-sub-badge-home {
+  background: #e8710a !important;
+}
+
+.ape-dub-spin {
+  position: absolute !important;
+  top: 7px !important;
+  right: 7px !important;
+  z-index: 9999 !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-top-color: #fff !important;
+  animation: ape-dub-spin 0.7s linear infinite !important;
+}
+
+/* Inline badge shown next to the <h1> on a player page. */
+.ape-dub-inline,
+.ape-sub-inline {
+  background: #d92558;
+  color: #fff;
+  font: 700 11px system-ui, sans-serif;
+  padding: 3px 9px;
+  border-radius: 3px;
+  margin-left: 10px;
+  vertical-align: middle;
+  display: inline-block;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.ape-sub-inline {
+  background: #e8710a;
+}

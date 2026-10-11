@@ -9,7 +9,7 @@
  *   5. Run cache garbage-collection in the background
  *
  * Adding a new feature:
- *   - Create content/features/my-feature.js that exports a class with an init(pageType) method
+ *   - Create content/features/js/my-feature.js that exports a class with an init(pageType) method
  *   - Add a settings key for it in helpers/storage.js  ->  DEFAULT_SETTINGS
  *   - Register it in the FEATURES array below
  */
@@ -65,33 +65,33 @@
 
   const FEATURES = [
     {
-      module: "content/features/continue-watching.js",
+      module: "content/features/js/continue-watching.js",
       export: "ContinueWatching",
       enabled: settings.cwEnabled,
     },
     {
-      module: "content/features/dub-detector.js",
+      module: "content/features/js/dub-detector.js",
       export: "DubDetector",
       enabled: settings.dubEnabled,
     },
     {
-      module: "content/features/smart-search.js",
+      module: "content/features/js/smart-search.js",
       export: "SmartSearch",
       enabled: settings.smartSearchEnabled,
     },
     {
-      module: "content/features/intro-skip.js",
+      module: "content/features/js/intro-skip.js",
       export: "IntroSkip",
       enabled: settings.introSkipEnabled,
     },
     {
-      module: "content/features/binge-watch.js",
+      module: "content/features/js/binge-watch.js",
       export: "BingeWatch",
       enabled: settings.bingeWatchEnabled,
     },
     //  to add a new feature, append an entry here
     // {
-    //   module:  "content/features/my-feature.js",
+    //   module:  "content/features/js/my-feature.js",
     //   export:  "MyFeature",
     //   enabled: settings.myFeatureEnabled,
     // },

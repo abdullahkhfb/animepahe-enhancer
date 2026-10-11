@@ -1,0 +1,92 @@
+/* intro-skip.css — used both on the animepahe page (currently nothing of
+ * its own; its pill is the shared one in main.css) and inside the kwik
+ * iframe (skip button + scrubber highlight segments below). */
+
+#ape-is-skip-btn {
+  position: fixed;
+  bottom: 64px;
+  right: 18px;
+  z-index: 2147483647;
+  display: none;
+  align-items: center;
+  gap: 7px;
+  background: rgba(8, 8, 22, 0.85);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 8px 16px 8px 11px;
+  font: 700 13px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.25s ease;
+  opacity: 0;
+  transform: translateY(10px);
+  user-select: none;
+  -webkit-user-select: none;
+}
+#ape-is-skip-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#ape-is-skip-btn:hover {
+  background: rgba(59, 130, 246, 0.95);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(0) scale(1.05);
+}
+#ape-is-skip-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+#ape-is-skip-btn .ape-is-skip-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+#ape-is-skip-btn .ape-is-skip-icon svg {
+  width: 100%;
+  height: 100%;
+}
+#ape-is-skip-btn .ape-is-skip-label {
+  white-space: nowrap;
+}
+/* When a fullscreen element is active, the button lives INSIDE that
+   element (which is in the top layer). Absolute positioning relative
+   to the fullscreen element keeps it pinned to the bottom-right of
+   the video instead of being left behind in the normal layout. */
+:fullscreen #ape-is-skip-btn,
+:-webkit-full-screen #ape-is-skip-btn {
+  position: absolute;
+}
+
+/* Injected directly into the kwik scrubber as absolutely-positioned
+ * children, so they track its position/size/fullscreen automatically.
+ * z-index sits above the "played" fill but below the scrubber handle. */
+.ape-is-hl-segment {
+  position: absolute !important;
+  top: 0 !important;
+  height: 100% !important;
+  border-radius: 3px !important;
+  opacity: 0.85 !important;
+  pointer-events: none !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6) !important;
+  z-index: 1 !important;
+  mix-blend-mode: screen !important;
+}
+.ape-is-hl-intro {
+  background: #3b82f6 !important;
+}
+.ape-is-hl-outro {
+  background: #e8710a !important;
+}
+.ape-is-hl-recap {
+  background: #a855f7 !important;
+}

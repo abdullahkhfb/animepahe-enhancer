@@ -90,12 +90,18 @@ animepahe-enhancer/
 │   ├── iframe-player.js          # Injected into Kwik iframe; postMessage bridge for
 │   │                             #   Continue Watching + Intro/Outro Skip controller
 │   │
-│   ├── features/                 # One file per feature; each exports a class with init(pageType)
-│   │   ├── continue-watching.js
-│   │   ├── dub-detector.js
-│   │   ├── smart-search.js
-│   │   ├── intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
-│   │   └── binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
+│   ├── features/                 # One class + one stylesheet per feature
+│   │   ├── js/                   #   Each file exports a class with init(pageType)
+│   │   │   ├── continue-watching.js
+│   │   │   ├── dub-detector.js
+│   │   │   ├── smart-search.js
+│   │   │   ├── intro-skip.js     # Intro/Outro Skip — timestamp lookup + range orchestration
+│   │   │   └── binge-watch.js    # Binge Watch — auto-plays the next episode, off by default
+│   │   └── css/                  #   One stylesheet per feature (injectStylesheet)
+│   │       ├── continue-watching.css
+│   │       ├── dub-detector.css
+│   │       ├── intro-skip.css
+│   │       └── binge-watch.css
 │   │
 │   └── helpers/                  # Shared utilities imported by any feature
 │       ├── storage.js            # chrome.storage.local wrapper + DEFAULT_SETTINGS
@@ -111,39 +117,26 @@ animepahe-enhancer/
 │                                 #   AniList → AniDB ID resolution, episode lookup)
 │
 ├── popup/
-│   ├── popup.html                # Three tabs: Features, Advanced Settings, Quick Links
-│   ├── popup.js                  # Slim entry point — wires up the tab bar, hands off
-│   │                             #   to each tab's own module in scripts/
-│   ├── scripts/
-│   │   ├── common.js             #   Shared: tab switching, collapsible sections,
-│   │   │                         #   button feedback
-│   │   ├── features.js           #   Features tab — imports ADVANCED_SETTINGS_SCHEMA
-│   │   ├── advanced.js           #   Advanced Settings tab from storage.js; imports
-│   │   │                         #   clearTimestampsCache / getTimestampsCacheInfo
-│   │   └── links.js              #   Quick Links tab       from timestamps-db.js
-│   └── styles/
-│       ├── common.css            #   Shared reset, header, tab bar, panel shell
-│       ├── features.css
-│       ├── advanced.css
-│       └── links.css
+│   ├── popup.html                # Empty shell — everything is built from components/
+│   ├── popup.js                  # Entry point — mounts header, timeline, tabs and panels
+│   ├── components/               # One file per component
+│   │   ├── dom.js                #   h() element builder
+│   │   ├── icons/                #   One file per icon + the real site/MalSync logos
+│   │   ├── ui/                   #   Toggle, Button, StatChip, Stepper, Notice
+│   │   ├── layout/               #   Header, Timeline, Tabs
+│   │   ├── features/             #   FeatureRow + feature-config.js
+│   │   ├── advanced/             #   SettingRow, GroupChips
+│   │   └── links/                #   LinkRow, SiteCard
+│   ├── scripts/                  # Wires components to storage (one module per tab)
+│   │   ├── common.js, features.js, advanced.js, links.js
+│   ├── styles/                   # tokens, components, layout + one file per tab
+│   └── fonts/                    # Bundled Bricolage Grotesque + DM Mono (OFL)
 │
 ├── icons/
-│   ├── icon16.{png,svg}
-│   ├── icon48.{png,svg}
-│   ├── icon128.{png,svg}
-│   ├── intro-skip.svg            # Intro/Outro Skip feature icon
-│   ├── binge-watch.svg           # Binge Watch feature icon
+│   ├── icon16.{png,svg}, icon48.{png,svg}, icon128.{png,svg}   # the "ap" mark
 │   ├── logo.svg
-│   ├── continue-watching.svg
-│   ├── dub-detector.svg
-│   ├── smart-search.svg
-│   ├── advanced-settings.svg
-│   ├── chevron.svg
-│   ├── github.svg
-│   ├── animepahe.svg
-│   ├── malsync.svg
-│   ├── notice.svg
-│   └── notice-white.svg
+│   ├── animepahe-wordmark.svg    # Real animepahe site logo
+│   └── malsync.svg               # Real MalSync logo
 │
 └── .github/
     ├── actions/
@@ -169,7 +162,7 @@ animepahe-enhancer/
 
 Every feature in the extension follows a three-file contract:
 
-**1. Create `content/features/my-feature.js`**
+**1. Create `content/features/js/my-feature.js`** (and, if it needs styling, `content/features/css/my-feature.css`)
 
 ```js
 export class MyFeature {
@@ -204,7 +197,7 @@ export const DEFAULT_SETTINGS = {
 const FEATURES = [
   // … existing entries …
   {
-    module: "content/features/my-feature.js",
+    module: "content/features/js/my-feature.js",
     export: "MyFeature",
     enabled: settings.myFeatureEnabled,
   },
@@ -216,13 +209,13 @@ const FEATURES = [
 ```json
 "web_accessible_resources": [
   {
-    "resources": ["content/features/*.js", "content/helpers/*.js"],
+    "resources": ["content/features/js/*.js", "content/features/css/*.css", "content/helpers/*.js"],
     "matches": ["*://*.animepahe.pw/*", "..."]
   }
 ]
 ```
 
-No other files need to change. If you add a toggle to the popup, update `popup/popup.html` and `popup/popup.js` accordingly.
+No other files need to change. To give the feature a row in the popup, add an icon component in `popup/components/icons/` and an entry in `popup/components/features/feature-config.js` — see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#adding-a-new-feature).
 
 ### New Advanced Settings
 

@@ -1,0 +1,9 @@
+/* binge-watch.css — cancelable variant of the shared .ape-pill (main.css). */
+
+.ape-bw-pill {
+  cursor: pointer;
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+.ape-bw-pill:hover {
+  background: rgba(59, 130, 246, 0.92) !important;
+}

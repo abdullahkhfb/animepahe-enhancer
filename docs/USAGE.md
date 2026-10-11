@@ -70,7 +70,7 @@ Smart Search activates automatically while you type in the animepahe search bar 
 5. Click any result card (native or injected) to navigate to that anime's page as normal.
 6. If Smart Search finds nothing additional, the dropdown is left unchanged.
 
-**Cache:** AniList lookup results are cached for **24 hours by default** (configurable in Advanced Settings). You can force-clear the cache from the popup.
+**Cache:** AniList lookup results are cached for **24 hours by default** (configurable in the Advanced tab). You can force-clear the cache from the popup.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -82,7 +82,7 @@ The Intro / Outro Skip feature activates automatically on the player page (`/pla
 2. It resolves the anime to an AniDB ID (via AniList search → relations.yuna.moe) and looks up intro/outro timestamps for that episode. A status pill in the bottom-right corner shows progress.
 3. If timestamps are found, a result pill appears (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`) and the skip ranges are sent to the Kwik player.
 4. In **manual mode** (default): A **Skip Intro** or **Skip Outro** button appears overlaid on the video when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after a configurable delay but reappears if you move your mouse.
-5. In **auto-skip mode** (opt-in, toggled in Advanced Settings): The player automatically seeks past intros and outros as soon as playback enters the range.
+5. In **auto-skip mode** (opt-in, toggled on the Intro / Outro Skip row): The player automatically seeks past intros and outros as soon as playback enters the range.
 6. **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps. This can be disabled in Advanced Settings.
 7. If the anime isn't in the local open-anime-timestamps database, the status pill shows "not found" — there's no online fallback for this feature, so nothing is skipped for that episode.
 
@@ -105,7 +105,7 @@ Binge Watch auto-plays the next episode when the current one ends. It's **off by
 5. While the feature is on, animepahe's "Click to load" placeholder over the embed is clicked automatically on **every** episode page you land on — not just ones Binge Watch navigates to — so nothing sits waiting for a click.
 6. If there's no next episode (you're on the latest one), nothing happens — playback just ends normally.
 
-**Tuning:** The countdown length is configurable in Advanced Settings (`Countdown before next episode`) and can be set to **0** to skip the pill entirely and jump straight to the next episode.
+**Tuning:** The countdown length is configurable in the Advanced tab (`Countdown before next episode`) and can be set to **0** to skip the pill entirely and jump straight to the next episode.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -113,20 +113,24 @@ Binge Watch auto-plays the next episode when the current one ends. It's **off by
 
 Click the extension icon in the browser toolbar to open the settings popup. It's split into three tabs:
 
-**Features tab** — one collapsible card per feature. Click a card to expand it and:
+**Features tab** — one row per feature, each with its own colour. A status strip under the header lights one segment per enabled feature ("4 of 5 active"). Click a row to expand it and:
 
-- Toggle that feature on or off
 - See a quick stat (items saved, entries cached, or whether the timestamps database is cached)
 - Clear that feature's cache/history with one click
+- Flip any sub-option that belongs to that feature (for example, auto-skip for Intro/Outro Skip)
 
-**Advanced Settings tab** — every internal tunable, grouped by feature and collapsed by default:
+The switch on the right of each row turns that feature on or off.
 
-- Click a group's header to expand it
-- Each setting shows a plain-language description and a bounded number input, plus its own **↺ reset** button
-- Edits are staged (marked with a small dot) until you press **Apply Changes** — nothing saves until then
-- **Reset All Advanced Settings** restores every tunable to default without touching your feature toggles
+**Advanced tab** — every internal tunable, grouped by feature:
 
-**Quick Links tab** — shortcuts to the GitHub repository, the issue tracker, the animepahe site, and a recommended companion tool ([MalSync](https://malsync.moe)) for syncing your progress to MyAnimeList/AniList/Kitsu.
+- Pick a group from the pill selector to see only that group's settings
+- Each setting shows a plain-language description and a stepper (− / + buttons, or type a value), plus a **Default N** link that appears once you change it
+- Edits are staged (marked with a small dot) until you press **Apply** — nothing saves until then
+- **Reset all advanced settings** restores every tunable to default without touching your feature toggles
+
+**Links tab** — the animepahe site (shown with its real logo), the GitHub repository, the issue tracker, and a recommended companion tool, [MalSync](https://malsync.moe) (with its real logo), for syncing your progress to MyAnimeList/AniList/Kitsu.
+
+The popup is 400px wide and as tall as its content, so there is no inner scrolling. The tab bar sits right under the header on every tab.
 
 > After toggling a feature or applying an advanced setting, reload the animepahe page for changes to take effect. The popup shows a reminder notice automatically.
 

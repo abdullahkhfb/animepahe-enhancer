@@ -70,7 +70,7 @@ Can't find an anime because you only know its English dub title, a common nickna
 
 Automatically skip anime openings and endings — or show a manual Skip button when you're ready. This feature uses the community-maintained [open-anime-timestamps](https://github.com/jonbarrow/open-anime-timestamps) dataset (~27 MB, cached locally in IndexedDB) to look up intro and outro timestamps per episode.
 
-- **Two modes**, toggled directly from the Intro/Outro Skip card in the popup (not buried in Advanced Settings):
+- **Two modes**, toggled directly from the Intro/Outro Skip card in the popup (not buried in the Advanced tab):
   - **Auto-skip** (off by default): The player automatically jumps past intros and outros without any interaction
   - **Manual skip** (on by default when auto-skip is off): A styled **Skip Intro** / **Skip Outro** button appears on top of the video when the playback enters an intro or outro range; clicking it seeks past the segment
 - **Progress bar highlights** (on by default, toggleable as its own sub-feature): Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps — giving you a visual map of non-story content at a glance

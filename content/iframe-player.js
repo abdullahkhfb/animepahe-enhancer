@@ -3,7 +3,7 @@ const MSG = {
   REQUEST_TIME: "AP_CW_REQUEST_TIME",
   RESTORE_TIME: "AP_CW_RESTORE_TIME",
   UPDATE_TIME: "AP_CW_UPDATE_TIME",
-  // Intro/Outro Skip messages (paired with content/features/intro-skip.js).
+  // Intro/Outro Skip messages (paired with content/features/js/intro-skip.js).
   IS_SET_RANGES: "AP_IS_SET_RANGES",
   IS_SEEK: "AP_IS_SEEK",
   IS_READY: "AP_IS_READY",
@@ -696,7 +696,7 @@ function injectButtonStyles() {
   // import() still works, same trick main.js uses for its helpers.
   import(chrome.runtime.getURL("content/helpers/styles.js")).then(
     ({ injectStylesheet }) => {
-      injectStylesheet("ape-is-styles", "content/features/intro-skip.css");
+      injectStylesheet("ape-is-styles", "content/features/css/intro-skip.css");
     },
   );
 }

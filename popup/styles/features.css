@@ -1,256 +1,98 @@
-/* ── Features grid (two columns, side by side) ──────────── */
-.features-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+/* ── Features tab ──────────────────────────────────────────────────────── */
+.feature {
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  transition: background 0.15s;
+  --c: var(--brand-2);
+  --tint: rgba(255, 77, 148, 0.14);
 }
-
-/* ── Feature card ────────────────────────────────────────── */
-.feature-card {
+.feature.is-open {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: border-color 0.2s;
-  display: flex;
-  flex-direction: column;
-}
-.feature-card:hover {
-  border-color: rgba(255, 255, 255, 0.13);
+  border-color: var(--line);
 }
 
-.feature-header {
+.feature__head {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  padding: 10px;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px 4px 10px;
+}
+.feature__expand {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   text-align: left;
 }
-
-.feature-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Feature icons */
-.feature-icon {
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
+.feature__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  background: #1b1a23;
+  color: var(--dim);
+  transition: background 0.18s, color 0.18s;
 }
-.feature-icon svg {
-  width: 14px;
-  height: 14px;
-}
+.feature.is-on .feature__icon { background: var(--tint); color: var(--c); }
 
-.cw-icon {
-  background: rgba(232, 113, 10, 0.15);
-  color: #e8710a;
-}
-.dub-icon {
-  background: rgba(217, 37, 88, 0.15);
-  color: #d92558;
-}
-.is-icon {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-}
-.ss-icon {
-  background: rgba(46, 204, 113, 0.15);
-  color: #2ecc71;
-}
-.bw-icon img {
-  width: 24px;
-  height: 24px;
-}
-
-.feature-name {
-  flex: 1;
+.feature__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   min-width: 0;
-  font-size: 12px;
+}
+.feature__name {
+  font-size: 14.5px;
   font-weight: 600;
-  color: #f0f0f8;
-  line-height: 1.25;
-  white-space: normal;
-  word-break: break-word;
+  letter-spacing: -0.01em;
+  color: var(--text-3);
 }
-
-.feature-bottom {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-.feature-desc {
-  flex: 1;
-  min-width: 0;
-  font-size: 10.5px;
+.feature.is-on .feature__name { color: var(--text); }
+.feature__desc {
+  font-size: 12px;
+  line-height: 1.3;
   color: var(--muted);
-  line-height: 1.35;
-  white-space: normal;
-  word-break: break-word;
 }
 
-.feature-chevron {
-  width: 10px;
-  height: 10px;
-  margin-top: 2px;
-}
-
-/* Collapsible content wrapper (stats + sub-feature toggles) */
-.feature-body {
-  border-top: 1px solid var(--border);
-  padding: 9px 10px 10px;
-  margin-top: -1px;
+.feature__body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 0 14px 10px 62px;
 }
-
-.feature-stats {
+.feature__stat {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 8px;
+}
+.feature__note {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-3);
 }
 
-.stat-chip {
-  flex: 1;
-  min-width: 60px;
-  font-size: 10px;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-
-.feature-note-block {
-  margin: 0;
-  font-size: 10.5px;
-  color: var(--muted);
-  line-height: 1.4;
-}
-
-/* ── Sub-feature rows ────────────────────────────────────── */
-.feature-subopts {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.subopt-row + .subopt-row {
-  padding-top: 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.subopt-main {
+.subopt {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-
-.subopt-label {
+.subopt__text {
   flex: 1;
   min-width: 0;
-  font-size: 10.5px;
-  color: #d8d8ea;
-  line-height: 1.3;
-}
-
-.subopt-info {
-  flex-shrink: 0;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: transparent;
-  color: var(--muted);
-  font: italic 700 9px/1 Georgia, serif;
-  cursor: pointer;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
+  flex-direction: column;
+  gap: 1px;
 }
-.subopt-info:hover {
-  color: #f0f0f8;
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.subopt-note {
-  margin: 0;
-  font-size: 10px;
+.subopt__label { font-size: 13px; font-weight: 500; }
+.subopt__note {
+  font-size: 11.5px;
+  line-height: 1.35;
   color: var(--muted);
-  line-height: 1.4;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 6px;
-  padding: 6px 8px;
-}
-
-/* ── Toggle switch ───────────────────────────────────────── */
-.toggle {
-  position: relative;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-.toggle input {
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-track {
-  display: block;
-  width: 32px;
-  height: 19px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 11px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition:
-    background 0.25s,
-    border-color 0.25s;
-  position: relative;
-}
-.toggle input:checked + .toggle-track {
-  background: var(--on);
-  border-color: var(--on);
-}
-
-.toggle-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 13px;
-  height: 13px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.toggle input:checked + .toggle-track .toggle-thumb {
-  transform: translateX(13px);
-}
-
-.toggle-sm .toggle-track {
-  width: 26px;
-  height: 15px;
-}
-.toggle-sm .toggle-thumb {
-  width: 10px;
-  height: 10px;
-}
-.toggle-sm input:checked + .toggle-track .toggle-thumb {
-  transform: translateX(11px);
-}
-
-/* Disabled card appearance */
-.feature-card.disabled .feature-icon,
-.feature-card.disabled .feature-name,
-.feature-card.disabled .feature-desc {
-  opacity: 0.45;
 }
