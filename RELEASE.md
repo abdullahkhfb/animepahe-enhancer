@@ -62,12 +62,7 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 ## v0.3.1.5 — 2026-10-13
 
-A small release to align the shipped version metadata, README screenshots, and the release notes with the current popup build.
-
-### Changed
-
-- The popup screenshot and version badge now reflect the v0.3.1.5 build shown in the extension UI.
-- Release notes were updated to keep the latest version history consistent with the current documentation snapshot.
+A small release to align the shipped version metadata, README screenshots, and the release notes with the current popup build. fixing Firefox build.
 
 [Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.4...v0.3.1.5)
 
@@ -111,7 +106,7 @@ Fixes videos starting muted, and cleans up a couple of rough edges in the popup.
 
 ### Fixed
 
-- **Videos could start (and stay) muted on autoplay.** `ensurePlayback()`'s mute/retry fallback only unmuted the video from inside a `.catch()` that ran after the *first* unmuted `play()` call was rejected — but kwik's player can start the `<video>` already muted on its own, in which case that first `play()` call succeeds immediately and the fallback (and its unmute step) never runs at all, leaving the video silently muted with nothing to undo it. Reported in [#5](https://github.com/abdullahkhfb/animepahe-enhancer/issues/5).
+- **Videos could start (and stay) muted on autoplay.** `ensurePlayback()`'s mute/retry fallback only unmuted the video from inside a `.catch()` that ran after the _first_ unmuted `play()` call was rejected — but kwik's player can start the `<video>` already muted on its own, in which case that first `play()` call succeeds immediately and the fallback (and its unmute step) never runs at all, leaving the video silently muted with nothing to undo it. Reported in [#5](https://github.com/abdullahkhfb/animepahe-enhancer/issues/5).
 - **Binge Watch's icon rendered inside an oversized square frame**, with visible empty padding around the artwork instead of filling its slot like the other feature icons do.
 
 ### Changed
