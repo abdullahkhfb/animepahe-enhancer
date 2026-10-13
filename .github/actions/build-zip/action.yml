@@ -11,6 +11,11 @@ description: >
   manifest.json (Firefox) and manifest.chromium.json (Chrome / Edge). For the
   `chromium` build, the latter is packed into the zip as manifest.json.
 
+  Built archives (*.zip, *.xpi, *.crx) are always excluded, so a zip produced
+  earlier in the same job (e.g. the Firefox build) can never be swept into the
+  Chromium build. The font licence text files (popup/fonts/*.txt) are also
+  left out of every build; the font files themselves are still packed.
+
 inputs:
   browser:
     description: "Target browser: firefox or chromium"
@@ -30,7 +35,7 @@ runs:
       env:
         BROWSER: ${{ inputs.browser }}
       run: |
-        EXCLUDES=(-x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*" "manifest.chromium.json")
+        EXCLUDES=(-x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*" "manifest.chromium.json" "*.zip" "*.xpi" "*.crx" "popup/fonts/*.txt")
 
         if [ "$BROWSER" = "chromium" ]; then
           ZIP=Animepahe-Enhancer-Chromium.zip

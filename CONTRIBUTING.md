@@ -130,7 +130,7 @@ animepahe-enhancer/
 │   ├── scripts/                  # Wires components to storage (one module per tab)
 │   │   ├── common.js, features.js, advanced.js, links.js
 │   ├── styles/                   # tokens, components, layout + one file per tab
-│   └── fonts/                    # Bundled Bricolage Grotesque + DM Mono (OFL)
+│   └── fonts/                    # Bundled Bricolage Grotesque + DM Mono (OFL); licence .txt files are excluded from builds
 │
 ├── icons/
 │   ├── icon16.png, icon48.png, icon128.png   # the "ap" mark

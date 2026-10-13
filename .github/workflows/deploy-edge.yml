@@ -26,6 +26,22 @@ jobs:
         with:
           browser: chromium
 
+      - name: Verify the zip is Chromium-only
+        env:
+          ZIP: ${{ steps.zip.outputs.zip-path }}
+        run: |
+          set -e
+          if unzip -l "$ZIP" | grep -Ei '\.(zip|xpi)$|manifest\.chromium\.json|Firefox'; then
+            echo "Chromium zip contains Firefox/nested build artifacts" >&2
+            exit 1
+          fi
+          unzip -p "$ZIP" manifest.json > /tmp/manifest.json
+          grep -q '"service_worker"' /tmp/manifest.json
+          if grep -q '"scripts"' /tmp/manifest.json; then
+            echo "Chromium zip has the Firefox manifest" >&2
+            exit 1
+          fi
+
       - name: Upload to Microsoft Edge Add-ons
         uses: wdzeng/edge-addon@v2
         with:

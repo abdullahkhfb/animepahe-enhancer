@@ -13,9 +13,12 @@ The extension requests the minimum permissions necessary:
 | `storage`                                          | Save settings, Continue Watching progress, and various caches to `chrome.storage.local` and IndexedDB             |
 | Host permissions for `*.animepahe.{pw,org,com}`    | Inject the main content script into animepahe pages                                                               |
 | Host permissions for `*.kwik.cx`                   | Inject the iframe player script into the embedded Kwik video player                                               |
+| Host permissions for `*.pahe.win`                  | Skip Wait only: lets the background script read the Kwik link out of a `pahe.win` download-link page you clicked  |
 | Host permissions for `graphql.anilist.co`          | Fetch alternative anime titles for Smart Search and resolve IDs for Intro/Outro Skip (no account data exchanged) |
 | Host permissions for `relations.yuna.moe`          | Resolve AniList/MAL IDs to AniDB IDs for the Intro/Outro Skip timestamp database lookup                            |
 | Host permissions for `raw.githubusercontent.com`   | Download the open-anime-timestamps database (~27 MB, cached in IndexedDB with conditional GET refresh)             |
+
+**Firefox:** the `pahe.win` host permission is declared in `host_permissions` (not optional), so it is shown in the install prompt and granted by default. If you revoke it under `about:addons` → Permissions, Skip Wait can't read the `pahe.win` page and falls back to opening the original `pahe.win` link; re-enable it there to restore Skip Wait.
 
 All network requests to external services (AniList, relations.yuna.moe, open-anime-timestamps) carry no personal identifiers or browsing history. See [PRIVACY.md](../PRIVACY.md) for the full privacy policy.
 
@@ -37,6 +40,7 @@ All network requests to external services (AniList, relations.yuna.moe, open-ani
 
 **External services (API calls only, no content script injection):**
 
+- `pahe.win` — Download-link pages fetched by the background script for Skip Wait (one request per Download-menu click)
 - `graphql.anilist.co` — AniList GraphQL API (Smart Search + Intro Skip ID resolution)
 - `relations.yuna.moe` — AniDB ID resolution (Intro Skip)
 - `raw.githubusercontent.com` (jonbarrow/open-anime-timestamps) — Timestamp database download (Intro Skip)

@@ -91,7 +91,7 @@
 │   │   ├── 🎨 features.css
 │   │   ├── 🎨 advanced.css
 │   │   └── 🎨 links.css
-│   └── 📁 fonts/                  # Bricolage Grotesque + DM Mono (OFL), bundled offline
+│   └── 📁 fonts/                  # Bricolage Grotesque + DM Mono (OFL), bundled offline; licence .txt files stay in the repo but are left out of builds
 │
 ├── 📁 icons/
 │   ├── 🖼️  icon16.png             # Toolbar / store icons (the "ap" mark)

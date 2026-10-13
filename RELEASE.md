@@ -60,7 +60,14 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 Changes staged for the next version, not yet tagged as a GitHub Release.
 
-Nothing yet.
+### Changed
+
+- Removed the `*://*.animepahe.ru/*` match from the content script and web-accessible resources; the extension no longer runs on animepahe.ru.
+- Release builds no longer include the `.txt` licence files in `popup/fonts/` (the fonts themselves are unchanged).
+
+### Fixed
+
+- The Chromium build can no longer pick up a previously built zip (such as the Firefox build) when both are built in the same job. The Edge deploy workflow also now verifies the zip is Chromium-only before uploading.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
