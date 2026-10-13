@@ -93,10 +93,6 @@ This release rolls up the v0.3.1.4 popup redesign, new icon, Skip Wait feature, 
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.3...v0.3.1.4)
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
-
 ## v0.3.1.2 — 2026-09-13
 
 Fixes videos starting muted, and cleans up a couple of rough edges in the popup.
