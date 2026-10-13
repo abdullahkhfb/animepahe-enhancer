@@ -62,15 +62,7 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 ## v0.3.1.5 — 2026-10-13
 
-A small release to align the shipped version metadata, README screenshots, and the release notes with the current popup build. fixing Firefox build.
-
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.4...v0.3.1.5)
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
-
-## v0.3.1.4 — 2026-10-13
-
-A redesigned popup, a new icon, a tidier source tree, and a new Skip Wait feature for download links.
+This release rolls up the v0.3.1.4 popup redesign, new icon, Skip Wait feature, and source-tree cleanup, plus the Firefox build/permissions and Chromium bundling fixes needed for a clean release.
 
 ### Added
 
@@ -91,10 +83,15 @@ A redesigned popup, a new icon, a tidier source tree, and a new Skip Wait featur
 ### Fixed
 
 - **Chrome / Edge no longer warn** that `'background.scripts' requires manifest version of 2 or lower`. Firefox and Chromium need different `background` keys in Manifest V3, so the repo now keeps `manifest.json` (Firefox) and `manifest.chromium.json` (Chrome / Edge), and releases include a separate `Animepahe-Enhancer-Chromium.zip`.
+- **Firefox build and permissions**: aligned the shipped version metadata, README screenshots, and release notes with the current popup build, and fixed the Firefox build.
 
 ### Removed
 
 - The old per-feature icon SVGs in `icons/` that only the previous popup used.
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.3...v0.3.1.5)
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
 
 [Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.3...v0.3.1.4)
 
