@@ -4,6 +4,7 @@ export { DubDetectorIcon } from "./DubDetectorIcon.js";
 export { SmartSearchIcon } from "./SmartSearchIcon.js";
 export { IntroSkipIcon } from "./IntroSkipIcon.js";
 export { BingeWatchIcon } from "./BingeWatchIcon.js";
+export { SkipWaitIcon } from "./SkipWaitIcon.js";
 export { SourceCodeIcon } from "./SourceCodeIcon.js";
 export { ReportIssueIcon } from "./ReportIssueIcon.js";
 export { ExternalLinkIcon } from "./ExternalLinkIcon.js";

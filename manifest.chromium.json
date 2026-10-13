@@ -1,0 +1,100 @@
+{
+  "manifest_version": 3,
+  "name": "animepahe Enhancer",
+  "short_name": "AP Enhancer",
+  "version": "0.3.1.4",
+  "description": "Video progress tracking, DUB detection, Smart Search via AniList, and Intro/Outro Skipping for animepahe.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "animepahe-enhancer@abdullahkhfb.github.io",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.animepahe.pw/*",
+    "*://*.animepahe.org/*",
+    "*://*.animepahe.com/*",
+    "*://*.kwik.cx/*",
+    "*://*.pahe.win/*",
+    "https://graphql.anilist.co/*",
+    "https://relations.yuna.moe/*",
+    "https://raw.githubusercontent.com/Ellivers/open-anime-timestamps/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.animepahe.pw/*",
+        "*://*.animepahe.org/*",
+        "*://*.animepahe.com/*",
+        "*://*.animepahe.ru/*"
+      ],
+      "js": [
+        "content/main.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.kwik.cx/*"
+      ],
+      "js": [
+        "content/iframe-player.js"
+      ],
+      "run_at": "document_end",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content/features/js/*.js",
+        "content/helpers/*.js",
+        "content/main.css",
+        "content/features/css/*.css"
+      ],
+      "matches": [
+        "*://*.animepahe.pw/*",
+        "*://*.animepahe.org/*",
+        "*://*.animepahe.com/*",
+        "*://*.animepahe.ru/*"
+      ]
+    },
+    {
+      "resources": [
+        "content/helpers/styles.js",
+        "content/features/css/intro-skip.css"
+      ],
+      "matches": [
+        "*://*.kwik.cx/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "animepahe Enhancer",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}

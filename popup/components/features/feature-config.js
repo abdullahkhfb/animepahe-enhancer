@@ -4,10 +4,11 @@ import {
   SmartSearchIcon,
   IntroSkipIcon,
   BingeWatchIcon,
+  SkipWaitIcon,
 } from "../icons/index.js";
 
 /**
- * Presentation metadata for the five features, in display order.
+ * Presentation metadata for the six features, in display order.
  *
  *   id          matches FEATURE_SUBOPTIONS keys in content/helpers/storage.js
  *   settingKey  the boolean in DEFAULT_SETTINGS that switches it on/off
@@ -70,5 +71,16 @@ export const FEATURES = [
     weight: 2,
     Icon: BingeWatchIcon,
     note: "Off by default. A countdown pill appears when an episode ends. Click it to cancel.",
+  },
+  {
+    id: "sw",
+    settingKey: "skipWaitEnabled",
+    name: "Skip Wait",
+    desc: "Skips the pahe.win countdown",
+    color: "#FF7A59",
+    tint: "rgba(255, 122, 89, 0.14)",
+    weight: 2,
+    Icon: SkipWaitIcon,
+    note: "Download-menu links go straight to kwik, no 5-second wait. Ctrl/Shift-click a link to use the normal page instead.",
   },
 ];

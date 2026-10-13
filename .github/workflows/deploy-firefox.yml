@@ -18,6 +18,12 @@ jobs:
         id: zip
         uses: ./.github/actions/build-zip
 
+      - name: Build Chromium zip (Chrome / Edge manual install)
+        id: zip-chromium
+        uses: ./.github/actions/build-zip
+        with:
+          browser: chromium
+
       - name: Upload to Firefox (AMO)
         uses: browser-actions/release-firefox-addon@v0.2.1
         with:
@@ -30,4 +36,6 @@ jobs:
       - name: Upload zip to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ steps.zip.outputs.zip-path }}
+          files: |
+            ${{ steps.zip.outputs.zip-path }}
+            ${{ steps.zip-chromium.outputs.zip-path }}

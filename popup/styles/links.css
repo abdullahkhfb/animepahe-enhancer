@@ -17,17 +17,26 @@
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 16px;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
-.site-card:hover { background: #1b1a23; border-color: var(--line-3); }
-.site-card__logo { display: flex; }
+.site-card:hover {
+  background: #1b1a23;
+  border-color: var(--line-3);
+}
+.site-card__logo {
+  display: flex;
+}
 .site-card__foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: var(--muted);
 }
-.site-card__desc { font-size: 12px; }
+.site-card__desc {
+  font-size: 12px;
+}
 
 .link-row {
   display: flex;
@@ -38,10 +47,17 @@
   border: 1px solid transparent;
   border-radius: 14px;
   color: var(--muted);
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
-.link-row:hover { background: #1b1a23; border-color: var(--line-3); }
-.link-row--accent { border-color: var(--line); }
+.link-row:hover {
+  background: #1b1a23;
+  border-color: var(--line-3);
+}
+.link-row--accent {
+  border-color: var(--line);
+}
 
 .link-row__tile {
   width: 36px;
@@ -67,4 +83,7 @@
   font-weight: 600;
   color: var(--text);
 }
-.link-row__desc { font-size: 12px; color: var(--muted); }
+.link-row__desc {
+  font-size: 12px;
+  color: var(--muted);
+}

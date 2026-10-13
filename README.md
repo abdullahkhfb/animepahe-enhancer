@@ -11,7 +11,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 <p align="center">
   <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.3-blue" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.4-blue" />
 </p>
 
 ## Contents
@@ -32,6 +32,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 - **🔍 Smart Search** — Finds a show even if you search by a nickname or a title in a different language. [Details&nbsp;→](docs/FEATURES.md#-smart-search)
 - **⏭ Intro / Outro Skip** — Skips the opening and ending automatically, or gives you a one-click Skip button. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
 - **🔁 Binge Watch** — Auto-plays the next episode when one ends, with a click to cancel. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
+- **⏩ Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second pahe.win countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
 
 Each feature can be turned on or off separately from the extension's popup, and everything runs locally in your browser — see [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
 
@@ -45,7 +46,7 @@ Each feature can be turned on or off separately from the extension's popup, and 
 <img src="screenshots/sc2.png" alt="Episode list showing DUB and SUB ONLY badges" width="100%" />
 <img src="screenshots/sc3.png" alt="Player page with the Skip Intro button" width="100%" />
 <img src="screenshots/sc4.png" alt="Smart Search showing extra results for an alternative title" width="100%" />
-<img src="screenshots/sc5.png" alt="The redesigned popup, three tabs side by side: Features with Continue Watching expanded, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" width="100%" />
+<img src="screenshots/sc5.png" alt="The redesigned popup, three tabs side by side: Features with Continue Watching expanded and all six features listed, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" width="100%" />
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

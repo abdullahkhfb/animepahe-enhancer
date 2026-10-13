@@ -5,6 +5,18 @@ description: >
   per-browser deploy workflow so the exclusion list never has to be kept
   in sync across multiple files.
 
+  Firefox and Chromium need different `background` keys (Firefox only
+  understands `background.scripts`, Chrome/Edge only `background.service_worker`
+  and warn about `scripts`), so the repo keeps two manifests:
+  manifest.json (Firefox) and manifest.chromium.json (Chrome / Edge). For the
+  `chromium` build, the latter is packed into the zip as manifest.json.
+
+inputs:
+  browser:
+    description: "Target browser: firefox or chromium"
+    required: false
+    default: firefox
+
 outputs:
   zip-path:
     description: Path to the built zip, relative to the repo root
@@ -15,7 +27,25 @@ runs:
   steps:
     - id: build
       shell: bash
+      env:
+        BROWSER: ${{ inputs.browser }}
       run: |
-        zip -r Animepahe-Enhancer.zip . \
-          -x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*"
-        echo "zip-path=Animepahe-Enhancer.zip" >> "$GITHUB_OUTPUT"
+        EXCLUDES=(-x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*" "manifest.chromium.json")
+
+        if [ "$BROWSER" = "chromium" ]; then
+          ZIP=Animepahe-Enhancer-Chromium.zip
+          rm -f "$ZIP"
+          zip -r "$ZIP" . "${EXCLUDES[@]}" -x "manifest.json"
+          TMP=$(mktemp -d)
+          cp manifest.chromium.json "$TMP/manifest.json"
+          (cd "$TMP" && zip "$GITHUB_WORKSPACE/$ZIP" manifest.json)
+        elif [ "$BROWSER" = "firefox" ]; then
+          ZIP=Animepahe-Enhancer-Firefox.zip
+          rm -f "$ZIP"
+          zip -r "$ZIP" . "${EXCLUDES[@]}"
+        else
+          echo "Unknown browser: $BROWSER" >&2
+          exit 1
+        fi
+
+        echo "zip-path=$ZIP" >> "$GITHUB_OUTPUT"

@@ -18,7 +18,10 @@
 
 ```
 📦 animepahe-enhancer/
-├── ⚙️  manifest.json              # Extension manifest (Manifest V3)
+├── ⚙️  manifest.json              # Extension manifest (Manifest V3) — Firefox build
+├── ⚙️  manifest.chromium.json     # Same manifest for Chrome / Edge: only `background` differs
+├── 📄 background.js               # Background script (service worker / event page) —
+│                                  #   Skip Wait: resolves pahe.win → kwik and opens the tab
 │
 ├── 📁 content/
 │   ├── 📄 main.js                 # Entry point — loads settings, detects page,
@@ -34,7 +37,8 @@
 │   │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
 │   │   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
 │   │   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
-│   │   │   └── 📄 binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
+│   │   │   ├── 📄 binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
+│   │   │   └── 📄 skip-wait.js          # Skip Wait — download links bypass the pahe.win countdown page
 │   │   └── 📁 css/
 │   │       ├── 🎨 continue-watching.css
 │   │       ├── 🎨 dub-detector.css
@@ -62,7 +66,8 @@
 │   │   ├── 📄 dom.js              #   h() element builder shared by every component
 │   │   ├── 📁 icons/              #   One file per icon (and per real logo image)
 │   │   │   ├── 📄 ContinueWatchingIcon.js, DubDetectorIcon.js, SmartSearchIcon.js,
-│   │   │   │      IntroSkipIcon.js, BingeWatchIcon.js     # the five feature icons
+│   │   │   │      IntroSkipIcon.js, BingeWatchIcon.js,
+│   │   │   │      SkipWaitIcon.js                         # the six feature icons
 │   │   │   ├── 📄 SourceCodeIcon.js, ReportIssueIcon.js, ExternalLinkIcon.js
 │   │   │   ├── 📄 ApMark.js       #   The extension's logo tile
 │   │   │   ├── 📄 SiteLogo.js     #   Real animepahe wordmark (icons/animepahe-wordmark.svg)
@@ -113,7 +118,7 @@
 
 ### Module loading — no bundler required
 
-`content/main.js` is the sole entry point registered in `manifest.json`. It uses the browser's native dynamic `import()` with `chrome.runtime.getURL()` to load feature and utility modules at runtime:
+`content/main.js` is the sole content-script entry point for animepahe pages registered in `manifest.json` (the only other scripts are `content/iframe-player.js` for the Kwik iframe and `background.js`, described under [Skip Wait](#skip-wait--background-flow)). It uses the browser's native dynamic `import()` with `chrome.runtime.getURL()` to load feature and utility modules at runtime:
 
 ```mermaid
 flowchart TD
@@ -127,14 +132,39 @@ flowchart TD
     CM -->|smartSearchEnabled| SS["features/js/smart-search.js"]
     CM -->|introSkipEnabled| IS["features/js/intro-skip.js"]
     CM -->|bingeWatchEnabled| BW["features/js/binge-watch.js"]
+    CM -->|skipWaitEnabled| SW["features/js/skip-wait.js"]
     CW --> CWI["new ContinueWatching(storage, settings)\n.init(pageType)"]
     DD --> DDI["new DubDetector(storage, settings)\n.init(pageType)"]
     SS --> SSI["new SmartSearch(storage, settings)\n.init(pageType)"]
     IS --> ISI["new IntroSkip(storage, settings)\n.init(pageType)"]
     BW --> BWI["new BingeWatch(storage, settings)\n.init(pageType)"]
+    SW --> SWI["new SkipWait(storage, settings)\n.init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules. Every feature constructor receives the same `settings` object (loaded once via `storage.getSettings()`), so reading a user-tuned value is just `settings.someKey ?? someDefault`.
+
+### Skip Wait — Background Flow
+
+Skip Wait is the one feature that needs a background script, because a content script on animepahe can't read another origin's page (`pahe.win`) — the extension's own background context can, via the `*://*.pahe.win/*` host permission.
+
+```mermaid
+sequenceDiagram
+    participant U as You (episode page)
+    participant S as skip-wait.js (content script)
+    participant B as background.js
+    participant P as pahe.win
+    U->>S: click a Download-menu link (capture phase)
+    S->>S: preventDefault — no pahe.win tab
+    S->>B: runtime message AP_SKIP_WAIT { url }
+    B->>P: fetch pahe.win/XXXX
+    P-->>B: HTML containing the kwik link
+    B->>U: open kwik.cx/f/YYYY in a new tab next to the episode
+```
+
+- `background.js` is a classic script (no ES modules). Firefox only runs it from `background.scripts` (`manifest.json`); Chrome and Edge only accept `background.service_worker` in Manifest V3 and warn about `scripts` (`manifest.chromium.json`). That's why there are two manifests — everything else in them is identical, and the release build picks the right one.
+- It only accepts `https://*.pahe.win/<id>` URLs — it is deliberately not a generic "fetch any URL" proxy.
+- If no kwik link is found in the page, it opens the original `pahe.win` URL so the click still does something.
+- Ctrl / Shift / Alt / Cmd-clicks and middle-clicks are ignored by `skip-wait.js`, so the original behaviour is always one modifier key away.
 
 ### Continue Watching — Cross-Frame Communication
 
@@ -282,6 +312,7 @@ export const DEFAULT_SETTINGS = {
   smartSearchEnabled: true,
   introSkipEnabled: true,
   bingeWatchEnabled: false,
+  skipWaitEnabled: true,
   myFeatureEnabled: true, // ← add here
   ...FEATURE_SUBOPTIONS_DEFAULTS,
   ...ADVANCED_DEFAULTS,

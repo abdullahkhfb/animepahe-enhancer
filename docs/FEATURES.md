@@ -11,6 +11,7 @@
 - [Smart Search](#-smart-search)
 - [Intro / Outro Skip](#-intro--outro-skip)
 - [Binge Watch](#-binge-watch)
+- [Skip Wait](#-skip-wait)
 - [Advanced Settings](#-advanced-settings)
 
 ---
@@ -105,6 +106,19 @@ Automatically opens and plays the next episode when the current one ends — no 
 - Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`) before navigating — click it any time to cancel. The countdown length is tunable in Advanced Settings, and can be set to 0 to skip it entirely and jump straight to the next episode
 - While the feature is on, animepahe's "Click to load" placeholder over the embed is clicked automatically on every episode page — including ones you open yourself, not just ones Binge Watch navigates to — so nothing ever sits waiting for a click
 - Works purely off of the current episode's session id and animepahe's own episode ordering, so it doesn't depend on any third-party database
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## ⏩ Skip Wait
+
+Clicking a link in an episode page's **Download** menu opens the kwik page straight away — the 5-second `pahe.win` countdown page never appears. You still press kwik's own **Download** button as usual.
+
+- Intercepts clicks on `pahe.win` links on episode pages and hands them to the extension's background script
+- The countdown on `pahe.win` is only a timer in the page; the kwik link is already in its HTML. The background script requests that page, reads the kwik link out of it, and opens `kwik.cx/f/…` in a new tab next to your episode tab
+- Nothing on kwik is touched, submitted or downloaded by the extension — it only saves you the wait
+- If the kwik link can't be found, the original `pahe.win` page opens instead, so the link never just does nothing
+- Ctrl / Shift / Alt / Cmd-click or middle-click a link to bypass the feature and open the original page
+- On by default; switch it off from its card in the popup's Features tab
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

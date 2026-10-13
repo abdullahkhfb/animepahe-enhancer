@@ -32,7 +32,7 @@ If you've dealt with a similar review reversal on Edge or Chrome, [open an issue
 
 If you'd rather not wait on Edge's store update pipeline, or want a specific version, manual install still works:
 
-1. Download the latest `Animepahe-Enhancer.zip` from the [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) page.
+1. Download the latest `Animepahe-Enhancer-Chromium.zip` (no `Animepahe-Enhancer-Firefox.zip`, which is the Firefox build) from the [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) page.
 2. Unzip it somewhere you won't accidentally delete it (Edge needs to keep reading from that folder).
 3. Go to `edge://extensions` in your address bar.
 4. Turn on **Developer mode** (toggle, usually bottom-left or top-right of the page).

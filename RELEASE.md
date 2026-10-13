@@ -60,10 +60,17 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 Changes staged for the next version, not yet tagged as a GitHub Release.
 
-A redesigned popup, a new icon, and a tidier source tree.
+Nothing yet.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## v0.3.1.4 — 2026-10-13
+
+A redesigned popup, a new icon, a tidier source tree, and a new Skip Wait feature for download links.
 
 ### Added
 
+- **Skip Wait**: links in the episode page's Download menu now open the kwik page directly, skipping the 5-second `pahe.win` countdown page. A new background script reads the kwik link out of the `pahe.win` page and opens it in a new tab; if the link can't be found, the original `pahe.win` page opens instead. Ctrl / Shift / Alt / Cmd-click or middle-click keeps the original behaviour. On by default, with its own switch in the Features tab. Adds the `*://*.pahe.win/*` host permission (no new API permissions).
 - **Redesigned popup**: a status strip in the header lights one colour-coded segment per enabled feature, features are single rows with one switch each, and every tab fits its content with no inner scrolling.
 - **New "ap" icon** for the toolbar and stores — a thin "a" beside a bold "p" whose counter is a play button, drawn in the site's own colours.
 - **Real logos in Links**: the animepahe wordmark and the MalSync logo now appear on their quick links.
@@ -75,10 +82,17 @@ A redesigned popup, a new icon, and a tidier source tree.
 - Tab names are now **Features / Advanced / Links**.
 - The popup is built from small components (`popup/components/`), with one file per icon, instead of one large `popup.html`.
 - `content/features/` is split into `js/` and `css/` folders. No behaviour change; internal paths and `manifest.json` globs were updated to match.
+- The popup screenshot in the README now shows the current six-feature popup, including Skip Wait.
+
+### Fixed
+
+- **Chrome / Edge no longer warn** that `'background.scripts' requires manifest version of 2 or lower`. Firefox and Chromium need different `background` keys in Manifest V3, so the repo now keeps `manifest.json` (Firefox) and `manifest.chromium.json` (Chrome / Edge), and releases include a separate `Animepahe-Enhancer-Chromium.zip`.
 
 ### Removed
 
 - The old per-feature icon SVGs in `icons/` that only the previous popup used.
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.3...v0.3.1.4)
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

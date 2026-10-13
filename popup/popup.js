@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const notice = Notice("Reload page to apply");
   const timeline = Timeline(FEATURES);
-  // Shown on the same line as "N of 5 active" so it never adds height.
+  // Shown on the same line as "N of 6 active" so it never adds height.
   timeline.append(notice);
   const panels = Object.fromEntries(
     TABS.map((t) => [

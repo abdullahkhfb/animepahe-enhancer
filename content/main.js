@@ -89,6 +89,11 @@
       export: "BingeWatch",
       enabled: settings.bingeWatchEnabled,
     },
+    {
+      module: "content/features/js/skip-wait.js",
+      export: "SkipWait",
+      enabled: settings.skipWaitEnabled,
+    },
     //  to add a new feature, append an entry here
     // {
     //   module:  "content/features/js/my-feature.js",

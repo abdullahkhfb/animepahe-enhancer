@@ -32,7 +32,7 @@ That's it — the directory is the extension.
 
 1. Navigate to `about:debugging#/runtime/this-firefox`
 2. Click **Load Temporary Add-on…**
-3. Select the `manifest.json` file inside the cloned directory.
+3. Select the `manifest.json` file inside the cloned directory. (`manifest.json` is the Firefox manifest.)
 
 The extension will be active until Firefox is restarted. To persist it across restarts, use a [Firefox developer profile](https://extensionworkshop.com/documentation/develop/debugging/).
 
@@ -40,7 +40,7 @@ The extension will be active until Firefox is restarted. To persist it across re
 
 1. Navigate to `chrome://extensions` or `edge://extensions`
 2. Enable **Developer mode**
-3. Click **Load unpacked** and select the cloned directory
+3. Chrome and Edge reject Firefox's `background.scripts` key in Manifest V3, so they need the Chromium manifest in place of `manifest.json`. Copy it over first — `copy /Y manifest.chromium.json manifest.json` (Windows) or `cp manifest.chromium.json manifest.json` (macOS / Linux) — then click **Load unpacked** and select the cloned directory. Restore the Firefox one afterwards with `git checkout manifest.json`. (Release builds do this swap automatically; see below.)
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -48,13 +48,13 @@ The extension will be active until Firefox is restarted. To persist it across re
 
 Firefox and Edge deploy through **separate workflows** on purpose — Firefox publishes automatically, Edge requires a deliberate manual step. This split exists because publishing a release used to submit to both stores at once, which made it too easy to accidentally trigger an Edge submission (including while Edge's certification status is unresolved — see [docs/EDGE.md](EDGE.md)) just by tagging a routine release.
 
-1. Bump the `version` field in `manifest.json`.
+1. Bump the `version` field in **both** `manifest.json` and `manifest.chromium.json`. They must stay identical except for the `background` key (Firefox: `scripts`; Chrome/Edge: `service_worker`).
 2. Add a `## v0.x.x.x — YYYY-MM-DD` section to [`RELEASE.md`](../RELEASE.md) describing what changed (see that file's own template).
 3. Commit, then create and publish a **GitHub Release** tagged to match (`v0.x.x.x`).
-4. **Firefox happens automatically** — [`deploy-firefox.yml`](../.github/workflows/deploy-firefox.yml) triggers on the release being published, builds the zip, submits to AMO using the release body as the release notes, and attaches the zip to the GitHub Release.
+4. **Firefox happens automatically** — [`deploy-firefox.yml`](../.github/workflows/deploy-firefox.yml) triggers on the release being published, builds the Firefox zip, submits to AMO using the release body as the release notes, and attaches that zip to the GitHub Release — along with a Chromium zip (`Animepahe-Enhancer-Chromium.zip`) for manual Chrome / Edge installs.
 5. **Edge does not happen automatically.** When you're ready to submit to Edge specifically, go to the Actions tab → **Deploy — Edge (manual)** → **Run workflow**, and enter the tag you want to publish (e.g. `v0.2.0.1`). This runs [`deploy-edge.yml`](../.github/workflows/deploy-edge.yml) against that exact tag.
 
-Both workflows build the zip the same way, via a shared composite action ([`build-zip`](../.github/actions/build-zip/action.yml)) — the exclusion list (every `.md` file, `docs/`, `screenshots/`) lives in exactly one place instead of being duplicated per workflow. If you add a new `.md` file anywhere in the repo, you don't need to touch either workflow — the `*.md` wildcard already covers it.
+Both workflows build the zip the same way, via a shared composite action ([`build-zip`](../.github/actions/build-zip/action.yml), which takes a `browser` input — `firefox` packs `manifest.json`, `chromium` packs `manifest.chromium.json` as `manifest.json`) — the exclusion list (every `.md` file, `docs/`, `screenshots/`) lives in exactly one place instead of being duplicated per workflow. If you add a new `.md` file anywhere in the repo, you don't need to touch either workflow — the `*.md` wildcard already covers it.
 
 **Required repository secrets:**
 

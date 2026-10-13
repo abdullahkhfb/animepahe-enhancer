@@ -23,6 +23,8 @@ jobs:
       - name: Build extension zip
         id: zip
         uses: ./.github/actions/build-zip
+        with:
+          browser: chromium
 
       - name: Upload to Microsoft Edge Add-ons
         uses: wdzeng/edge-addon@v2

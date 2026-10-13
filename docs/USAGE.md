@@ -11,6 +11,7 @@
 - [Smart Search](#smart-search)
 - [Intro / Outro Skip](#intro--outro-skip)
 - [Binge Watch](#binge-watch)
+- [Skip Wait](#skip-wait)
 - [Popup Settings Panel](#popup-settings-panel)
 
 ---
@@ -106,6 +107,19 @@ Binge Watch auto-plays the next episode when the current one ends. It's **off by
 6. If there's no next episode (you're on the latest one), nothing happens — playback just ends normally.
 
 **Tuning:** The countdown length is configurable in the Advanced tab (`Countdown before next episode`) and can be set to **0** to skip the pill entirely and jump straight to the next episode.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## Skip Wait
+
+Skip Wait removes the `pahe.win` countdown page from the download flow. It's **on by default** and can be switched off from its card in the popup's Features tab.
+
+1. Open an episode and click the **Download** menu as usual.
+2. Click a quality (for example `SubsPlease · 1080p`). A small pill appears in the bottom-right corner (`⏩ Skip Wait: getting link…`).
+3. A new tab opens directly on the kwik page — no 5-second `pahe.win` wait. Click kwik's **Download** button there to save the file, as you normally would.
+4. If the extension can't find the kwik link, it opens the original `pahe.win` page instead, and the pill says so.
+
+**Want the original behaviour for one click?** Hold Ctrl, Shift, Alt or Cmd while clicking (or middle-click) and the link opens the normal `pahe.win` page.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

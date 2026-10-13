@@ -291,6 +291,7 @@ export const DEFAULT_SETTINGS = {
   // Navigates on its own with no click required, so unlike the rest
   // above, it defaults to off.
   bingeWatchEnabled: false,
+  skipWaitEnabled: true,
   ...FEATURE_SUBOPTIONS_DEFAULTS,
   ...ADVANCED_DEFAULTS,
 };

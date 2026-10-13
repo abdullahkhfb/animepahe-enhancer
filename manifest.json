@@ -2,14 +2,16 @@
   "manifest_version": 3,
   "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.3.1.3",
+  "version": "0.3.1.4",
   "description": "Video progress tracking, DUB detection, Smart Search via AniList, and Intro/Outro Skipping for animepahe.",
   "browser_specific_settings": {
     "gecko": {
       "id": "animepahe-enhancer@abdullahkhfb.github.io",
       "strict_min_version": "140.0",
       "data_collection_permissions": {
-        "required": ["none"]
+        "required": [
+          "none"
+        ]
       }
     },
     "gecko_android": {
@@ -21,12 +23,15 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "*://*.animepahe.pw/*",
     "*://*.animepahe.org/*",
     "*://*.animepahe.com/*",
     "*://*.kwik.cx/*",
+    "*://*.pahe.win/*",
     "https://graphql.anilist.co/*",
     "https://relations.yuna.moe/*",
     "https://raw.githubusercontent.com/Ellivers/open-anime-timestamps/*"
@@ -39,12 +44,18 @@
         "*://*.animepahe.com/*",
         "*://*.animepahe.ru/*"
       ],
-      "js": ["content/main.js"],
+      "js": [
+        "content/main.js"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["*://*.kwik.cx/*"],
-      "js": ["content/iframe-player.js"],
+      "matches": [
+        "*://*.kwik.cx/*"
+      ],
+      "js": [
+        "content/iframe-player.js"
+      ],
       "run_at": "document_end",
       "all_frames": true
     }
@@ -69,7 +80,9 @@
         "content/helpers/styles.js",
         "content/features/css/intro-skip.css"
       ],
-      "matches": ["*://*.kwik.cx/*"]
+      "matches": [
+        "*://*.kwik.cx/*"
+      ]
     }
   ],
   "action": {
@@ -80,5 +93,10 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
   }
 }
