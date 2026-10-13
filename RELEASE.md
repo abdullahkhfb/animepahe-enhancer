@@ -58,16 +58,18 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 ## Unreleased
 
-Changes staged for the next version, not yet tagged as a GitHub Release.
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
+## v0.3.1.5 — 2026-10-13
+
+A small release to align the shipped version metadata, README screenshots, and the release notes with the current popup build.
 
 ### Changed
 
-- Removed the `*://*.animepahe.ru/*` match from the content script and web-accessible resources; the extension no longer runs on animepahe.ru.
-- Release builds no longer include the `.txt` licence files in `popup/fonts/` (the fonts themselves are unchanged).
+- The popup screenshot and version badge now reflect the v0.3.1.5 build shown in the extension UI.
+- Release notes were updated to keep the latest version history consistent with the current documentation snapshot.
 
-### Fixed
-
-- The Chromium build can no longer pick up a previously built zip (such as the Firefox build) when both are built in the same job. The Edge deploy workflow also now verifies the zip is Chromium-only before uploading.
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.4...v0.3.1.5)
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
