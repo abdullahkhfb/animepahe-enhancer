@@ -1,8 +1,8 @@
 <!--
   Chrome widget — status badge, not an install prompt.
-  The Chrome Web Store listing doesn't exist yet, so this just communicates
-  "coming soon" instead of linking anywhere. Update this once the listing
-  goes live — swap it for a real link + badge like firefox.md.
+  The Chrome Web Store listing has not been submitted, so this communicates
+  that installation is not currently available there. Update this once the
+  listing goes live — swap it for a real link + badge like firefox.md.
 -->
 
 <p align="center">

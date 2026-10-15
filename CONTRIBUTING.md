@@ -39,8 +39,8 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - **Discuss before you build.** For anything beyond a trivial bug fix, open an issue first. This avoids duplicated effort and ensures the change aligns with the project's direction.
 - **One concern per PR.** Keep pull requests focused. A PR that fixes a bug and adds an unrelated feature is harder to review and slows everything down.
 - **No build step required.** The extension is plain ES2020+ JavaScript with no bundler, no TypeScript, and no external npm dependencies. Keep it that way.
-- **Minimal permissions.** Any change that would require adding a new entry to `permissions` or `host_permissions` in `manifest.json` needs strong justification and will be scrutinised carefully.
-- **Local-first data.** No feature should transmit user data to an external server beyond what is already documented (AniList title lookups for Smart Search, AniList/relations.yuna.moe/open-anime-timestamps requests for Intro/Outro Skip). New network targets require explicit discussion.
+- **Minimal permissions.** Any change that would require adding a new entry to `permissions` or `host_permissions` in either manifest needs strong justification and will be scrutinised carefully.
+- **Local-first data.** Keep new data flows limited to what a feature needs. Existing network requests include animepahe requests for DUB detection, search, and Binge Watch; pahe.win link resolution for Skip Wait; and AniList, relations.yuna.moe, and the open-anime-timestamps dataset for Intro/Outro Skip. New network targets or data sent require explicit discussion and a `PRIVACY.md` update.
 - **Be respectful.** This project adheres to its [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
@@ -66,7 +66,7 @@ The extension stays active until Firefox is restarted. For persistent developmen
 
 1. Open `chrome://extensions` (or `edge://extensions`)
 2. Enable **Developer mode** (toggle in the top-right corner)
-3. Click **Load unpacked** and select the cloned directory.
+3. Chrome and Edge require the Chromium manifest in place of Firefox's `manifest.json`. Follow the manifest-copy and restore steps in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally), then click **Load unpacked** and select the cloned directory.
 
 ### Reloading after changes
 
@@ -83,21 +83,24 @@ Then reload any open animepahe tab.
 
 ```
 animepahe-enhancer/
-├── manifest.json                 # Extension manifest (Manifest V3)
+├── manifest.json                 # Firefox Manifest V3 manifest
+├── manifest.chromium.json        # Chrome / Edge Manifest V3 manifest
+├── background.js                 # Skip Wait link-resolution background handler
 │
 ├── content/
 │   ├── main.js                   # Entry point — loads settings, detects page, imports features
 │   ├── iframe-player.js          # Injected into Kwik iframe; postMessage bridge for
 │   │                             #   Continue Watching + Intro/Outro Skip controller
 │   │
-│   ├── features/                 # One class + one stylesheet per feature
+│   ├── features/                 # Feature modules with optional stylesheets
 │   │   ├── js/                   #   Each file exports a class with init(pageType)
 │   │   │   ├── continue-watching.js
 │   │   │   ├── dub-detector.js
 │   │   │   ├── smart-search.js
 │   │   │   ├── intro-skip.js     # Intro/Outro Skip — timestamp lookup + range orchestration
-│   │   │   └── binge-watch.js    # Binge Watch — auto-plays the next episode, off by default
-│   │   └── css/                  #   One stylesheet per feature (injectStylesheet)
+│   │   │   ├── binge-watch.js    # Binge Watch — auto-plays the next episode, off by default
+│   │   │   └── skip-wait.js      # Skip Wait — bypasses the pahe.win countdown
+│   │   └── css/                  #   Stylesheets for features that need them
 │   │       ├── continue-watching.css
 │   │       ├── dub-detector.css
 │   │       ├── intro-skip.css
@@ -159,7 +162,7 @@ animepahe-enhancer/
 
 ### New Features
 
-Every feature in the extension follows a three-file contract:
+Every feature is registered in the feature loader and has a settings key; a stylesheet and popup row are added when needed:
 
 **1. Create `content/features/js/my-feature.js`** (and, if it needs styling, `content/features/css/my-feature.css`)
 
@@ -182,11 +185,10 @@ export class MyFeature {
 
 ```js
 export const DEFAULT_SETTINGS = {
-  cwEnabled: true,
-  dubEnabled: true,
-  smartSearchEnabled: true,
-  introSkipEnabled: true,
+  // Keep the existing feature toggles and settings here.
   myFeatureEnabled: true, // ← add here
+  ...FEATURE_SUBOPTIONS_DEFAULTS,
+  ...ADVANCED_DEFAULTS,
 };
 ```
 
@@ -203,7 +205,7 @@ const FEATURES = [
 ];
 ```
 
-**4. Expose the module in `manifest.json`** (if it needs to be importable by the content script)
+**4. Confirm both manifests expose the module** (if it needs to be importable by the content script)
 
 ```json
 "web_accessible_resources": [
@@ -214,7 +216,7 @@ const FEATURES = [
 ]
 ```
 
-No other files need to change. To give the feature a row in the popup, add an icon component in `popup/components/icons/` and an entry in `popup/components/features/feature-config.js` — see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#adding-a-new-feature).
+The existing resource globs already cover feature modules and stylesheets; update them only if the new file is outside those paths. To give the feature a row in the popup, add an icon component in `popup/components/icons/` and an entry in `popup/components/features/feature-config.js` — see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#adding-a-new-feature).
 
 ### New Advanced Settings
 
@@ -240,7 +242,7 @@ If your change adds a tunable value (a timing, limit, batch size, etc.) rather t
 this._myValue = settings.myNewTunable ?? 10;
 ```
 
-That's it. The popup will automatically render a labeled input, your description, and its own **↺ reset** button for the new setting, and fold it into **Reset All Advanced Settings** — no other files need to change.
+That's it. The popup will automatically render a labeled stepper, an info button for your description, and its own **Default N** reset button for the new setting, and fold it into **Reset all** — no other popup files need to change.
 
 A few conventions to follow:
 
@@ -251,9 +253,9 @@ A few conventions to follow:
 
 ### Documentation
 
-- Edit `README.md`, `PRIVACY.md`, or `SECURITY.md` directly.
+- Update the documentation page that covers the affected feature or workflow; update `PRIVACY.md` or `SECURITY.md` as well when data flows or security-relevant behavior changes.
 - Code comments are valued — explain _why_ something is done, not just _what_ it does.
-- Architecture diagrams in the README use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
+- Diagrams in `docs/ARCHITECTURE.md` use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
 
 ---
 
@@ -269,9 +271,9 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 | **Indentation**      | 2 spaces                                                                                                              |
 | **Strings**          | Double quotes for HTML attribute strings; single or template literals for JavaScript                                  |
 | **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied, animepahe-sourced, or AniList-sourced data |
-| **Error handling**   | Wrap feature initialisation in `try/catch` and log to `console.error` with the `[animepahe-enhancer]` prefix          |
+| **Error handling**   | Follow existing feature-specific error handling and logging patterns; use `[animepahe-enhancer]` for shared entry-point messages |
 | **Comments**         | JSDoc for exported classes and public methods; inline comments for non-obvious logic                                  |
-| **Storage keys**     | All keys must use the established prefixes (`ape_`, `d2_`, `h2_`, `ape_ss_`, `ape_isid_`, `ape_askip_`) and be documented in `storage.js` or the relevant helper |
+| **Storage keys**     | Use established key prefixes (`ape_`, `d2_`, `h2_`) and document new keys in `storage.js` or the relevant helper |
 
 ---
 

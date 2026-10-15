@@ -66,10 +66,10 @@ Smart Search activates automatically while you type in the animepahe search bar 
 
 1. Start typing any title in the search bar. After a 100 ms debounce by default (configurable), Smart Search kicks in alongside the native search.
 2. animepahe's regular results appear as normal. Smart Search then queries AniList for alternative titles associated with your term.
-3. Any additional matching anime found via those alternative titles are **injected at the top** of the dropdown under a labelled divider.
-4. Each extra result card shows the anime's poster thumbnail, its title as listed on animepahe, and a pink _also known as "…"_ tag showing which search term led to this result.
+3. Smart Search searches animepahe for up to three alternate titles by default, one at a time. Matching results are appended after the existing results.
+4. Each extra result card shows the anime's poster thumbnail, its title as listed on animepahe, and a pink _also matching "…"_ label.
 5. Click any result card (native or injected) to navigate to that anime's page as normal.
-6. If Smart Search finds nothing additional, the dropdown is left unchanged.
+6. If Smart Search finds no additional matches, the dropdown is left unchanged. If there are no native results and AniList finds a likely title, Smart Search may add a **Did you mean?** suggestion.
 
 **Cache:** AniList lookup results are cached for **24 hours by default** (configurable in the Advanced tab). You can force-clear the cache from the popup.
 
@@ -84,8 +84,8 @@ The Intro / Outro Skip feature activates automatically on the player page (`/pla
 3. If timestamps are found, a result pill appears (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`) and the skip ranges are sent to the Kwik player.
 4. In **manual mode** (default): A **Skip Intro** or **Skip Outro** button appears overlaid on the video when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after a configurable delay but reappears if you move your mouse.
 5. In **auto-skip mode** (opt-in, toggled on the Intro / Outro Skip row): The player automatically seeks past intros and outros as soon as playback enters the range.
-6. **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps. This can be disabled in Advanced Settings.
-7. If the anime isn't in the local open-anime-timestamps database, the status pill shows "not found" — there's no online fallback for this feature, so nothing is skipped for that episode.
+6. **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps. Toggle this sub-option in the Intro / Outro Skip feature card in the popup.
+7. If the title or episode cannot be matched to timestamp data, nothing is skipped for that episode; the status pill reports that no data was found. There is no online timestamp fallback.
 
 **Data sources and caching:**
 
@@ -127,7 +127,7 @@ Skip Wait removes the `pahe.win` countdown page from the download flow. It's **o
 
 Click the extension icon in the browser toolbar to open the settings popup. It's split into three tabs:
 
-**Features tab** — one row per feature, each with its own colour. A status strip under the header lights one segment per enabled feature ("4 of 5 active"). Click a row to expand it and:
+**Features tab** — one row per feature, each with its own colour. A status strip under the header lights one segment per enabled feature (for example, "4 of 6 active"). Click a row to expand it and:
 
 - See a quick stat (items saved, entries cached, or whether the timestamps database is cached)
 - Clear that feature's cache/history with one click
@@ -135,12 +135,12 @@ Click the extension icon in the browser toolbar to open the settings popup. It's
 
 The switch on the right of each row turns that feature on or off.
 
-**Advanced tab** — every internal tunable, grouped by feature:
+**Advanced tab** — tunable settings grouped by feature:
 
 - Pick a group from the pill selector to see only that group's settings
-- Each setting shows a plain-language description and a stepper (− / + buttons, or type a value), plus a **Default N** link that appears once you change it
+- Each setting has a stepper (− / + buttons, or type a value), an info button for its plain-language description, and a **Default N** button that appears once you change it
 - Edits are staged (marked with a small dot) until you press **Apply** — nothing saves until then
-- **Reset all advanced settings** restores every tunable to default without touching your feature toggles
+- **Reset all** restores every tunable to default without touching your feature toggles
 
 **Links tab** — the animepahe site (shown with its real logo), the GitHub repository, the issue tracker, and a recommended companion tool, [MalSync](https://malsync.moe) (with its real logo), for syncing your progress to MyAnimeList/AniList/Kitsu.
 

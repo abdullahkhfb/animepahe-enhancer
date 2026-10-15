@@ -26,7 +26,7 @@ Never lose your place again. animepahe Enhancer tracks your exact playback posit
 - Supports up to **24 episodes** by default in your watch history (FIFO — oldest entries are pruned automatically; this limit is configurable)
 - Individual episodes can be removed with a hover-reveal ✕ button
 - The entire list can be cleared in one click from the popup or the home page
-- Works across all official animepahe mirror domains
+- Works on the animepahe domains supported by the extension: `.pw`, `.org`, and `.com`
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -45,31 +45,31 @@ Detection uses a two-method strategy with a local cache (24 hours by default, co
 1. **Lightweight JSON API check** — hits animepahe's `/api?m=links` endpoint
 2. **HTML page fallback** — parses the play page if the API check is inconclusive
 
-A smart **gallop-then-binary-search** algorithm is used on episode lists, since dubbed episodes always form a contiguous block from the beginning of a series. It steps backward from the newest episode in doubling strides to bracket the dub/sub cutoff, then binary-searches within that bracket — one request at a time, never in parallel — cutting the number of network requests from O(n) to O(log n) without bursting the API. The delay between scan batches is configurable.
+A smart **gallop-then-binary-search** algorithm is used on episode lists, since dubbed episodes are expected to form a contiguous block from the beginning of a series. After checking the first and last episodes (which can be checked together), it steps backward from the newest episode in doubling strides to bracket the dub/sub cutoff, then binary-searches within that bracket. The gallop and binary-search probes run one at a time, reducing requests to O(log n) under that ordering assumption. The delay between scan batches is configurable.
 
 Scanning the home page's `N/total` cards is a sub-feature, toggleable directly from the DUB Detector card in the popup (default **on**) — turn it off to only scan episode lists and player pages, which uses fewer requests.
 
-All network requests are routed through a **`RequestThrottler`** — a built-in rate-limiting layer that enforces configurable concurrency limits, per-request jitter, and exponential back-off with automatic retry on HTTP 429/503/403 responses, keeping scans polite without sacrificing speed. Every one of these knobs is exposed in the popup's [Advanced Settings](#-advanced-settings) panel.
+The DUB Detector's animepahe API requests are routed through a **`RequestThrottler`** — a built-in rate-limiting layer that enforces configurable concurrency limits, per-request jitter, and exponential back-off with automatic retry on HTTP 429/403 responses and Cloudflare challenge responses, keeping scans polite without sacrificing speed. Every one of these knobs is exposed in the popup's [Advanced Settings](#-advanced-settings) panel.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ## 🔍 Smart Search
 
-Can't find an anime because you only know its English dub title, a common nickname, or a romanized spelling that doesn't match animepahe's catalogue? Smart Search fixes that by querying [AniList](https://anilist.co) for every alternative title associated with your search term and running parallel searches for each one — all without leaving the search bar.
+Can't find an anime because you only know its English dub title, a common nickname, or a romanized spelling that doesn't match animepahe's catalogue? Smart Search queries [AniList](https://anilist.co) for alternative titles associated with your search term, then searches animepahe for those titles — all without leaving the search bar.
 
-- Activates automatically as you type (debounced 100 ms by default) — no extra interaction required
-- Fetches alternative titles (romaji, English, synonyms) from the AniList GraphQL API for the top matching anime
-- Runs additional searches on animepahe using each candidate title and merges the results
-- Extra results appear **above** the native dropdown, clearly labelled with a pink `also known as "…"` tag and a left-side accent border
+- Activates automatically as you type (after a 100 ms debounce by default, with a 2-character minimum query) — no extra interaction required
+- Fetches alternative titles (romaji, English, synonyms) from the AniList GraphQL API and selects the best-matching anime
+- Searches animepahe for up to 3 alternate titles by default, one at a time with a 250 ms pause between searches
+- Extra results are appended to the dropdown after existing results, with a pink `also matching "…"` label and a left-side accent border
 - Duplicate titles already shown by animepahe's native search are automatically suppressed
-- Relevance filtering ensures only genuinely related titles are injected (word-overlap + substring checks)
+- Relevance filtering uses title similarity and word overlap to limit injected results to related titles
 - AniList lookup results are cached locally for 24 hours by default (storage prefix `ape_ss_`) — shares the same configurable cache-duration setting as the DUB Detector
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ## ⏭ Intro / Outro Skip
 
-Automatically skip anime openings and endings — or show a manual Skip button when you're ready. This feature uses the community-maintained [open-anime-timestamps](https://github.com/jonbarrow/open-anime-timestamps) dataset (~27 MB, cached locally in IndexedDB) to look up intro and outro timestamps per episode.
+Automatically skip anime openings and endings — or show a manual Skip button when you're ready. This feature uses the community-maintained [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) dataset (~27 MB, cached locally in IndexedDB) to look up intro and outro timestamps per episode.
 
 - **Two modes**, toggled directly from the Intro/Outro Skip card in the popup (not buried in the Advanced tab):
   - **Auto-skip** (off by default): The player automatically jumps past intros and outros without any interaction
@@ -124,7 +124,7 @@ Clicking a link in an episode page's **Download** menu opens the kwik page strai
 
 ## ⚙ Advanced Settings
 
-For anyone who wants to fine-tune exactly how the extension behaves, every internal timing, caching, and request-throttling value is exposed in a collapsible **Advanced Settings** tab inside the popup — no code editing required.
+For anyone who wants to fine-tune exactly how the extension behaves, timing, caching, and request-throttling values are exposed in the popup's **Advanced** tab — no code editing required. Select a group chip to show that group's settings; only one group is displayed at a time.
 
 | Group                  | What's tunable                                                                                                                             |
 | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -138,10 +138,10 @@ For anyone who wants to fine-tune exactly how the extension behaves, every inter
 
 - Auto-skip and progress-bar highlights are no longer here — they're sub-feature toggles on the Intro/Outro Skip card itself (see above), since they're everyday options, not tuning knobs.
 
-- Every group is collapsed by default so the tab stays short — click a group's header to expand it
-- Each setting has its own plain-language description, a numeric input clamped to a sane range, and an individual **↺ reset** button
-- Edits are staged as you type — nothing is saved until you press **Apply Changes** at the bottom of the tab
-- A **Reset All Advanced Settings** button restores every tunable above to its default in one click — without touching your feature toggles
+- Tap a setting's **ⓘ** control to show its plain-language description
+- Each setting has a numeric stepper clamped to a sane range; a **Default N** reset button appears when its value differs from the default
+- Edits are staged as you change them — nothing is saved until you press **Apply** at the bottom of the tab
+- **Reset all** restores every tunable above to its default in one click — without touching your feature toggles
 - Changes persist across browser restarts and (like the feature toggles) need a page reload to take effect
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

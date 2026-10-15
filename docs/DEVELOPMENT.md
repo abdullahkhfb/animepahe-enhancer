@@ -40,13 +40,13 @@ The extension will be active until Firefox is restarted. To persist it across re
 
 1. Navigate to `chrome://extensions` or `edge://extensions`
 2. Enable **Developer mode**
-3. Chrome and Edge reject Firefox's `background.scripts` key in Manifest V3, so they need the Chromium manifest in place of `manifest.json`. Copy it over first — `copy /Y manifest.chromium.json manifest.json` (Windows) or `cp manifest.chromium.json manifest.json` (macOS / Linux) — then click **Load unpacked** and select the cloned directory. Restore the Firefox one afterwards with `git checkout manifest.json`. (Release builds do this swap automatically; see below.)
+3. Chrome and Edge need the Chromium manifest because they reject Firefox's `background.scripts` key in Manifest V3. Before replacing `manifest.json`, make sure it has no uncommitted changes you need to keep. Copy `manifest.chromium.json` over it — `Copy-Item manifest.chromium.json manifest.json` (PowerShell), `copy /Y manifest.chromium.json manifest.json` (Command Prompt), or `cp manifest.chromium.json manifest.json` (macOS / Linux) — then click **Load unpacked** and select the cloned directory. Restore the original Firefox manifest afterwards; if you started from a clean checkout, use `git restore manifest.json`. Release builds select the appropriate manifest automatically; see below.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ## Releasing a New Version
 
-Firefox and Edge deploy through **separate workflows** on purpose — Firefox publishes automatically, Edge requires a deliberate manual step. This split exists because publishing a release used to submit to both stores at once, which made it too easy to accidentally trigger an Edge submission (including while Edge's certification status is unresolved — see [docs/EDGE.md](EDGE.md)) just by tagging a routine release.
+Firefox and Edge deploy through **separate workflows** on purpose — Firefox publishes automatically, Edge requires a deliberate manual step. This split keeps routine releases from submitting to Edge without an explicit decision, since Edge submissions require a separate review and release step (see [docs/EDGE.md](EDGE.md)).
 
 1. Bump the `version` field in **both** `manifest.json` and `manifest.chromium.json`. They must stay identical except for the `background` key (Firefox: `scripts`; Chrome/Edge: `service_worker`).
 2. Add a `## v0.x.x.x — YYYY-MM-DD` section to [`RELEASE.md`](../RELEASE.md) describing what changed (see that file's own template).

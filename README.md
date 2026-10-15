@@ -34,7 +34,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 - **🔁 Binge Watch** — Auto-plays the next episode when one ends, with a click to cancel. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
 - **⏩ Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second pahe.win countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
 
-Each feature can be turned on or off separately from the extension's popup, and everything runs locally in your browser — see [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
+Each feature can be turned on or off separately from the extension's popup. Settings and watch progress stay in your browser; some features make the network requests they need to work. See [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -83,7 +83,7 @@ Each feature can be turned on or off separately from the extension's popup, and 
 | Browser                    | Where to get it                                                                                    | Notes                                                                                                                                        |
 | -------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)              | Ready to install right now                                                                                                                   |
-| **Chrome**                 | Chrome Web Store                                                                                   | **Release date: TBA** — not submitted yet; may face a similar review process to the one Edge went through (see [docs/EDGE.md](docs/EDGE.md)) |
+| **Chrome**                 | Chrome Web Store                                                                                   | **Release date: TBA** — not submitted yet; Chrome Web Store review has not been tested |
 | **Edge**                   | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Ready to install right now                                                                                                                   |
 | Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally)                                                |
 

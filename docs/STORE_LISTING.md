@@ -25,7 +25,7 @@ Every feature can be switched on or off individually.
 
 **Privacy**
 
-No accounts, no tracking, no analytics, no data collection — full stop. Your watch history and settings stay on your device. The only things that ever leave your browser are a handful of anonymous lookups (like a search term or a show title) needed to power Smart Search and Intro/Outro Skip, and those two features can be turned off individually if you'd rather nothing leave your browser at all. Full details in the [Privacy policy](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/PRIVACY.md).
+No account, analytics, or telemetry is used by the extension. Your watch history and settings stay on your device. When enabled, Smart Search and Intro/Outro Skip send search terms or anime titles/IDs to the public services they use; those features can each be turned off in the popup. Requests to animepahe and pahe.win also use their respective sites as described in the [Privacy policy](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/PRIVACY.md).
 
 - [Full feature documentation](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/docs/FEATURES.md)
 - [Source code, issues & release notes](https://github.com/abdullahkhfb/animepahe-enhancer)

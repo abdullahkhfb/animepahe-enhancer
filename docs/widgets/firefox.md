@@ -1,8 +1,7 @@
 <!--
   Firefox widget — canonical install PROMPT for Firefox.
-  Firefox is the only store listing that's fully live right now, so unlike
-  the Chrome/Edge widgets, this one actively encourages installing rather
-  than just showing a status badge. Used at the top of README.md.
+  This actively encourages installing the live Firefox Add-ons listing.
+  Used at the top of README.md.
 -->
 
 <p align="center">

@@ -6,8 +6,8 @@ GitHub doesn't support pulling one Markdown file into another at render time, so
 
 | File                       | Purpose                                                                                                   |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [`firefox.md`](firefox.md) | Firefox install prompt. Firefox is the only fully working store listing, so this one actively encourages install. |
-| [`chrome.md`](chrome.md)   | Chrome Web Store placeholder — shows "Release date: TBA" until the listing goes live.                     |
-| [`edge.md`](edge.md)       | Edge Add-ons badge — points to [`docs/EDGE.md`](../EDGE.md) instead of prompting a direct install, since that listing currently doesn't work. |
+| [`firefox.md`](firefox.md) | Firefox install prompt for the live Firefox Add-ons listing. |
+| [`chrome.md`](chrome.md)   | Chrome Web Store placeholder — shows "Release date: TBA" because the listing has not been submitted. |
+| [`edge.md`](edge.md)       | Edge Add-ons install prompt for the live listing. |
 
 Each widget file has a short HTML comment at the top explaining what it's for and where it's used — keep that comment up to date if you change what a widget does.

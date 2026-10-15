@@ -20,7 +20,7 @@ The extension requests the minimum permissions necessary:
 
 **Firefox:** the `pahe.win` host permission is declared in `host_permissions` (not optional), so it is shown in the install prompt and granted by default. If you revoke it under `about:addons` → Permissions, Skip Wait can't read the `pahe.win` page and falls back to opening the original `pahe.win` link; re-enable it there to restore Skip Wait.
 
-All network requests to external services (AniList, relations.yuna.moe, open-anime-timestamps) carry no personal identifiers or browsing history. See [PRIVACY.md](../PRIVACY.md) for the full privacy policy.
+The extension does not include account details or browsing history in requests to AniList, relations.yuna.moe, or GitHub. Those services may still receive standard connection metadata, such as your IP address, as part of any network request. Requests to animepahe and pahe.win use the browser's normal site credentials where required. See [PRIVACY.md](../PRIVACY.md) for the full privacy policy.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -43,6 +43,6 @@ All network requests to external services (AniList, relations.yuna.moe, open-ani
 - `pahe.win` — Download-link pages fetched by the background script for Skip Wait (one request per Download-menu click)
 - `graphql.anilist.co` — AniList GraphQL API (Smart Search + Intro Skip ID resolution)
 - `relations.yuna.moe` — AniDB ID resolution (Intro Skip)
-- `raw.githubusercontent.com` (jonbarrow/open-anime-timestamps) — Timestamp database download (Intro Skip)
+- `raw.githubusercontent.com` (Ellivers/open-anime-timestamps) — Timestamp database download (Intro Skip)
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

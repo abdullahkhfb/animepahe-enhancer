@@ -30,7 +30,7 @@
 │   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge for
 │   │                              #   Continue Watching + Intro/Outro Skip controller
 │   │
-│   ├── 📁 features/               # One class + one stylesheet per feature,
+│   ├── 📁 features/               # Feature modules, with optional stylesheets,
 │   │   │                          #   kept in separate css/ and js/ folders
 │   │   ├── 📁 js/
 │   │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
@@ -200,11 +200,7 @@ sequenceDiagram
 
 ### DUB Detector — Binary Search
 
-Dubbed episodes on animepahe always occupy a **contiguous leading block** (episodes 1, 2, 3 … N are dubbed; the rest are sub-only). The detector exploits this property:
-
-1. Check episode 1 — if not dubbed, stop (0 dubbed).
-2. Check the last episode — if dubbed, all are dubbed.
-3. Otherwise, binary-search the boundary, performing only **O(log n)** API calls.
+Dubbed episodes on animepahe are expected to occupy a **contiguous leading block** (episodes 1, 2, 3 … N are dubbed; the rest are sub-only). The detector checks the first and last episodes, then gallops backward from the newest episode to bracket the cutoff before binary-searching that bracket. The initial endpoint checks may run together; the gallop and binary-search probes run one at a time. This takes **O(log n)** API calls under that ordering assumption.
 
 Detection itself uses two methods tried in sequence:
 
@@ -226,15 +222,15 @@ All settings and cache data are stored in `chrome.storage.local`. The large open
 
 | Key                     | Type                  | Description                                                                                                                                                                                                                                                                                                                                    |
 | ------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ape_settings`          | `object`              | `{ cwEnabled, dubEnabled, smartSearchEnabled, introSkipEnabled, ...23 advanced tunables }` — feature toggles plus every Advanced Settings value (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` in `helpers/storage.js`. |
+| `ape_settings`          | `object`              | Feature toggles, feature sub-options, and Advanced Settings values (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` and `FEATURE_SUBOPTIONS` in `content/helpers/storage.js`. |
 | `ape_cw_v1`             | `string` (JSON array) | Continue Watching list, up to 24 entries by default (configurable)                                                                                                                                                                                                                                                                             |
-| `d2_{epSession}`        | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|{boolean}"`                                                                                                                                                                                                                                                                      |
-| `h2_{animeSession}`     | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|{dubs, total}"`                                                                                                                                                                                                                                                                        |
+| `d2_{epSession}`        | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|v1\|{JSON payload}"`                                                                                                                                                                                                                                                                                                                                      |
+| `h2_{animeSession}`     | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|v1\|{JSON payload}"`                                                                                                                                                                                                                                                                        |
 | `ape_ss_{query}`        | `string`              | Smart Search AniList cache for a normalised query. Stores `allTitles` and `queryCandidates` arrays.                                                                                                                                                                                                                                            |
 | `ape_isid_v1_{session}` | `string` (JSON)       | Intro Skip ID resolution cache — maps an animepahe `animeSession` to its resolved AniDB/AniList/MAL IDs. TTL is configurable (default 7 days).                                                                                                                                                                                                |
 | `ape_is_db_meta`        | `object`              | Metadata for the open-anime-timestamps database cached in IndexedDB: `{ fetchedAt, sizeBytes, etag }`. Shared between the content script and popup (the popup can't access the content script's IndexedDB).                                                                                                                                  |
 
-Cache entries prefixed `d2_`, `h2_`, and `ape_ss_` all expire after the same configurable cache-duration setting (24 hours by default) and are garbage-collected automatically. The Intro Skip ID cache (`ape_isid_`) has its own independent TTL as described above. The timestamps database in IndexedDB is refreshed on a separate configurable schedule (7 days by default).
+Entries prefixed `d2_`, `h2_`, and `ape_ss_` use the same configurable 24-hour default TTL. Expired DUB entries (`d2_` and `h2_`) are garbage-collected; expired Smart Search entries are ignored on lookup but remain stored until cleared. The Intro Skip ID cache (`ape_isid_`) has its own independent TTL (7 days by default). The timestamps database in IndexedDB is refreshed on a separate configurable schedule (7 days by default).
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -247,20 +243,20 @@ flowchart TD
     A["User types in search bar (debounced 100 ms by default)"] --> B["Parallel: apSearch(query) + getAltTitles(query)"]
     B --> C{AniList cache hit?}
     C -->|Yes| D["✓ Return cached allTitles + queryCandidates"]
-    C -->|No| E["POST graphql.anilist.co\nQuery top-5 media, extract romaji/english/synonyms"]
+    C -->|No| E["POST graphql.anilist.co\nQuery up to 15 media, extract romaji/english/synonyms"]
     E --> F["Write to ape_ss_ cache (24h TTL by default)"]
     F --> D
     D --> G["Filter candidates: remove query itself, keep up to 3 by default"]
-    G --> H["apSearch(candidate) for each — parallel"]
+    G --> H["apSearch(candidate) one at a time\n(250 ms pause by default)"]
     H --> I["Relevance filter: substring + word-overlap check"]
-    I --> J["Inject extra rows into dropdown (deduplicated)"]
+    I --> J["Append extra rows after native results\n(deduplicated)"]
 ```
 
 Key design decisions:
 
 - **Debounce (100 ms by default, configurable)** prevents API calls on every keystroke.
 - **Normalisation** (`norm()`) strips punctuation and lowercases before any comparison.
-- **Relevance filter** (`isRelevant()`) uses substring inclusion and an 80 % alt-word / 50 % item-word overlap ratio.
+- **Relevance filter** (`isRelevant()`) uses title substring/fuzzy similarity and requires at least 70 % overlap of alternate-title words for its word-overlap match.
 - **Deduplication** suppresses any result whose normalised title already appears in the native dropdown.
 - **Stale-query guard** — if the input changes while awaiting results, the injection is silently aborted.
 
@@ -272,7 +268,7 @@ All outbound DUB detection requests are routed through `helpers/throttler.js`, w
 
 - **Concurrency cap** — limits simultaneous in-flight fetches (`maxConcurrent`, default 6)
 - **Interval + jitter** — enforces a minimum gap between request launches with ± random variation to avoid burst patterns
-- **Exponential back-off with retry** — on HTTP 429, 503, or 403 (and Cloudflare HTML rate-limit pages), the request is re-queued and the entire drain loop backs off for `baseBackoff × 2ⁿ` ms (up to `maxRetries` attempts)
+- **Exponential back-off with retry** — on HTTP 429/403 or a Cloudflare challenge response, the request is re-queued and the entire drain loop backs off for `baseBackoff × 2ⁿ` ms (up to `maxRetries` attempts)
 - **`pendingCount` getter** — used by the DUB Detector's ETA pill to display live scan progress
 - **`updateOptions(opts)`** — applies new values to the live singleton without dropping anything already queued or in-flight; `main.js` calls this once on startup with the user's Advanced Settings → Network Throttler values
 
@@ -301,7 +297,7 @@ import { injectStylesheet } from "../../helpers/styles.js";
 injectStylesheet("ape-mf-styles", "content/features/css/my-feature.css");
 ```
 
-Add the new `.css` file to `web_accessible_resources` in `manifest.json`. Anything the new feature's CSS has in common with another feature's belongs in `content/main.css` instead (loaded once by `main.js`), not copy-pasted — same goes for the shared status pill, see `content/helpers/pill.js`.
+The existing `web_accessible_resources` globs already cover files in these feature and helper folders; check that both manifests continue to expose any new module or stylesheet. Anything the new feature's CSS has in common with another feature's belongs in `content/main.css` instead (loaded once by `main.js`), not copy-pasted — same goes for the shared status pill, see `content/helpers/pill.js`.
 
 3. Add a settings key and default in `content/helpers/storage.js`:
 
@@ -365,7 +361,7 @@ The Advanced tab in the popup isn't hand-written markup — it's generated entir
 this._myValue = settings.myNewTunable ?? 10;
 ```
 
-The popup automatically renders a labeled stepper, description, and its own **Default N** reset link for the new setting, and folds it into **Reset All Advanced Settings** — for free.
+The popup automatically renders a labeled stepper, an info button for the description, and its own **Default N** reset button for the new setting, and folds it into **Reset all** — for free.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -379,7 +375,7 @@ export const FEATURE_SUBOPTIONS = {
     {
       key: "dubHomeScanEnabled",
       label: "Scan homepage cards",
-      note: "Shown when the info button is hovered or clicked.",
+      note: "Also checks homepage cards for dub status.",
       default: true,
     },
   ],
