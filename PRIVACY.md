@@ -1,6 +1,6 @@
 # Privacy Policy for animepahe Enhancer
 
-**Last Modified:** October 15, 2026
+**Last Modified:** October 21, 2026
 
 This Privacy Policy explains how the **animepahe Enhancer** extension, published by **Vixon**, handles data. Transparency and strict digital privacy are core principles of this project.
 
@@ -38,11 +38,11 @@ This extension does not incorporate any third-party analytics trackers, telemetr
 
 The extension makes outbound requests to the following public APIs for specific functionality:
 
-| Service | URL | Purpose | Data Sent | Caching |
-| --- | --- | --- | --- | --- |
-| [AniList](https://anilist.co) | `graphql.anilist.co` | Smart Search alt-title lookups; Intro Skip anime title → ID resolution | Search query (Smart Search) or anime title (Intro Skip) | 24h (Smart Search), 7d (Intro Skip) — both configurable |
-| [relations.yuna.moe](https://relations.yuna.moe) | `relations.yuna.moe/api/ids` | Intro Skip AniList/MAL → AniDB ID resolution | Numeric ID + source identifier | 7 days (configurable) |
-| [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) | `raw.githubusercontent.com` | Intro Skip timestamp database download | Static dataset request; conditional ETag header when available | IndexedDB, refreshed every 7 days by default (configurable) via ETag |
+| Service                                                                    | URL                          | Purpose                                                                | Data Sent                                                      | Caching                                                              |
+| -------------------------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [AniList](https://anilist.co)                                              | `graphql.anilist.co`         | Smart Search alt-title lookups; Intro Skip anime title → ID resolution | Search query (Smart Search) or anime title (Intro Skip)        | 24h (Smart Search), 7d (Intro Skip) — both configurable              |
+| [relations.yuna.moe](https://relations.yuna.moe)                           | `relations.yuna.moe/api/ids` | Intro Skip AniList/MAL → AniDB ID resolution                           | Numeric ID + source identifier                                 | 7 days (configurable)                                                |
+| [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) | `raw.githubusercontent.com`  | Intro Skip timestamp database download                                 | Static dataset request; conditional ETag header when available | IndexedDB, refreshed every 7 days by default (configurable) via ETag |
 
 The request payloads to these services do not include account details or browsing history. Services may receive standard connection metadata, such as your IP address, when your browser connects to them. These API calls are subject to each service's own Terms of Service and Privacy Policy:
 
