@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 212 26" width="212" height="26">
+  <rect width="212" height="26" rx="4" fill="#181820"/>
+  <text x="10" y="17" fill="#888888" font-family="system-ui, -apple-system, sans-serif" font-size="11.5">Did you mean:</text>
+  <text x="90" y="17" fill="#d92558" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="700">Shingeki no Kyojin</text>
+  <text x="198" y="17" fill="#888888" font-family="system-ui, -apple-system, sans-serif" font-size="11.5">?</text>
+</svg>

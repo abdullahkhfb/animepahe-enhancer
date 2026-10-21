@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 84 22" width="84" height="22">
+  <rect x="0.5" y="0.5" width="83" height="21" rx="4" fill="#141417" stroke="#ffb066" stroke-opacity="0.4"/>
+  <circle cx="11" cy="11" r="3" fill="#ff8a1f"/>
+  <text x="19" y="14.5" fill="#ffb066" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" letter-spacing="0.6">SUB ONLY</text>
+</svg>

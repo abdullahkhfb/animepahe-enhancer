@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 24" width="200" height="24">
+  <rect width="200" height="24" rx="6" fill="#141417"/>
+  <g transform="translate(6, 5.5) scale(0.54)" fill="none" stroke="#ff5c9d" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="2" width="6" height="12" rx="3"/>
+    <path d="M5 11a7 7 0 0 0 14 0M12 18v4"/>
+  </g>
+  <text x="24" y="16" fill="#e8e8e8" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="500">6 of 9 dubbed</text>
+  <g transform="translate(116, 10)">
+    <rect x="0" y="0" width="6.5" height="4" fill="#d5015b"/>
+    <rect x="8.5" y="0" width="6.5" height="4" fill="#d5015b"/>
+    <rect x="17" y="0" width="6.5" height="4" fill="#d5015b"/>
+    <rect x="25.5" y="0" width="6.5" height="4" fill="#d5015b"/>
+    <rect x="34" y="0" width="6.5" height="4" fill="#d5015b"/>
+    <rect x="42.5" y="0" width="6.5" height="4" fill="#d5015b"/>
+    <rect x="51" y="0" width="6.5" height="4" fill="#3a3a3e"/>
+    <rect x="59.5" y="0" width="6.5" height="4" fill="#3a3a3e"/>
+    <rect x="68" y="0" width="6.5" height="4" fill="#3a3a3e"/>
+  </g>
+</svg>

@@ -2,7 +2,7 @@
 
 # Architecture
 
-> How the codebase is put together. For a plain-language overview, see the [main README](../README.md).
+> How the codebase is put together. For a plain-language overview, see the [main README](../README.md), or see [docs/FEATURES.md](FEATURES.md) for feature-by-feature behaviour.
 
 ## Table of Contents
 
@@ -24,20 +24,20 @@
 │                                  #   Skip Wait: resolves pahe.win → kwik and opens the tab
 │
 ├── 📁 content/
-│   ├── 📄 main.js                 # Entry point — loads settings, detects page,
-│   │                              #   dynamically imports and initializes features
-│   ├── 🎨 main.css                # Shared base styles (currently: the status pill)
-│   ├── 📄 iframe-player.js        # Kwik iframe script — postMessage bridge for
-│   │                              #   Continue Watching + Intro/Outro Skip controller
+│   ├── 📄 main.js                 # Entry point — waits for whenSiteReady(), loads settings,
+│   │                              #   detects page, dynamically imports and initializes features
+│   ├── 🎨 main.css                # Shared base styles (status toast: plain + rich states)
+│   ├── 📄 iframe-player.js        # Kwik iframe script — ensurePlayback() + postMessage bridge for
+│   │                              #   Continue Watching, Intro/Outro Skip, and Binge Watch (ended)
 │   │
 │   ├── 📁 features/               # Feature modules, with optional stylesheets,
 │   │   │                          #   kept in separate css/ and js/ folders
 │   │   ├── 📁 js/
-│   │   │   ├── 📄 continue-watching.js  # Continue Watching — home row + player bridge
-│   │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, binary search, cache
+│   │   │   ├── 📄 continue-watching.js  # Continue Watching — home shelf, snapshot harvester, player bridge
+│   │   │   ├── 📄 dub-detector.js       # DUB Detector — badges, summary bar, gallop+binary search, cache
 │   │   │   ├── 📄 smart-search.js       # Smart Search — AniList alt-title lookup + dropdown injection
 │   │   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
-│   │   │   ├── 📄 binge-watch.js        # Binge Watch — auto-plays the next episode, off by default
+│   │   │   ├── 📄 binge-watch.js        # Binge Watch — auto-loads embed + auto-plays next episode
 │   │   │   └── 📄 skip-wait.js          # Skip Wait — download links bypass the pahe.win countdown page
 │   │   └── 📁 css/
 │   │       ├── 🎨 continue-watching.css
@@ -46,17 +46,20 @@
 │   │       └── 🎨 binge-watch.css
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
-│       ├── 📄 storage.js          # chrome.storage.local wrapper + DEFAULT_SETTINGS
+│       ├── 📄 storage.js          # chrome.storage.local wrapper + KEYS + DEFAULT_SETTINGS
 │       │                          #   + ADVANCED_SETTINGS_SCHEMA + FEATURE_SUBOPTIONS
-│       ├── 📄 router.js           # Page-type detection from the current URL
-│       ├── 📄 cache.js            # DUB cache read/write/GC (configurable TTL)
-│       ├── 📄 throttler.js        # RequestThrottler — rate-limiting, jitter, retry
-│       │                          #   (tunable at runtime via updateOptions())
-│       ├── 📄 styles.js           # injectStylesheet() — one-line CSS loading, shared
-│       │                          #   by every feature so none of them duplicate it
-│       ├── 📄 pill.js             # showPill() — the shared bottom-right status toast
-│       └── 📄 timestamps-db.js    # open-anime-timestamps dataset access (IndexedDB
-│                                  #   cache, ID resolution, episode lookup)
+│       ├── 📄 router.js           # Page-type and session ID detection from the current URL
+│       ├── 📄 challenge.js        # isChallengePage() + whenSiteReady() — stays idle on Cloudflare
+│       │                          #   interstitials and waits for page load before starting features
+│       ├── 📄 cache.js            # Shared TTL cache read/write/GC (d2_, h2_, ape_ss_, ape_isid_)
+│       ├── 📄 throttler.js        # RequestThrottler — concurrency, interval+jitter, priority queue,
+│       │                          #   exponential backoff on 429/403, 60s pause on CF challenges
+│       ├── 📄 icons.js            # Shared inline-SVG factory (micIcon, checkIcon, playIcon, closeIcon)
+│       ├── 📄 styles.js           # injectStylesheet() — one-line CSS loading, shared by every feature
+│       ├── 📄 pill.js             # showPill() (plain text) + showStatus() (rich toast with progress
+│       │                          #   ring, pink check icon, or amber dot)
+│       └── 📄 timestamps-db.js    # open-anime-timestamps dataset access (IndexedDB cache, ETag refresh,
+│                                  #   AniList → relations.yuna.moe → AniDB ID resolution, episode lookup)
 │
 ├── 📁 popup/                      # The toolbar popup — built from small components
 │   ├── 🌐 popup.html              # Empty shell: stylesheets + <div id="app">
@@ -101,6 +104,7 @@
 │   └── 🖼️  malsync.svg            # The real MalSync logo (Links tab)
 │
 ├── 📁 docs/                       # Detailed documentation (this file lives here)
+│   ├── 📁 assets/                 # Feature & UI badge SVGs used across Markdown docs
 │   └── 📁 widgets/                # Reusable install-prompt snippets for README.md
 │
 └── 📁 .github/
@@ -118,27 +122,39 @@
 
 ### Module loading — no bundler required
 
-`content/main.js` is the sole content-script entry point for animepahe pages registered in `manifest.json` (the only other scripts are `content/iframe-player.js` for the Kwik iframe and `background.js`, described under [Skip Wait](#skip-wait--background-flow)). It uses the browser's native dynamic `import()` with `chrome.runtime.getURL()` to load feature and utility modules at runtime:
+`content/main.js` is the sole content-script entry point for animepahe pages registered in `manifest.json` (the only other scripts are `content/iframe-player.js` for the Kwik iframe and `background.js`, described under [Skip Wait](#skip-wait--background-flow)). It uses the browser's native dynamic `import()` with `chrome.runtime.getURL()` to load helper and feature modules at runtime — after verifying via `helpers/challenge.js` (`whenSiteReady()`) that the page is not a Cloudflare interstitial and has finished loading:
 
 ```mermaid
 flowchart TD
-    MF["📄 manifest.json"] --> CM["content/main.js\n(entry point)"]
-    CM --> HS["helpers/storage.js\n(getSettings)"]
+    MF["📄 manifest.json"] --> CM["content/main.js
+(entry point)"]
+    CM --> CH["helpers/challenge.js
+(await whenSiteReady())"]
+    CH -->|Ready| HS["helpers/storage.js
+(getSettings)"]
     CM --> HR["helpers/router.js"]
-    CM --> HCache["helpers/cache.js"]
-    CM --> TH["helpers/throttler.js\nthrottler.updateOptions(settings)"]
-    CM -->|cwEnabled| CW["features/js/continue-watching.js"]
-    CM -->|dubEnabled| DD["features/js/dub-detector.js"]
-    CM -->|smartSearchEnabled| SS["features/js/smart-search.js"]
-    CM -->|introSkipEnabled| IS["features/js/intro-skip.js"]
-    CM -->|bingeWatchEnabled| BW["features/js/binge-watch.js"]
-    CM -->|skipWaitEnabled| SW["features/js/skip-wait.js"]
-    CW --> CWI["new ContinueWatching(storage, settings)\n.init(pageType)"]
-    DD --> DDI["new DubDetector(storage, settings)\n.init(pageType)"]
-    SS --> SSI["new SmartSearch(storage, settings)\n.init(pageType)"]
-    IS --> ISI["new IntroSkip(storage, settings)\n.init(pageType)"]
-    BW --> BWI["new BingeWatch(storage, settings)\n.init(pageType)"]
-    SW --> SWI["new SkipWait(storage, settings)\n.init(pageType)"]
+    CM --> HCache["helpers/cache.js
+(gcDubCache after 3s)"]
+    CM --> TH["helpers/throttler.js
+throttler.updateOptions(settings)"]
+    HS -->|cwEnabled| CW["features/js/continue-watching.js"]
+    HS -->|dubEnabled| DD["features/js/dub-detector.js"]
+    HS -->|smartSearchEnabled| SS["features/js/smart-search.js"]
+    HS -->|introSkipEnabled| IS["features/js/intro-skip.js"]
+    HS -->|bingeWatchEnabled| BW["features/js/binge-watch.js"]
+    HS -->|skipWaitEnabled| SW["features/js/skip-wait.js"]
+    CW --> CWI["new ContinueWatching(storage, settings)
+.init(pageType)"]
+    DD --> DDI["new DubDetector(storage, settings)
+.init(pageType)"]
+    SS --> SSI["new SmartSearch(storage, settings)
+.init(pageType)"]
+    IS --> ISI["new IntroSkip(storage, settings)
+.init(pageType)"]
+    BW --> BWI["new BingeWatch(storage, settings)
+.init(pageType)"]
+    SW --> SWI["new SkipWait(storage, settings)
+.init(pageType)"]
 ```
 
 Feature files are listed in `web_accessible_resources` so the extension runtime can import them. No bundler, no build step — plain ES2020+ modules. Every feature constructor receives the same `settings` object (loaded once via `storage.getSettings()`), so reading a user-tuned value is just `settings.someKey ?? someDefault`.
@@ -156,81 +172,96 @@ sequenceDiagram
     U->>S: click a Download-menu link (capture phase)
     S->>S: preventDefault — no pahe.win tab
     S->>B: runtime message AP_SKIP_WAIT { url }
-    B->>P: fetch pahe.win/XXXX
-    P-->>B: HTML containing the kwik link
+    B->>P: fetch pahe.win/XXXX (15s timeout)
+    P-->>B: HTML (or redirect) containing the kwik link
     B->>U: open kwik.cx/f/YYYY in a new tab next to the episode
 ```
 
 - `background.js` is a classic script (no ES modules). Firefox only runs it from `background.scripts` (`manifest.json`); Chrome and Edge only accept `background.service_worker` in Manifest V3 and warn about `scripts` (`manifest.chromium.json`). That's why there are two manifests — everything else in them is identical, and the release build picks the right one.
 - It only accepts `https://*.pahe.win/<id>` URLs — it is deliberately not a generic "fetch any URL" proxy.
-- If no kwik link is found in the page, it opens the original `pahe.win` URL so the click still does something.
+- If no kwik link is found in the page (or the fetch times out after 15 seconds), it opens the original `pahe.win` URL so the click still does something.
 - Ctrl / Shift / Alt / Cmd-clicks and middle-clicks are ignored by `skip-wait.js`, so the original behaviour is always one modifier key away.
 
-### Continue Watching — Cross-Frame Communication
+### Cross-Frame Player Communication (`iframe-player.js`)
 
-animepahe embeds the actual video player in a sandboxed `<iframe>` served from a separate domain (Kwik). Because the iframe and the parent page are on different origins, direct DOM access is impossible. The extension solves this with a **`postMessage` bridge**:
+animepahe embeds the actual video player in a sandboxed `<iframe>` served from a separate domain (`kwik.cx`). Because the iframe and the parent page are on different origins, direct DOM access is impossible. The extension bridges the parent page (`continue-watching.js`, `intro-skip.js`, `binge-watch.js`) and the Kwik iframe (`iframe-player.js`) with `window.postMessage`:
 
 ```mermaid
 sequenceDiagram
-    participant P as animepahe page (continue-watching.js)
+    participant P as animepahe page (CW / IntroSkip / BingeWatch)
     participant K as Kwik iframe (iframe-player.js)
 
     K->>P: AP_CW_REQUEST_TIME
     Note over K,P: Iframe asks parent for saved timestamp
     P->>K: AP_CW_RESTORE_TIME { time }
     Note over K,P: Parent sends saved position — iframe seeks
-    loop Every 2 seconds
+    K->>P: AP_IS_READY
+    P->>K: AP_IS_SET_RANGES { ranges, autoSkip, pollMs, buttonAutoHideMs, showHighlights }
+    loop Every 2 seconds while playing (+ pause/ended)
         K->>P: AP_CW_UPDATE_TIME { time, duration }
-        Note over P: Progress saved to chrome.storage.local
+        Note over P: Coalesced & flushed to chrome.storage.local (at most every 5s, or immediately on seek/hide)
     end
+    K->>P: AP_BW_ENDED (when video emits 'ended')
+    Note over P: Binge Watch resolves next episode & starts countdown
 ```
 
 **Message types:**
 
-| Type                 | Direction       | Payload                                                          | Description                                      |
-| --------------------- | ---------------- | ------------------------------------------------------------------ | --------------------------------------------------- |
-| `AP_CW_REQUEST_TIME` | iframe → parent | —                                                                | Iframe asks parent for saved timestamp           |
-| `AP_CW_RESTORE_TIME` | parent → iframe | `{ time: number }`                                               | Parent sends saved position; iframe seeks        |
-| `AP_CW_UPDATE_TIME`  | iframe → parent | `{ time, duration }`                                             | Iframe reports current playback position         |
-| `AP_IS_SET_RANGES`   | parent → iframe | `{ ranges, autoSkip, pollMs, buttonAutoHideMs, showHighlights }` | Parent sends intro/outro skip ranges to iframe   |
-| `AP_IS_SEEK`         | parent → iframe | `{ time: number }`                                               | Parent instructs iframe to seek (reserved)       |
-| `AP_IS_READY`        | iframe → parent | —                                                                | Iframe signals it's ready to receive skip ranges |
+| Type                 | Direction       | Payload                                                          | Description                                                                 |
+| -------------------- | --------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `AP_CW_REQUEST_TIME` | iframe → parent | —                                                                | Iframe asks parent for saved timestamp on player load                       |
+| `AP_CW_RESTORE_TIME` | parent → iframe | `{ time: number }`                                               | Parent sends saved position; iframe seeks `<video>`                         |
+| `AP_CW_UPDATE_TIME`  | iframe → parent | `{ time, duration }`                                             | Iframe reports current playback position every `playerUpdateInterval` ms    |
+| `AP_IS_SET_RANGES`   | parent → iframe | `{ ranges, autoSkip, pollMs, buttonAutoHideMs, showHighlights }` | Parent sends intro/outro/recap skip ranges and settings to iframe           |
+| `AP_IS_SEEK`         | parent → iframe | `{ time: number }`                                               | Parent instructs iframe to seek (reserved)                                  |
+| `AP_IS_READY`        | iframe → parent | —                                                                | Iframe signals it is ready to receive skip ranges                           |
+| `AP_BW_ENDED`        | iframe → parent | —                                                                | Fired on every `<video>` `ended` event; `binge-watch.js` handles navigation |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-### DUB Detector — Binary Search
+### DUB Detector — Gallop-Then-Binary-Search
 
-Dubbed episodes on animepahe are expected to occupy a **contiguous leading block** (episodes 1, 2, 3 … N are dubbed; the rest are sub-only). The detector checks the first and last episodes, then gallops backward from the newest episode to bracket the cutoff before binary-searching that bracket. The initial endpoint checks may run together; the gallop and binary-search probes run one at a time. This takes **O(log n)** API calls under that ordering assumption.
+Dubbed episodes on animepahe occupy a **contiguous leading block** (episodes 1, 2, 3 … K are dubbed; K+1 … N are sub-only). After checking the first and last episodes concurrently, `_findBoundaryConcurrent()` gallops backward from the newest episode in doubling strides (`1, 2, 4, 8…`) one request at a time to bracket the cutoff, then binary-searches within that bracket one request at a time. This takes **O(log n)** API calls without firing parallel probe bursts.
 
-Detection itself uses two methods tried in sequence:
+Detection for a single episode uses two methods tried in sequence:
 
 ```mermaid
 flowchart TD
     A["isEpisodeDubbed(animeSession, epSession)"] --> B{Cache hit?}
     B -->|Yes| C["✓ Return cached result immediately"]
-    B -->|No| D["Method A\nGET /api?m=links&id=…&session=…&p=kwik\nParse JSON for 'eng' / 'english' / 'dub'\n✓ Fast, minimal data transfer"]
-    D -->|Conclusive| E["✓ Return & cache result"]
-    D -->|Inconclusive| F["Method B — fallback\nGET /play/{animeSession}/{epSession}\nParse HTML: title, download section, scripts\n✓ More thorough, handles edge cases"]
-    F --> G["✓ Return & cache result"]
+    B -->|No| D["Method A
+GET /api?m=links&id=…&session=…&p=kwik
+Parse JSON for 'eng' / 'english' / 'dub'
+✓ Fast, minimal data transfer"]
+    D -->|Conclusive| E["✓ Write to d2_ cache & return"]
+    D -->|Inconclusive| F["Method B — fallback
+GET /play/{animeSession}/{epSession}
+Parse HTML: data attributes, download area, inline scripts
+✓ More thorough, handles edge cases"]
+    F --> E
+    D -->|Rate limited / CF challenge| R["✗ Throw rateLimited error (never cache false SUB ONLY)
+Pause scan & retry after 90s"]
+    F -->|Rate limited / CF challenge| R
 ```
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ### Storage Schema
 
-All settings and cache data are stored in `chrome.storage.local`. The large open-anime-timestamps database is stored in **IndexedDB** (see the [Intro / Outro Skip](FEATURES.md#-intro--outro-skip) feature page).
+All settings and cache data are stored in `chrome.storage.local`. The large `open-anime-timestamps` database is stored in **IndexedDB** (see the [Intro / Outro Skip](FEATURES.md#-intro--outro-skip) section).
 
 | Key                     | Type                  | Description                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ape_settings`          | `object`              | Feature toggles, feature sub-options, and Advanced Settings values (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` and `FEATURE_SUBOPTIONS` in `content/helpers/storage.js`. |
-| `ape_cw_v1`             | `string` (JSON array) | Continue Watching list, up to 24 entries by default (configurable)                                                                                                                                                                                                                                                                             |
-| `d2_{epSession}`        | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|v1\|{JSON payload}"`                                                                                                                                                                                                                                                                                                                                      |
-| `h2_{animeSession}`     | `string`              | DUB stats cache for a home card. Format: `"{timestamp}\|v1\|{JSON payload}"`                                                                                                                                                                                                                                                                        |
-| `ape_ss_{query}`        | `string`              | Smart Search AniList cache for a normalised query. Stores `allTitles` and `queryCandidates` arrays.                                                                                                                                                                                                                                            |
-| `ape_isid_v1_{session}` | `string` (JSON)       | Intro Skip ID resolution cache — maps an animepahe `animeSession` to its resolved AniDB/AniList/MAL IDs. TTL is configurable (default 7 days).                                                                                                                                                                                                |
-| `ape_is_db_meta`        | `object`              | Metadata for the open-anime-timestamps database cached in IndexedDB: `{ fetchedAt, sizeBytes, etag }`. Shared between the content script and popup (the popup can't access the content script's IndexedDB).                                                                                                                                  |
+| ----------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ape_settings`          | `object`              | Feature toggles, feature sub-options, and Advanced Settings values (cache TTL, throttling, batch sizes, debounce timings, skip durations, etc.). The full list of keys, labels, bounds, and defaults lives in `ADVANCED_SETTINGS_SCHEMA` and `FEATURE_SUBOPTIONS` in `content/helpers/storage.js`.                                                    |
+| `ape_cw_v1`             | `string` (JSON array) | Continue Watching list — one entry per anime series in most-recently-watched order, up to 24 entries by default (`cwMaxEntries`). Writes are coalesced to at most every 5 seconds (or immediately on seek, episode change, or tab hide/close).                                                                                                          |
+| `ape_cw_snaps`          | `object`              | LRU map of up to 300 `{ [epSession]: snapshotUrl }` pairs harvested passively from `/play/` links as you browse animepahe listings, allowing Continue Watching cards to display episode stills with zero extra network requests.                                                                                                                       |
+| `d2_{epSession}`        | `string`              | DUB result cache for a single episode. Format: `"{timestamp}\|v1\|{JSON payload}"`                                                                                                                                                                                                                                                             |
+| `h2_{animeSession}`     | `string`              | DUB stats cache (`{ dubs, total }`) for a home card. Format: `"{timestamp}\|v1\|{JSON payload}"`                                                                                                                                                                                                                                               |
+| `ape_ss_{query}`        | `string`              | Smart Search AniList cache for a normalised query. Format: `"{timestamp}\|v1\|{JSON payload}"` storing `{ allTitles, queryCandidates, bestMatch }`.                                                                                                                                                                                           |
+| `ape_isid_v1_{session}` | `string`              | Intro Skip ID resolution cache — maps an animepahe `animeSession` to its resolved `{ anidbId, anilistId, idMal }`. Format: `"{timestamp}\|v1\|{JSON payload}"`. TTL is configurable (`introSkipIdCacheHours`, default 168 hours / 7 days).                                                                                                    |
+| `ape_is_db_meta`        | `object`              | Metadata for the `open-anime-timestamps` database cached in IndexedDB (`ape_intro_skip`): `{ fetchedAt, sizeBytes, etag }`. Shared between the content script and popup so the popup can display cache status and trigger invalidation across origins.                                                                                                  |
 
-Entries prefixed `d2_`, `h2_`, and `ape_ss_` use the same configurable 24-hour default TTL. Expired DUB entries (`d2_` and `h2_`) are garbage-collected; expired Smart Search entries are ignored on lookup but remain stored until cleared. The Intro Skip ID cache (`ape_isid_`) has its own independent TTL (7 days by default). The timestamps database in IndexedDB is refreshed on a separate configurable schedule (7 days by default).
+Entries prefixed `d2_`, `h2_`, and `ape_ss_` use the same configurable 24-hour default TTL (`cacheTtlHours`). Expired DUB entries (`d2_` and `h2_`) are garbage-collected 3 seconds after page startup (`gcDubCache`); expired Smart Search entries are ignored on lookup and removed when cleared from the popup. The Intro Skip ID cache (`ape_isid_`) has its own independent TTL (7 days by default), and the timestamps database in IndexedDB is refreshed via conditional GET (`If-None-Match` ETag) on a separate configurable schedule (`introSkipDbRefreshHours`, 7 days by default).
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
@@ -240,36 +271,42 @@ Smart Search enriches the native animepahe dropdown by resolving alternative tit
 
 ```mermaid
 flowchart TD
-    A["User types in search bar (debounced 100 ms by default)"] --> B["Parallel: apSearch(query) + getAltTitles(query)"]
+    A["User types in search bar (debounced 400 ms by default)"] --> B["Parallel: apSearch(query) + getAltTitles(query)"]
     B --> C{AniList cache hit?}
-    C -->|Yes| D["✓ Return cached allTitles + queryCandidates"]
-    C -->|No| E["POST graphql.anilist.co\nQuery up to 15 media, extract romaji/english/synonyms"]
+    C -->|Yes| D["✓ Return cached allTitles + queryCandidates + bestMatch"]
+    C -->|No| E["POST graphql.anilist.co
+Query up to 15 media, extract romaji/english/synonyms"]
     E --> F["Write to ape_ss_ cache (24h TTL by default)"]
     F --> D
     D --> G["Filter candidates: remove query itself, keep up to 3 by default"]
-    G --> H["apSearch(candidate) one at a time\n(250 ms pause by default)"]
-    H --> I["Relevance filter: substring + word-overlap check"]
-    I --> J["Append extra rows after native results\n(deduplicated)"]
+    G --> H["apSearch(candidate) one at a time via RequestThrottler
+(priority: true, maxRetries: 2, 5-min in-memory cache, 250 ms pause)"]
+    H --> I["Relevance filter: substring + fuzzy Levenshtein + ≥70% word overlap"]
+    I --> J["Prepend 'Did you mean?' (if 0 native hits) and append extra rows
+(deduplicated against native results)"]
 ```
 
 Key design decisions:
 
-- **Debounce (100 ms by default, configurable)** prevents API calls on every keystroke.
+- **Debounce (400 ms by default, configurable via `ssDebounceMs`)** prevents API calls while the user is actively typing.
+- **Throttled + cached animepahe search (`apSearch`)** routes `/api?m=search` requests through `throttler.fetch(..., { priority: true, maxRetries: 2 })` and caches responses in memory (`apCache`) for 5 minutes so backspacing or retyping never re-queries the server.
 - **Normalisation** (`norm()`) strips punctuation and lowercases before any comparison.
-- **Relevance filter** (`isRelevant()`) uses title substring/fuzzy similarity and requires at least 70 % overlap of alternate-title words for its word-overlap match.
-- **Deduplication** suppresses any result whose normalised title already appears in the native dropdown.
-- **Stale-query guard** — if the input changes while awaiting results, the injection is silently aborted.
+- **Relevance filter** (`isRelevant()`) uses title substring inclusion, Levenshtein fuzzy similarity (`<= 25%` edit distance), and requires at least 70% overlap of alternate-title words for its word-overlap match.
+- **Deduplication** suppresses any result whose normalised title or session already appears in the native dropdown.
+- **Stale-query guard** — if the input changes while awaiting AniList or between synonym lookups, the stale run aborts immediately without making further requests.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ### RequestThrottler
 
-All outbound DUB detection requests are routed through `helpers/throttler.js`, which exports a shared `throttler` singleton (and the `RequestThrottler` class for custom instances). It provides:
+All outbound extension requests to animepahe's `/api` — across **DUB Detector**, **Smart Search** (`apSearch`), **Continue Watching** (`_lookupOne`), and **Binge Watch** (`_findNextEpisodeSession`) — are routed through `helpers/throttler.js`, which exports a shared `throttler` singleton (and the `RequestThrottler` class). It provides:
 
 - **Concurrency cap** — limits simultaneous in-flight fetches (`maxConcurrent`, default 6)
-- **Interval + jitter** — enforces a minimum gap between request launches with ± random variation to avoid burst patterns
-- **Exponential back-off with retry** — on HTTP 429/403 or a Cloudflare challenge response, the request is re-queued and the entire drain loop backs off for `baseBackoff × 2ⁿ` ms (up to `maxRetries` attempts)
-- **`pendingCount` getter** — used by the DUB Detector's ETA pill to display live scan progress
+- **Interval + jitter** — enforces a minimum gap (`minInterval`, default 120 ms) between request launches with `± jitter` (default 50 ms) random variation to avoid burst patterns
+- **Priority queue support** — `throttler.fetch(url, wantJson, { priority: true, maxRetries: 2 })` lets interactive user actions (like Smart Search) jump to the front of `_queue` ahead of background DUB scans
+- **Exponential back-off on rate limits (HTTP 429/403)** — re-queues the request (up to `maxRetries`, default 4) and pauses the drain loop for `Math.max(retryAfterMs, baseBackoff × 2ⁿ + jitter)` (where `baseBackoff` defaults to 3,000 ms)
+- **Cloudflare challenge pause (no retry)** — when a response is a Cloudflare challenge (HTTP 503 with Cloudflare HTML, or HTTP 200 returning Cloudflare HTML when JSON was expected), the request is **not** retried (which would only add load); it rejects immediately with `isCfChallenge: true` and pauses the entire queue for **60 seconds**
+- **`pendingCount` getter** — used by the DUB Detector's status toast to display live scan progress
 - **`updateOptions(opts)`** — applies new values to the live singleton without dropping anything already queued or in-flight; `main.js` calls this once on startup with the user's Advanced Settings → Network Throttler values
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
@@ -297,7 +334,7 @@ import { injectStylesheet } from "../../helpers/styles.js";
 injectStylesheet("ape-mf-styles", "content/features/css/my-feature.css");
 ```
 
-The existing `web_accessible_resources` globs already cover files in these feature and helper folders; check that both manifests continue to expose any new module or stylesheet. Anything the new feature's CSS has in common with another feature's belongs in `content/main.css` instead (loaded once by `main.js`), not copy-pasted — same goes for the shared status pill, see `content/helpers/pill.js`.
+The existing `web_accessible_resources` globs already cover files in these feature and helper folders; check that both manifests continue to expose any new module or stylesheet. Anything the new feature's CSS has in common with another feature's belongs in `content/main.css` instead (loaded once by `main.js`), not copy-pasted — same goes for the shared status pill (`content/helpers/pill.js`) and shared on-page SVG icons (`content/helpers/icons.js`).
 
 3. Add a settings key and default in `content/helpers/storage.js`:
 
@@ -375,7 +412,7 @@ export const FEATURE_SUBOPTIONS = {
     {
       key: "dubHomeScanEnabled",
       label: "Scan homepage cards",
-      note: "Also checks homepage cards for dub status.",
+      note: "Also checks homepage cards for dub status, not just episode lists. Off = fewer requests.",
       default: true,
     },
   ],

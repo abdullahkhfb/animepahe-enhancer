@@ -2,7 +2,7 @@
 
 # Usage Guide
 
-> Step-by-step instructions for every feature. For a quick overview instead, see the [main README](../README.md).
+> Step-by-step instructions for every feature. For a quick overview instead, see the [main README](../README.md), or see [docs/FEATURES.md](FEATURES.md) for full technical details.
 
 ## Table of Contents
 
@@ -16,136 +16,150 @@
 
 ---
 
-## Continue Watching
+<a id="continue-watching"></a>
+
+## <img src="assets/continue-watching.svg" width="26" height="26" align="absmiddle" alt="▶" /> Continue Watching
 
 When you watch an episode on animepahe:
 
-1. The extension automatically records your progress after the video starts playing. No manual action is required.
-2. The next time you visit the **animepahe home page**, a **Continue Watching** section appears above the Latest Releases grid.
-3. Each card shows:
-   - The **episode's own thumbnail** (the same still you see in the episode list), not the anime poster. If it can't be found, the anime poster is used instead
-   - A pink progress bar at the bottom of the thumbnail indicating how far through the episode you are
-   - The episode number (`EP 6`, bottom-right of the thumbnail)
-   - The anime title (bottom-left of the thumbnail)
-4. Click any card to jump directly back to that episode. The video will automatically seek to your saved position.
-5. Hover over a card to reveal the **✕** remove button (top-right of the thumbnail) to remove that individual entry.
-6. Use **Show More / Show Less** if you have more than 6 entries in your history.
-7. Use **Clear All** (from the home page section or the popup) to wipe the entire list.
+1. The extension automatically tracks your playback position every 2 seconds (by default) and coalesces storage writes at most every 5 seconds (or immediately when you seek, switch episodes, or hide/close the tab). No manual action is required.
+2. Only the latest watched episode per anime series is kept (up to **24 shows** by default), ordered with the most recently watched series first.
+3. The next time you visit the **animepahe home page**, a **Continue Watching** shelf appears directly above the **Latest Releases** grid, aligned to the same 3-column layout (**2 columns** below 1000 px, **1 column** below 560 px) and matching the site's heading font and card spacing.
+4. Each 16:9 card displays:
+    - The **episode's own thumbnail** (harvested passively as you browse episode listings, with a single release-API lookup per home-page visit if an episode still wasn't seen yet, or the anime poster as a final fallback)
+    - A glowing pink progress bar (<img src="assets/cw-prog-bar.svg" width="70" height="8" align="absmiddle" alt="Progress bar" />) along the bottom edge showing how far through the episode you are
+    - The anime title in the bottom-left and the episode badge (<img src="assets/cw-ep-badge.svg" height="20" align="absmiddle" alt="EP 6" />) in the bottom-right
+    - On hover or keyboard focus: a centered pink circular **play button** (<img src="assets/play.svg" width="18" height="18" align="absmiddle" alt="▶" />), a top-left **time-remaining badge** (<img src="assets/cw-time-left.svg" height="18" align="absmiddle" alt="14 min left" />, or `Almost done` when under 60 seconds remain), and a top-right **remove button** (<img src="assets/close.svg" width="18" height="18" align="absmiddle" alt="✕" />, always visible on touch devices)
+5. Click any card to jump directly back to that episode; the video player will automatically seek to your saved timestamp.
+6. Click the top-right **✕** button on a card to remove that series from your list.
+7. Use **Show more / Show less** (<img src="assets/cw-btn-more.svg" height="20" align="absmiddle" alt="Show more" />) in the shelf header (next to the pink entry count pill <img src="assets/cw-count.svg" height="18" align="absmiddle" alt="6" />) when you have more than 6 entries (configurable in Advanced Settings).
+8. Click **Clear all** (<img src="assets/cw-btn-clear.svg" height="20" align="absmiddle" alt="Clear all" />) in the shelf header to open the inline confirmation dialog (`Clear all N episodes from Continue Watching?`), or use **Clear list** inside the Continue Watching row in the popup.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-## DUB Detector
+<a id="dub-detector"></a>
 
-The DUB Detector runs automatically in the background on three page types:
+## <img src="assets/dub-detector.svg" width="26" height="26" align="absmiddle" alt="🎙" /> DUB Detector
+
+The DUB Detector runs automatically in the background on three page types (after waiting for any Cloudflare interstitial check and the page's own load to finish):
 
 **Anime episode list page (`/anime/{session}`):**
 
-- All visible episode cards are scanned (using binary search) when the page loads.
-- Dubbed episodes receive a pink **DUB** badge in the top-right corner of their card; sub-only episodes receive an orange **SUB ONLY** badge.
-- A status pill appears in the bottom-right of the screen with real-time scan progress, including a live percentage indicator that resolves to the final count on completion (e.g., `🎙 DUB: 12 episodes dubbed ✓`).
+- Once episode cards appear on the page, they are scanned using a sequential gallop-then-binary-search algorithm.
+- Dubbed episodes receive a solid brand-pink **DUB** badge (<img src="assets/badge-dub.svg" height="18" align="absmiddle" alt="🎙 DUB" />) with a microphone icon in the top-right corner of their card; sub-only episodes receive a dark frosted-glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />) with an amber dot.
+- Next to the page's `Episodes (N)` heading, an inline summary (<img src="assets/badge-dub-summary.svg" height="20" align="absmiddle" alt="🎙 6 of 9 dubbed" />) shows the total dubbed count (`6 of 9 dubbed`) alongside a segmented pink/grey progress bar.
+- A rich status toast in the bottom-right corner displays a pink progress ring (<img src="assets/progress-ring.svg" width="16" height="16" align="absmiddle" alt="◌" />) and live percentage while scanning (`Scanning dubs 67%`), resolving to a pink checkmark badge (<img src="assets/check.svg" width="16" height="16" align="absmiddle" alt="✓" /> `6 episodes dubbed`) or an amber dot (<img src="assets/amber-dot.svg" width="12" height="12" align="absmiddle" alt="•" /> `No dub found`). If rate-limited, it shows `Dub scan paused (rate limited)` without applying false `SUB ONLY` badges and retries after 90 seconds.
 - The scan re-runs automatically when the episode list is paginated or updated via AJAX.
 
 **Player page (`/play/{animeSession}/{epSession}`):**
 
-- A quick check runs on load.
-- If the episode is dubbed, a **DUB** badge is appended inline to the episode title; otherwise a **SUB ONLY** badge is shown.
+- Checks the active episode on load while showing `Checking dub` in the bottom-right status toast.
+- Appends an inline pink **DUB** badge (<img src="assets/badge-dub.svg" height="18" align="absmiddle" alt="🎙 DUB" />) or dark glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />) directly next to the episode's `<h1>` heading, and updates the toast to `Dub available` or `Sub only`.
 
-**Home page (latest releases grid):**
+**Home page (Latest Releases grid):**
 
-- Every anime card in the latest release feed is scanned.
-- Cards with dubbed episodes receive a pink badge showing `dubbed/total` episodes (e.g., `12/24`).
-- Scanning is batched (2 at a time by default) to avoid rate-limiting.
+- Enabled by default and toggleable via the **Scan homepage cards** sub-option inside the DUB Detector row in the popup.
+- While a card is being checked on a cache miss, it shows a temporary dark glass **SCANNING** spinner badge (<img src="assets/badge-scanning.svg" height="18" align="absmiddle" alt="◌ SCANNING" />).
+- Cards with dubbed episodes receive a pink badge (<img src="assets/badge-dub-home.svg" height="18" align="absmiddle" alt="🎙 6/10" />) showing the microphone icon, `dubbed/total` count (e.g., `6/10`), and a visual coverage meter bar. Sub-only series receive the dark glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />).
+- Scanning is batched (2 cards at a time by default) to avoid rate-limiting, automatically skipping the inter-batch delay when results are cached or have no dub.
 
-**Cache:** DUB results are cached for **24 hours by default**. Stale entries are garbage-collected automatically. Both the batch size and cache duration are configurable in Advanced Settings, and you can force-clear the cache from the popup.
+**Cache:** DUB results are cached for **24 hours by default**. Stale entries are garbage-collected automatically on startup. Batch size, batch delay, and cache duration are configurable in Advanced Settings, and you can force-clear the cache from the popup.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-## Smart Search
+<a id="smart-search"></a>
+
+## <img src="assets/smart-search.svg" width="26" height="26" align="absmiddle" alt="🔍" /> Smart Search
 
 Smart Search activates automatically while you type in the animepahe search bar — no extra steps are needed:
 
-1. Start typing any title in the search bar. After a 100 ms debounce by default (configurable), Smart Search kicks in alongside the native search.
-2. animepahe's regular results appear as normal. Smart Search then queries AniList for alternative titles associated with your term.
-3. Smart Search searches animepahe for up to three alternate titles by default, one at a time. Matching results are appended after the existing results.
-4. Each extra result card shows the anime's poster thumbnail, its title as listed on animepahe, and a pink _also matching "…"_ label.
-5. Click any result card (native or injected) to navigate to that anime's page as normal.
-6. If Smart Search finds no additional matches, the dropdown is left unchanged. If there are no native results and AniList finds a likely title, Smart Search may add a **Did you mean?** suggestion.
+1. Start typing any query (at least 2 characters by default) in the search bar. After a **400 ms debounce** by default (configurable in Advanced Settings), Smart Search runs alongside the native search.
+2. animepahe's regular results appear as normal. Smart Search queries AniList for alternative titles (English, romaji, and synonyms) associated with your term.
+3. Smart Search queries animepahe's search API for up to **3 alternate titles** by default (one at a time with a 250 ms pause), routing requests through the shared throttler with priority ahead of background DUB scans and caching animepahe search responses in memory for 5 minutes. If you keep typing, stale synonym lookups are aborted automatically.
+4. Matching extra results (<img src="assets/ss-extra-row.svg" height="28" align="absmiddle" alt="Extra search row" />) are appended below the native results with a 3 px pink left border, circular poster thumbnail, metadata line (`Type - N Eps - Season - Year`), and a pink italic _also matching "…"_ label.
+5. If animepahe's native search returns **0 results** and AniList finds a likely match, Smart Search inserts a clickable **Did you mean?** banner (<img src="assets/ss-dym-badge.svg" height="20" align="absmiddle" alt="Did you mean?" />) at the top of the dropdown — click it to search for that title immediately.
+6. Click any result row (native or injected) to navigate to that anime's page as normal.
 
-**Cache:** AniList lookup results are cached for **24 hours by default** (configurable in the Advanced tab). You can force-clear the cache from the popup.
+**Cache:** AniList lookup results are cached in `chrome.storage.local` (`ape_ss_` prefix) for **24 hours by default** (configurable in the Advanced tab). You can force-clear the cache from the popup.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-## Intro / Outro Skip
+<a id="intro--outro-skip"></a>
+
+## <img src="assets/intro-skip.svg" width="26" height="26" align="absmiddle" alt="⏭" /> Intro / Outro Skip
 
 The Intro / Outro Skip feature activates automatically on the player page (`/play/{animeSession}/{epSession}`):
 
 1. When you navigate to a player page, the extension extracts the anime title and episode number from the page.
-2. It resolves the anime to an AniDB ID (via AniList search → relations.yuna.moe) and looks up intro/outro timestamps for that episode. A status pill in the bottom-right corner shows progress.
-3. If timestamps are found, a result pill appears (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`) and the skip ranges are sent to the Kwik player.
-4. In **manual mode** (default): A **Skip Intro** or **Skip Outro** button appears overlaid on the video when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after a configurable delay but reappears if you move your mouse.
-5. In **auto-skip mode** (opt-in, toggled on the Intro / Outro Skip row): The player automatically seeks past intros and outros as soon as playback enters the range.
-6. **Progress bar highlights**: Coloured segments are drawn directly on the Kwik player's scrubber — blue for intros, orange for outros, purple for recaps. Toggle this sub-option in the Intro / Outro Skip feature card in the popup.
-7. If the title or episode cannot be matched to timestamp data, nothing is skipped for that episode; the status pill reports that no data was found. There is no online timestamp fallback.
+2. It resolves the anime to an AniDB ID (via AniList search → `relations.yuna.moe`) and looks up intro/outro/recap timestamps for that episode in the cached `open-anime-timestamps` database. A status pill in the bottom-right corner shows progress (`⏭ Resolving anime…` → `⏭ Looking up timestamps…`).
+3. If timestamps are found, a result pill appears (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`) and the skip ranges are sent to the Kwik player iframe.
+4. In **manual mode** (default): A styled **Skip Intro** or **Skip Outro** button (<img src="assets/badge-skip-intro.svg" height="22" align="absmiddle" alt="Skip Intro" />) appears overlaid in the bottom-right corner of the video (in both normal and fullscreen playback) when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after **8 seconds** by default (configurable) and reappears when you move your mouse.
+5. In **auto-skip mode** (opt-in via the **Auto-skip automatically** sub-option on the Intro / Outro Skip card in the popup): The player automatically seeks past intros and outros as soon as playback enters the range, with a 1-second grace period after manual seeks so you can still scrub into an OP/ED if you want to.
+6. **Progress bar highlights** (on by default, toggleable via **Highlight on progress bar** on the Intro / Outro Skip card): Coloured segments are drawn directly inside the Kwik player's scrubber — **blue** (<img src="assets/scrubber-intro.svg" width="48" height="12" align="absmiddle" alt="Blue" />) for intros, **orange** (<img src="assets/scrubber-outro.svg" width="48" height="12" align="absmiddle" alt="Orange" />) for outros, and **purple** (<img src="assets/scrubber-recap.svg" width="48" height="12" align="absmiddle" alt="Purple" />) for recaps.
+7. If the title or episode cannot be matched to timestamp data, nothing is skipped for that episode and the status pill reports `not found in database` or `no data for this episode`.
 
 **Data sources and caching:**
 
-- The open-anime-timestamps database (~27 MB) is downloaded from GitHub and cached in **IndexedDB** (too large for `chrome.storage.local`'s default quota). It's refreshed on a configurable schedule (7 days by default) using conditional GET with ETag headers to avoid re-downloading unchanged data.
-- AniList → AniDB ID mappings are cached per anime session in `chrome.storage.local` (configurable TTL, default 7 days).
-- You can see whether the database is currently cached, or clear all cached data, from the popup.
+- The `open-anime-timestamps` database (~27 MB) is downloaded from GitHub and cached in **IndexedDB** (`ape_intro_skip`), with lightweight metadata in `chrome.storage.local` (`ape_is_db_meta`). It is refreshed on a configurable schedule (**7 days / 168 hours** by default) using conditional GET with `If-None-Match` (ETag) headers to avoid re-downloading unchanged data.
+- AniList → AniDB ID mappings are cached per anime session in `chrome.storage.local` (`ape_isid_v1_{session}`, configurable TTL, default **7 days / 168 hours**).
+- You can see whether the database is currently cached, or clear all cached data, from the Intro / Outro Skip row in the popup.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-## Binge Watch
+<a id="binge-watch"></a>
 
-Binge Watch auto-plays the next episode when the current one ends. It's **off by default** since it navigates your browser on its own — turn it on from its card in the popup's Features tab.
+## <img src="assets/binge-watch.svg" width="26" height="26" align="absmiddle" alt="🔁" /> Binge Watch
 
-1. Once enabled, nothing changes until an episode actually finishes playing.
-2. When the video hits its native "ended" event, the extension looks up the next episode via animepahe's own release listing.
-3. A short countdown pill appears (`▶ Binge Watch: next episode in 5s`) in the bottom-right corner. Click it any time before it finishes to cancel and stay on the current episode.
+Binge Watch auto-loads the player and auto-plays the next episode when the current one ends. It's **off by default** since it navigates your browser on its own — turn it on from its row in the popup's Features tab.
+
+1. While Binge Watch is on, animepahe's `"Click to load"` placeholder (`div.click-to-load`) over the video embed is clicked automatically on **every** episode page you land on — including ones you open yourself from an episode list — and Kwik's player starts playback automatically.
+2. When the video hits its native `ended` event inside Kwik, the extension shows `🔁 Binge Watch: finding next episode…` and looks up the next episode via animepahe's own release listing (walking across paginated release pages if needed).
+3. A clickable countdown pill (<img src="assets/pill-bw-countdown.svg" height="22" align="absmiddle" alt="▶ Binge Watch: next episode in 5s (click to cancel)" />) appears in the bottom-right corner. Click it any time before the timer finishes to cancel and stay on the current episode (`🔁 Binge Watch: cancelled`).
 4. If you don't cancel, the browser navigates to the next episode automatically once the countdown ends.
-5. While the feature is on, animepahe's "Click to load" placeholder over the embed is clicked automatically on **every** episode page you land on — not just ones Binge Watch navigates to — so nothing sits waiting for a click.
-6. If there's no next episode (you're on the latest one), nothing happens — playback just ends normally.
+5. If there is no next episode (you're on the latest one), the pill shows `🔁 Binge Watch: no next episode found` and playback ends normally.
 
-**Tuning:** The countdown length is configurable in the Advanced tab (`Countdown before next episode`) and can be set to **0** to skip the pill entirely and jump straight to the next episode.
+**Tuning:** The countdown length is configurable in the Advanced tab (`Countdown before next episode`, under `Binge`) and can be set to **0** to skip the countdown pill entirely and jump straight to the next episode.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
-## Skip Wait
+<a id="skip-wait"></a>
 
-Skip Wait removes the `pahe.win` countdown page from the download flow. It's **on by default** and can be switched off from its card in the popup's Features tab.
+## <img src="assets/skip-wait.svg" width="26" height="26" align="absmiddle" alt="⏩" /> Skip Wait
 
-1. Open an episode and click the **Download** menu as usual.
-2. Click a quality (for example `SubsPlease · 1080p`). A small pill appears in the bottom-right corner (`⏩ Skip Wait: getting link…`).
-3. A new tab opens directly on the kwik page — no 5-second `pahe.win` wait. Click kwik's **Download** button there to save the file, as you normally would.
-4. If the extension can't find the kwik link, it opens the original `pahe.win` page instead, and the pill says so.
+Skip Wait removes the `pahe.win` countdown page from the download flow. It's **on by default** and can be switched off from its row in the popup's Features tab.
 
-**Want the original behaviour for one click?** Hold Ctrl, Shift, Alt or Cmd while clicking (or middle-click) and the link opens the normal `pahe.win` page.
+1. Open an episode player page and click the **Download** menu as usual.
+2. Left-click a quality link (for example `SubsPlease · 1080p`). A status pill appears in the bottom-right corner (`⏩ Skip Wait: getting link (SubsPlease · 1080p)…`).
+3. A new tab opens directly on the `kwik.cx/f/…` page right next to your episode tab (<img src="assets/pill-sw-opened.svg" height="22" align="absmiddle" alt="✓ Skip Wait: opened kwik" />) — no 5-second `pahe.win` wait. Click Kwik's **Download** button there to save the file as usual.
+4. If the extension can't find the Kwik link (or the request times out after 15 seconds), it opens the original `pahe.win` page instead (`⏩ Skip Wait: couldn't find the link, opened the normal page`).
+
+**Want the original behaviour for one click?** Hold **Ctrl**, **Shift**, **Alt**, or **Cmd** while clicking (or **middle-click**) and the link opens the normal `pahe.win` page.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
 ## Popup Settings Panel
 
-Click the extension icon in the browser toolbar to open the settings popup. It's split into three tabs:
+Click the extension icon in the browser toolbar to open the settings popup (`400px` wide, sized to fit its content with no inner scrollbar). It is organized into three tabs below the header and status timeline strip:
 
-**Features tab** — one row per feature, each with its own colour. A status strip under the header lights one segment per enabled feature (for example, "4 of 6 active"). Click a row to expand it and:
+**Features tab** — one row per feature, each with its own custom SVG icon and accent colour. The timeline strip under the header lights one proportional segment per enabled feature (for example, `5 OF 6 ACTIVE` by default). Click any feature row to expand it (accordion-style, one row open at a time) and:
 
-- See a quick stat (items saved, entries cached, or whether the timestamps database is cached)
-- Clear that feature's cache/history with one click
-- Flip any sub-option that belongs to that feature (for example, auto-skip for Intro/Outro Skip)
+- View a live stat chip (`N items` for Continue Watching, `N cached` for DUB Detector and Smart Search, or `Database cached` / `N IDs cached` / `Not cached` for Intro / Outro Skip)
+- Clear that feature's saved list or cache with one click (`Clear list` / `Clear cache`)
+- Toggle feature sub-options right on the card:
+    - **DUB Detector**: `Scan homepage cards` (default **On**)
+    - **Intro / Outro Skip**: `Auto-skip automatically` (default **Off**) and `Highlight on progress bar` (default **On**)
 
-The switch on the right of each row turns that feature on or off.
+The switch on the right of each row turns that entire feature on or off.
 
-**Advanced tab** — tunable settings grouped by feature:
+**Advanced tab** — 22 tunable settings organized into 7 group chips (`Continue`, `DUB`, `Network`, `Search`, `Player`, `Skip`, `Binge`):
 
-- Pick a group from the pill selector to see only that group's settings
-- Each setting has a stepper (− / + buttons, or type a value), an info button for its plain-language description, and a **Default N** button that appears once you change it
-- Edits are staged (marked with a small dot) until you press **Apply** — nothing saves until then
-- **Reset all** restores every tunable to default without touching your feature toggles
+- Select a group chip to display only that group's settings
+- Each setting row has a numeric stepper (`−` / `+` buttons and direct number input), an **`i`** button that shows its plain-language description in the help box below the list, and a blue **`Default N`** link that appears whenever its value differs from the default
+- Edits are staged (marked with a pink dot on both the row and the group chip) until you press **Apply** — nothing is saved until then
+- **Reset all** restores every advanced tunable to its default value without touching your feature toggles
 
-**Links tab** — the animepahe site (shown with its real logo), the GitHub repository, the issue tracker, and a recommended companion tool, [MalSync](https://malsync.moe) (with its real logo), for syncing your progress to MyAnimeList/AniList/Kitsu.
+**Links tab** — a hero card for animepahe (with the real animepahe wordmark), links to the GitHub source repository and issue tracker, and a recommended companion tool, [MalSync](https://malsync.moe/) (with its official logo), for syncing watch progress to MyAnimeList, AniList, and Kitsu.
 
-The popup is 400px wide and as tall as its content, so there is no inner scrolling. The tab bar sits right under the header on every tab.
-
-> After toggling a feature or applying an advanced setting, reload the animepahe page for changes to take effect. The popup shows a reminder notice automatically.
+> After toggling a feature or applying an advanced setting, reload the animepahe page for changes to take effect. The popup displays a `Reload page to apply` notice in the timeline bar automatically.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

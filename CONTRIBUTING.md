@@ -29,7 +29,7 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - **Request a feature** — open an issue describing the problem you want to solve and why it fits the project.
 - **Fix a bug** — pick up an open issue labelled `bug` and open a pull request.
 - **Build a feature** — discuss first in an issue, then implement it.
-- **Improve the docs** — fix typos, clarify explanations, or add missing information in `README.md`, `PRIVACY.md`, `SECURITY.md`, or code comments.
+- **Improve the docs** — fix typos, clarify explanations, or add missing information in `README.md`, `docs/`, `PRIVACY.md`, `SECURITY.md`, or code comments.
 - **Report a security vulnerability** — see [`SECURITY.md`](SECURITY.md) for the private disclosure process. Do **not** open a public issue.
 
 ---
@@ -40,7 +40,7 @@ Thank you for your interest in improving animepahe Enhancer! This document expla
 - **One concern per PR.** Keep pull requests focused. A PR that fixes a bug and adds an unrelated feature is harder to review and slows everything down.
 - **No build step required.** The extension is plain ES2020+ JavaScript with no bundler, no TypeScript, and no external npm dependencies. Keep it that way.
 - **Minimal permissions.** Any change that would require adding a new entry to `permissions` or `host_permissions` in either manifest needs strong justification and will be scrutinised carefully.
-- **Local-first data.** Keep new data flows limited to what a feature needs. Existing network requests include animepahe requests for DUB detection, search, and Binge Watch; pahe.win link resolution for Skip Wait; and AniList, relations.yuna.moe, and the open-anime-timestamps dataset for Intro/Outro Skip. New network targets or data sent require explicit discussion and a `PRIVACY.md` update.
+- **Local-first data.** Keep new data flows limited to what a feature needs. Existing network requests include animepahe requests for DUB detection, Smart Search, Continue Watching fallback thumbnail lookup, and Binge Watch; `pahe.win` link resolution for Skip Wait; and AniList, `relations.yuna.moe`, and the `open-anime-timestamps` dataset for Smart Search and Intro/Outro Skip. New network targets or data sent require explicit discussion and a `PRIVACY.md` update.
 - **Be respectful.** This project adheres to its [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ---
@@ -88,9 +88,10 @@ animepahe-enhancer/
 ├── background.js                 # Skip Wait link-resolution background handler
 │
 ├── content/
-│   ├── main.js                   # Entry point — loads settings, detects page, imports features
-│   ├── iframe-player.js          # Injected into Kwik iframe; postMessage bridge for
-│   │                             #   Continue Watching + Intro/Outro Skip controller
+│   ├── main.js                   # Entry point — awaits whenSiteReady(), loads settings, imports features
+│   ├── main.css                  # Shared base styles (status toast: plain + rich states)
+│   ├── iframe-player.js          # Injected into Kwik iframe; ensurePlayback() + postMessage bridge for
+│   │                             #   Continue Watching, Intro/Outro Skip, and Binge Watch
 │   │
 │   ├── features/                 # Feature modules with optional stylesheets
 │   │   ├── js/                   #   Each file exports a class with init(pageType)
@@ -98,7 +99,7 @@ animepahe-enhancer/
 │   │   │   ├── dub-detector.js
 │   │   │   ├── smart-search.js
 │   │   │   ├── intro-skip.js     # Intro/Outro Skip — timestamp lookup + range orchestration
-│   │   │   ├── binge-watch.js    # Binge Watch — auto-plays the next episode, off by default
+│   │   │   ├── binge-watch.js    # Binge Watch — auto-loads embed + auto-plays next episode
 │   │   │   └── skip-wait.js      # Skip Wait — bypasses the pahe.win countdown
 │   │   └── css/                  #   Stylesheets for features that need them
 │   │       ├── continue-watching.css
@@ -107,15 +108,16 @@ animepahe-enhancer/
 │   │       └── binge-watch.css
 │   │
 │   └── helpers/                  # Shared utilities imported by any feature
-│       ├── storage.js            # chrome.storage.local wrapper + DEFAULT_SETTINGS
-│       │                         #   + ADVANCED_SETTINGS_SCHEMA (drives the popup's panel)
+│       ├── storage.js            # chrome.storage.local wrapper + KEYS + DEFAULT_SETTINGS
+│       │                         #   + ADVANCED_SETTINGS_SCHEMA + FEATURE_SUBOPTIONS
 │       ├── router.js             # Page-type detection from the current URL
-│       ├── cache.js              # DUB cache read/write/garbage collection (configurable TTL)
-│       ├── throttler.js          # RequestThrottler — concurrency, jitter, retry, back-off
+│       ├── challenge.js          # Cloudflare challenge detection & page-load gate (whenSiteReady())
+│       ├── cache.js              # Shared TTL cache read/write/garbage collection
+│       ├── throttler.js          # RequestThrottler — concurrency, jitter, priority queue, back-off
 │       │                         #   (tunable at runtime via updateOptions())
-│       ├── styles.js             # injectStylesheet() — shared one-line CSS loading, used
-│       │                         #   by every feature instead of duplicating it
-│       ├── pill.js                # showPill() — shared bottom-right status toast
+│       ├── icons.js              # Shared inline-SVG factory (micIcon, checkIcon, playIcon, closeIcon)
+│       ├── styles.js             # injectStylesheet() — shared one-line CSS loading
+│       ├── pill.js               # showPill() + showStatus() — shared bottom-right status toast
 │       └── timestamps-db.js      # open-anime-timestamps dataset access (IndexedDB cache,
 │                                 #   AniList → AniDB ID resolution, episode lookup)
 │
@@ -140,10 +142,12 @@ animepahe-enhancer/
 │   ├── animepahe-wordmark.svg    # Real animepahe site logo
 │   └── malsync.svg               # Real MalSync logo
 │
+├── docs/                         # Detailed documentation, Markdown SVG assets (docs/assets/), and store widgets
+│
 └── .github/
     ├── actions/
     │   └── build-zip/
-    │       └── action.yml        # Shared: builds the store-ready zip
+    │       └── action.yml        # Shared: builds the store-ready Firefox and Chromium zips
     └── workflows/
         ├── deploy-firefox.yml    # Auto-deploys to Firefox on release publish
         └── deploy-edge.yml       # Manual-only deploy to Edge
@@ -210,7 +214,7 @@ const FEATURES = [
 ```json
 "web_accessible_resources": [
   {
-    "resources": ["content/features/js/*.js", "content/features/css/*.css", "content/helpers/*.js"],
+    "resources": ["content/features/js/*.js", "content/features/css/*.css", "content/helpers/*.js", "content/main.css"],
     "matches": ["*://*.animepahe.pw/*", "..."]
   }
 ]
@@ -255,7 +259,7 @@ A few conventions to follow:
 
 - Update the documentation page that covers the affected feature or workflow; update `PRIVACY.md` or `SECURITY.md` as well when data flows or security-relevant behavior changes.
 - Code comments are valued — explain _why_ something is done, not just _what_ it does.
-- Diagrams in `docs/ARCHITECTURE.md` use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
+- Diagrams in `docs/ARCHITECTURE.md` and `docs/FEATURES.md` use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
 
 ---
 
@@ -315,8 +319,8 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 - [ ] No `innerHTML` used with untrusted/third-party data (animepahe DOM, AniList responses)
 - [ ] `DEFAULT_SETTINGS` updated if a new toggle was added
 - [ ] `ADVANCED_SETTINGS_SCHEMA` updated (with a matching `default`) if a new tunable was added, instead of hand-rolling popup UI
-- [ ] `manifest.json` `version` field **not** bumped (maintainer handles versioning)
-- [ ] `README.md` updated if user-facing behaviour changed
+- [ ] `manifest.json` and `manifest.chromium.json` `version` fields **not** bumped (maintainer handles versioning)
+- [ ] `README.md` and `docs/` updated if user-facing behaviour changed
 - [ ] `PRIVACY.md` updated if new network targets or data flows were introduced
 - [ ] `SECURITY.md` updated if new attack surface was introduced
 
@@ -328,7 +332,7 @@ Good issues save everyone time. Please include:
 
 **For bug reports:**
 
-- Extension version (visible in the popup footer or `manifest.json`)
+- Extension version (visible in the popup header or `manifest.json`)
 - Browser name and version
 - Operating system
 - The animepahe URL or page type where the issue occurs
@@ -351,7 +355,7 @@ The issue tracker offers three templates (🐛 Bug report, 💡 Feature request,
 Use the existing issue labels to help triage:
 
 | Label              | Meaning                                            |
-| ------------------ | --------------------------------------------------- |
+| ------------------ | -------------------------------------------------- |
 | `bug`              | Confirmed misbehaviour                             |
 | `enhancement`      | New feature or improvement                         |
 | `documentation`    | Docs-only change                                   |
@@ -367,9 +371,9 @@ Releases are handled by the maintainer. Contributors do **not** bump the version
 
 When a release is ready:
 
-1. The `version` field in `manifest.json` is bumped following [Semantic Versioning](https://semver.org/).
+1. The `version` field in **both** `manifest.json` and `manifest.chromium.json` is bumped following [Semantic Versioning](https://semver.org/).
 2. A GitHub Release is published with a tag matching `v<version>`.
-3. [`deploy-firefox.yml`](.github/workflows/deploy-firefox.yml) triggers automatically: packages the extension into `Animepahe-Enhancer.zip`, submits to the Firefox AMO review queue, and attaches the zip to the GitHub Release.
+3. [`deploy-firefox.yml`](.github/workflows/deploy-firefox.yml) triggers automatically: packages the extension into `Animepahe-Enhancer-Firefox.zip` and `Animepahe-Enhancer-Chromium.zip`, submits the Firefox build to the AMO review queue, and attaches both zips to the GitHub Release.
 4. Edge is **not** automatic — it's a separate, deliberate step run manually from the Actions tab (see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#releasing-a-new-version) for why).
 
 ---

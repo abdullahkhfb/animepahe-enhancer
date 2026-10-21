@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 24" width="48" height="24">
+  <rect width="48" height="24" rx="4" fill="#121214" fill-opacity="0.88"/>
+  <text x="8" y="17" fill="#ffffff" fill-opacity="0.7" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.8">EP</text>
+  <text x="25" y="18" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700">6</text>
+</svg>

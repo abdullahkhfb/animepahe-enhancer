@@ -27,12 +27,12 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 
 ## What it does
 
-- **▶ Continue Watching** — Picks up exactly where you stopped, every time. No more hunting for the right episode. [Details&nbsp;→](docs/FEATURES.md#-continue-watching)
-- **🎙 DUB Detector** — Puts a badge on every episode that's dubbed, so you don't have to open it to find out. [Details&nbsp;→](docs/FEATURES.md#-dub-detector)
-- **🔍 Smart Search** — Finds a show even if you search by a nickname or a title in a different language. [Details&nbsp;→](docs/FEATURES.md#-smart-search)
-- **⏭ Intro / Outro Skip** — Skips the opening and ending automatically, or gives you a one-click Skip button. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
-- **🔁 Binge Watch** — Auto-plays the next episode when one ends, with a click to cancel. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
-- **⏩ Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second pahe.win countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
+- <img src="docs/assets/continue-watching.svg" width="22" height="22" align="absmiddle" alt="▶" /> **Continue Watching** — Picks up exactly where you stopped, every time, with a 3-column shelf of episode thumbnails, time-left badges, and progress bars on the home page. [Details&nbsp;→](docs/FEATURES.md#-continue-watching)
+- <img src="docs/assets/dub-detector.svg" width="22" height="22" align="absmiddle" alt="🎙" /> **DUB Detector** — Flags dubbed and sub-only episodes with colour-coded badges, home-card coverage meters, and an episode-list summary bar so you don't have to open an episode to find out. [Details&nbsp;→](docs/FEATURES.md#-dub-detector)
+- <img src="docs/assets/smart-search.svg" width="22" height="22" align="absmiddle" alt="🔍" /> **Smart Search** — Finds a show even if you search by an English title, a nickname, or a synonym in a different language via AniList. [Details&nbsp;→](docs/FEATURES.md#-smart-search)
+- <img src="docs/assets/intro-skip.svg" width="22" height="22" align="absmiddle" alt="⏭" /> **Intro / Outro Skip** — Skips openings and endings automatically or with a one-click Skip button, and highlights intros, outros, and recaps on the player scrubber. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
+- <img src="docs/assets/binge-watch.svg" width="22" height="22" align="absmiddle" alt="🔁" /> **Binge Watch** — Auto-loads the video embed and plays the next episode when one ends, with a click-to-cancel countdown pill. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
+- <img src="docs/assets/skip-wait.svg" width="22" height="22" align="absmiddle" alt="⏩" /> **Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second `pahe.win` countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
 
 Each feature can be turned on or off separately from the extension's popup. Settings and watch progress stay in your browser; some features make the network requests they need to work. See [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
 
@@ -106,7 +106,7 @@ This README keeps things short on purpose. For anything more in-depth:
 
 | Guide                                          | What's in it                                                                     |
 | ---------------------------------------------- | -------------------------------------------------------------------------------- |
-| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical detail behind every feature                                   |
+| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical and visual detail behind every feature                        |
 | [docs/USAGE.md](docs/USAGE.md)                 | Step-by-step instructions for using each feature and the popup                   |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   | How the code is organized, and how to add a new feature or setting               |
 | [docs/PERMISSIONS.md](docs/PERMISSIONS.md)     | Exactly what the extension can access, and why                                   |
