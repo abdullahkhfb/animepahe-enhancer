@@ -33,6 +33,11 @@
     import(extUrl("content/helpers/styles.js")),
   ]);
 
+  // Stay idle on Cloudflare challenge pages and let the site load its own
+  // content first; the extension's requests must never compete with it.
+  const { whenSiteReady } = await import(extUrl("content/helpers/challenge.js"));
+  if (!(await whenSiteReady())) return;
+
   const pageType = getPageType();
   const settings = await storage.getSettings();
 

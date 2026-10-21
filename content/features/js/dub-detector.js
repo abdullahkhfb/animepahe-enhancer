@@ -7,7 +7,8 @@ import {
 } from "../../helpers/cache.js";
 import { throttler } from "../../helpers/throttler.js";
 import { injectStylesheet } from "../../helpers/styles.js";
-import { showPill } from "../../helpers/pill.js";
+import { showStatus } from "../../helpers/pill.js";
+import { micIcon } from "../../helpers/icons.js";
 
 const AUDIO_DUB_VALUES = new Set(["eng", "english", "dub", "dubbed"]);
 
@@ -234,7 +235,7 @@ export class DubDetector {
         0,
         Math.min(this._itemsScanned === this._totalItems ? 100 : 99, pct),
       );
-      showPill(`${this._pillBaseText}  ·  ${pct}%`, 0, true);
+      showStatus({ state: "progress", text: this._pillBaseText, percent: pct, live: true });
       return;
     }
 
@@ -252,24 +253,25 @@ export class DubDetector {
     const currentTotal = this._reqCompleted + pending;
     if (currentTotal > this._maxTotalReqs) this._maxTotalReqs = currentTotal;
 
-    let pctStr = "";
+    let pct = null;
     if (this._maxTotalReqs > 0) {
-      let pct = Math.floor((this._reqCompleted / this._maxTotalReqs) * 100);
+      pct = Math.floor((this._reqCompleted / this._maxTotalReqs) * 100);
       pct = Math.max(
         0,
         Math.min(pending === 0 && this._reqCompleted > 0 ? 100 : 99, pct),
       );
-      pctStr = `  ·  ${pct}%`;
     }
 
-    showPill(`${this._pillBaseText}${pctStr}`, 0, true);
+    showStatus({ state: "progress", text: this._pillBaseText, percent: pct, live: true });
   }
 
   async _initEpisodeList() {
     const sessions = getPageSessions();
     if (!sessions) return;
 
-    showPill("🎙 DUB: Scanning…");
+    // No status pill yet: the episode list is filled in by the site after
+    // load (and may never arrive if the site is rate-limiting). The pill
+    // appears only once there are episodes to scan.
     await this._scanEpisodeList(sessions.animeSession);
 
     if (!this._episodeListObserver) {
@@ -309,7 +311,10 @@ export class DubDetector {
       const target = this._getThumbnailTarget(a);
       if (target.dataset.apeDubDone) continue;
       target.dataset.apeDubDone = "1";
-      if (!seenSessions.has(epSession)) {
+      if (
+        !seenSessions.has(epSession) &&
+        !document.querySelector(`[data-ape-ep="${CSS.escape(epSession)}"]`)
+      ) {
         seenSessions.add(epSession);
         episodes.push({ el: target, epSession });
       }
@@ -318,17 +323,64 @@ export class DubDetector {
     if (!episodes.length) return;
 
     episodes.reverse();
-    this._startEta("🎙 DUB: Scanning");
+    this._startEta("Scanning dubs");
 
-    const dubCount = await this._binarySearchAndBadge(animeSession, episodes);
+    let dubCount;
+    try {
+      dubCount = await this._binarySearchAndBadge(animeSession, episodes);
+    } catch (err) {
+      this._stopEta();
+      if (!err?.rateLimited) throw err;
+      // Nothing was badged. Un-mark the cards so a later pass retries them.
+      for (const { el } of episodes) delete el.dataset.apeDubDone;
+      showStatus({
+        state: "empty",
+        text: "Dub scan paused (rate limited)",
+        autohideMs: 5000,
+      });
+      clearTimeout(this._retryTimer);
+      this._retryTimer = setTimeout(() => {
+        const s = getPageSessions();
+        if (s) this._scanEpisodeList(s.animeSession);
+      }, 90_000);
+      return;
+    }
 
     this._stopEta();
-    showPill(
-      dubCount > 0
-        ? `🎙 DUB: ${dubCount} episode${dubCount === 1 ? "" : "s"} dubbed ✓`
-        : "🎙 DUB: no dub found",
-      4500,
+    // This pass only saw the cards that were new since the last one (the
+    // site re-renders the list, so a later pass can see just a few). Report
+    // the totals for every badged episode on the page instead, otherwise the
+    // summary flips from "10 of 10" to "1 of 1".
+    const totals = this._countPageBadges();
+    const pageDubs = totals.total ? totals.dubs : dubCount;
+    const pageTotal = totals.total || episodes.length;
+    this._renderSummary(pageDubs, pageTotal);
+    showStatus(
+      pageDubs > 0
+        ? {
+            state: "success",
+            text: `${pageDubs} episode${pageDubs === 1 ? "" : "s"} dubbed`,
+            autohideMs: 4500,
+          }
+        : { state: "empty", text: "No dub found", autohideMs: 4500 },
     );
+  }
+
+  /** Dub / total counts across every episode badge currently on the page. */
+  _countPageBadges() {
+    // One episode can have several links (thumbnail, title, ...), so count
+    // each episode session once, however many badges it ended up with.
+    const seen = new Map();
+    document
+      .querySelectorAll(".ape-dub-badge-ep, .ape-sub-badge-ep")
+      .forEach((b, i) => {
+        const key = b.dataset.apeEp || `#${i}`;
+        const isDub = b.classList.contains("ape-dub-badge-ep");
+        seen.set(key, seen.get(key) || isDub);
+      });
+    let dubs = 0;
+    for (const v of seen.values()) if (v) dubs++;
+    return { dubs, total: seen.size };
   }
 
   async _binarySearchAndBadge(animeSession, episodes) {
@@ -339,11 +391,11 @@ export class DubDetector {
     );
 
     for (let i = 0; i < boundaryCount; i++) {
-      this._addEpBadge(episodes[i].el);
+      this._addEpBadge(episodes[i].el, episodes[i].epSession);
     }
 
     for (let i = boundaryCount; i < episodes.length; i++) {
-      this._addSubEpBadge(episodes[i].el);
+      this._addSubEpBadge(episodes[i].el, episodes[i].epSession);
     }
 
     return boundaryCount;
@@ -356,7 +408,7 @@ export class DubDetector {
     document.querySelector(".ape-dub-inline")?.remove();
     document.querySelector(".ape-sub-inline")?.remove();
 
-    this._startEta("🎙 DUB: Checking");
+    this._startEta("Checking dub");
     const dubbed = await this._isEpisodeDubbed(
       sessions.animeSession,
       sessions.epSession,
@@ -365,10 +417,10 @@ export class DubDetector {
 
     if (dubbed) {
       this._addPlayerBadge();
-      showPill("🎙 DUB: Dubbed ✓", 5000);
+      showStatus({ state: "success", text: "Dub available", autohideMs: 5000 });
     } else {
       this._addSubPlayerBadge();
-      showPill("🎙 DUB: Sub only", 4000);
+      showStatus({ state: "empty", text: "Sub only", autohideMs: 4000 });
     }
   }
 
@@ -377,7 +429,7 @@ export class DubDetector {
     if (!h1 || h1.querySelector(".ape-dub-inline")) return;
     const badge = document.createElement("span");
     badge.className = "ape-dub-inline";
-    badge.textContent = "DUB";
+    badge.append(micIcon(11), document.createTextNode("DUB"));
     h1.appendChild(badge);
   }
 
@@ -398,6 +450,12 @@ export class DubDetector {
   async _initHome() {
     const scanHomeCards = async () => {
       if (this._homeBusy) return;
+      const wait = (this._homeCooldownUntil ?? 0) - Date.now();
+      if (wait > 0) {
+        clearTimeout(this._homeRetryTimer);
+        this._homeRetryTimer = setTimeout(scanHomeCards, wait + 500);
+        return;
+      }
       this._homeBusy = true;
 
       const cards = [
@@ -433,7 +491,7 @@ export class DubDetector {
       }
 
       if (work.length > 0) {
-        this._startEta("🎙 DUB: Scanning home", work.length);
+        this._startEta("Scanning home cards", work.length);
         await this._batchProcess(
           work,
           (item) => this._scanHomeCard(item),
@@ -441,7 +499,7 @@ export class DubDetector {
           this._batchDelay,
         );
         this._stopEta();
-        showPill("🎙 DUB: scan complete ✓", 4000);
+        showStatus({ state: "success", text: "Home scan complete", autohideMs: 4000 });
       }
       this._homeBusy = false;
     };
@@ -480,7 +538,12 @@ export class DubDetector {
         this._addHomeBadge(anchor, stats.dubs, stats.total);
         hasDub = stats.dubs > 0;
       }
-    } catch {
+    } catch (err) {
+      if (err?.rateLimited) {
+        delete anchor.dataset.apeDubDone;
+        // Back off for a while instead of rescanning on the next DOM change.
+        this._homeCooldownUntil = Date.now() + 90_000;
+      }
     } finally {
       this._setSpinner(anchor, false);
     }
@@ -496,7 +559,8 @@ export class DubDetector {
         `/api?m=release&id=${animeSession}&sort=episode_asc&page=1`,
         true,
       );
-    } catch {
+    } catch (err) {
+      if (err?.rateLimited) throw err;
       return null;
     }
 
@@ -583,23 +647,28 @@ export class DubDetector {
     );
   }
 
-  _addEpBadge(el) {
+  _ensureRelative(el) {
+    if (getComputedStyle(el).position === "static")
+      el.style.setProperty("position", "relative", "important");
+  }
+
+  _addEpBadge(el, epSession = "") {
     if (el.querySelector(".ape-dub-badge")) return;
     const badge = document.createElement("span");
     badge.className = "ape-dub-badge ape-dub-badge-ep";
-    badge.textContent = "DUB";
-    if (getComputedStyle(el).position === "static")
-      el.style.setProperty("position", "relative", "important");
+    badge.dataset.apeEp = epSession;
+    badge.append(micIcon(11), document.createTextNode("DUB"));
+    this._ensureRelative(el);
     el.appendChild(badge);
   }
 
-  _addSubEpBadge(el) {
+  _addSubEpBadge(el, epSession = "") {
     if (el.querySelector(".ape-dub-badge")) return;
     const badge = document.createElement("span");
     badge.className = "ape-dub-badge ape-sub-badge-ep";
+    badge.dataset.apeEp = epSession;
     badge.textContent = "SUB ONLY";
-    if (getComputedStyle(el).position === "static")
-      el.style.setProperty("position", "relative", "important");
+    this._ensureRelative(el);
     el.appendChild(badge);
   }
 
@@ -609,30 +678,78 @@ export class DubDetector {
     badge.className = "ape-dub-badge ape-dub-badge-home";
 
     if (dubs > 0) {
-      badge.textContent = `🎙 ${dubs}/${total}`;
+      badge.title = `${dubs} of ${total} episodes dubbed`;
+      const meter = document.createElement("span");
+      meter.className = "ape-dub-meter";
+      const fill = document.createElement("b");
+      fill.style.setProperty(
+        "width",
+        `${Math.min(100, Math.round((dubs / Math.max(1, total)) * 100))}%`,
+        "important",
+      );
+      meter.appendChild(fill);
+      badge.append(micIcon(11), document.createTextNode(`${dubs}/${total}`), meter);
     } else {
-      badge.textContent = `SUB ONLY`;
+      badge.textContent = "SUB ONLY";
       badge.classList.add("ape-sub-badge-home");
     }
 
-    if (getComputedStyle(el).position === "static")
-      el.style.setProperty("position", "relative", "important");
+    this._ensureRelative(el);
     el.appendChild(badge);
   }
 
   _setSpinner(el, on) {
     if (on) {
       if (el.querySelector(".ape-dub-spin")) return;
-      const s = document.createElement("span");
-      s.className = "ape-dub-spin";
-      if (getComputedStyle(el).position === "static")
-        el.style.setProperty("position", "relative", "important");
-      el.appendChild(s);
+      const chip = document.createElement("span");
+      chip.className = "ape-dub-spin";
+      const ring = document.createElement("i");
+      ring.className = "ape-dub-ring";
+      chip.append(ring, document.createTextNode("SCANNING"));
+      this._ensureRelative(el);
+      el.appendChild(chip);
     } else {
       el.querySelector(".ape-dub-spin")?.remove();
     }
   }
 
+  /** "6 of 9 dubbed" + segmented bar, appended to the "Episodes (N)" heading. */
+  _renderSummary(dubCount, total) {
+    document.querySelectorAll(".ape-dub-summary").forEach((n) => n.remove());
+    if (!total) return;
+    const host = this._findEpisodesHeading();
+    if (!host) return;
+
+    const summary = document.createElement("span");
+    summary.className = "ape-dub-summary";
+    summary.title = `${dubCount} of ${total} episodes on this page have an English dub`;
+
+    const bar = document.createElement("span");
+    bar.className = "ape-dub-seg";
+    bar.setAttribute("aria-hidden", "true");
+    const segs = Math.min(total, 30);
+    const on = Math.round((dubCount / total) * segs);
+    for (let i = 0; i < segs; i++) {
+      const seg = document.createElement("i");
+      if (i < on) seg.className = "on";
+      bar.appendChild(seg);
+    }
+
+    summary.append(micIcon(13), document.createTextNode(`${dubCount} of ${total} dubbed`), bar);
+    host.appendChild(summary);
+  }
+
+  _findEpisodesHeading() {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (/^\s*Episodes\s*\(\d+\)\s*$/i.test(node.nodeValue)) {
+        const el = node.parentElement;
+        if (el && !el.closest("#ape-cw-section")) return el;
+      }
+    }
+    return null;
+  }
 
   async _apiFetch(url, wantJson = true) {
     const result = await throttler.fetch(url, wantJson);
@@ -667,13 +784,17 @@ export class DubDetector {
       dubbed = await this._checkDubViaApi(animeSession, epSession);
     } catch (err) {
       apiError = err;
-      if (err?.rateLimited) return false;
+      // Rate limited / Cloudflare challenge: we know nothing about this
+      // episode. Never report it as "not dubbed" — let the scan abort and
+      // retry later.
+      if (err?.rateLimited) throw err;
     }
 
     if (dubbed === null) {
       try {
         dubbed = await this._checkDubViaHtml(animeSession, epSession);
-      } catch {
+      } catch (err) {
+        if (err?.rateLimited) throw err;
         return false;
       }
     }

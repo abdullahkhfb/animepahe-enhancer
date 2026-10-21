@@ -11,7 +11,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 <p align="center">
   <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.5-blue" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.16-blue" />
 </p>
 
 ## Contents
@@ -42,11 +42,12 @@ Each feature can be turned on or off separately from the extension's popup. Sett
 
 ## Screenshots
 
-<img src="screenshots/sc1.png" alt="animepahe home page with the Continue Watching row" width="100%" />
-<img src="screenshots/sc2.png" alt="Episode list showing DUB and SUB ONLY badges" width="100%" />
-<img src="screenshots/sc3.png" alt="Player page with the Skip Intro button" width="100%" />
-<img src="screenshots/sc4.png" alt="Smart Search showing extra results for an alternative title" width="100%" />
-<img src="screenshots/sc5.png" alt="The redesigned popup, three tabs side by side: Features with Continue Watching expanded and all six features listed, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" width="100%" />
+<img src="screenshots/sc1.png" alt="animepahe home page showing Latest Releases with DUB coverage meters and SUB ONLY badges" width="100%" />
+<img src="screenshots/sc2.png" alt="Episode list showing the 6 of 9 dubbed summary bar, DUB and SUB ONLY badges, and status toast" width="100%" />
+<img src="screenshots/sc3.png" alt="Player page showing the inline DUB badge and English audio stream options" width="100%" />
+<img src="screenshots/sc4.png" alt="animepahe home page with the Continue Watching shelf of episode thumbnails, each with an episode number, progress bar and remove button, aligned above Latest Releases" width="100%" />
+<img src="screenshots/sc5.png" alt="The redesigned popup (v0.3.1.16), three tabs side by side: Features with Continue Watching expanded and all six features listed, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" width="100%" />
+<img src="screenshots/sc6.png" alt="Player page with the Skip Intro button and intro/outro progress bar highlights" width="100%" />
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

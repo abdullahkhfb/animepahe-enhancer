@@ -1,4 +1,5 @@
 import { readCache, writeCache } from "../../helpers/cache.js";
+import { throttler } from "../../helpers/throttler.js";
 
 const ANILIST_URL = "https://graphql.anilist.co";
 const CACHE_PFX = "ape_ss_";
@@ -130,25 +131,33 @@ async function getAltTitles(query, ttlMs) {
   return resObj;
 }
 
+// Short-lived in-memory cache so retyping / backspacing over a query never
+// hits animepahe's search API twice.
+const AP_CACHE_MS = 5 * 60 * 1000;
+const apCache = new Map();
+
 async function apSearch(q) {
+  const key = norm(q);
+  const hit = apCache.get(key);
+  if (hit && Date.now() - hit.t < AP_CACHE_MS) return hit.data;
+
   try {
-    const res = await fetch(`/api?m=search&q=${encodeURIComponent(q)}`, {
-      credentials: "include",
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-    });
-    if (!res.ok) {
-      console.warn(
-        `[SmartSearch] AnimePahe API returned status ${res.status} for query: ${q}`,
-      );
-      return [];
-    }
-    const json = await res.json();
-    return Array.isArray(json?.data) ? json.data : [];
-  } catch (err) {
-    console.warn(
-      `[SmartSearch] AnimePahe API Fetch failed for query: ${q}`,
-      err,
+    // Goes through the shared throttler: it spaces requests out, backs off
+    // and retries on HTTP 429, and cooperates with the other features that
+    // use the same API. Search is interactive, so it jumps the queue and
+    // only retries a couple of times before giving up as stale.
+    const json = await throttler.fetch(
+      `/api?m=search&q=${encodeURIComponent(q)}`,
+      true,
+      { priority: true, maxRetries: 2 },
     );
+    const data = Array.isArray(json?.data) ? json.data : [];
+    apCache.set(key, { t: Date.now(), data });
+    return data;
+  } catch (err) {
+    // Not cached, so the next attempt tries again. Quiet on purpose: a
+    // rate limit is expected and shouldn't appear as an extension error.
+    console.debug(`[SmartSearch] AnimePahe search failed for "${q}":`, err?.message ?? err);
     return [];
   }
 }
@@ -278,7 +287,7 @@ export class SmartSearch {
     this._pendingResults = null;
     this._dropdownObserver = null;
     this._minLen = settings.ssMinQueryLen ?? 2;
-    this._debounceMs = settings.ssDebounceMs ?? 100;
+    this._debounceMs = settings.ssDebounceMs ?? 400;
     this._maxSynonyms = settings.ssMaxSynonyms ?? 3;
     this._synonymDelay = settings.ssSynonymDelay ?? 250;
     this._cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
@@ -398,6 +407,8 @@ export class SmartSearch {
     const seen = new Set(nativeNorms);
 
     for (const c of candidates) {
+      // The user kept typing: this lookup is stale, don't spend requests.
+      if (norm(this._lastQuery) !== nq) return result;
       console.log(`[SmartSearch] Querying AnimePahe API for synonym: "${c}"`);
       const batch = await apSearch(c);
 

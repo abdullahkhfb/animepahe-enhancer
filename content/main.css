@@ -1,23 +1,77 @@
 /* main.css — shared base styles. Only rules used by more than one
- * feature live here (currently just the status pill); everything
+ * feature live here (currently just the status toast); everything
  * feature-specific lives in that feature's own CSS file. */
+
+@keyframes ape-pill-spin {
+  to { transform: rotate(360deg); }
+}
 
 .ape-pill {
   position: fixed;
   bottom: 14px;
   right: 14px;
   z-index: 2147483647;
-  background: rgba(8, 8, 22, 0.92);
-  color: #e8e8f8;
-  font: 700 11px/1.5 system-ui, sans-serif;
-  padding: 6px 14px;
-  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+  box-sizing: border-box;
+  padding: 6px 16px;
+  background: rgba(14, 14, 16, 0.94);
+  color: #f1f1f1;
+  font: 500 13px/1.4 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  border-radius: 19px;
   pointer-events: none;
   transition: opacity 0.45s;
   max-width: 360px;
-  text-align: right;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   opacity: 0;
   font-variant-numeric: tabular-nums;
+}
+.ape-pill--rich { padding-left: 11px; }
+
+/* progress ring — a conic wedge cut into a ring */
+.ape-pill-ring {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  --ape-p: 0;
+  background: conic-gradient(#ff4d94 calc(var(--ape-p) * 1%), rgba(255, 255, 255, 0.2) 0);
+  -webkit-mask: radial-gradient(circle, transparent 5px, #000 5.5px);
+  mask: radial-gradient(circle, transparent 5px, #000 5.5px);
+}
+.ape-pill-ring.is-indeterminate {
+  --ape-p: 28;
+  animation: ape-pill-spin 0.8s linear infinite;
+}
+.ape-pill-ok {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d5015b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ape-pill-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background: #ff8a1f;
+}
+.ape-pill-pct {
+  font-style: normal;
+  color: #a3a3a3;
+}
+.ape-pill-pct[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ape-pill-ring.is-indeterminate { animation: none; }
 }

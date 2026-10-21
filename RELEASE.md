@@ -60,6 +60,21 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.16 — 2026-10-21
+
+### Fixed
+
+- **Pages not fully loading / dub scanner working on the Cloudflare page**: the extension now stays completely idle on Cloudflare challenge pages ("Just a moment…") and waits for the real page to finish loading before any feature starts, so its requests no longer compete with the site's own. A Cloudflare challenge is no longer retried (that only added load); requests pause for 60 seconds instead. The dub scanner no longer treats a rate-limited or blocked request as "not dubbed", so it can't show wrong SUB ONLY badges; it pauses and retries after a cool-down.
+- **"Scanning dubs" stuck forever**: the status pill was shown as soon as an anime page opened, before the site had loaded any episodes, and nothing ever hid it if the list stayed empty (for example while the site is rate-limiting). It now appears only when there are episodes to scan.
+- **Continue Watching card size**: the shelf now uses the same 3-column grid as Latest Releases (2 columns below 1000 px, 1 below 560 px), so cards are the same size as the Latest Releases cards instead of a small sixth of the row. Title, episode number and buttons were scaled up to match.
+- **Continue Watching thumbnails**: cards now show the episode's own thumbnail (the still from the episode list) instead of the anime poster, matching the README screenshot. Thumbnails cost no requests in the normal case: while you browse, the extension remembers the episode stills that animepahe already shows next to each episode link (episode list, Latest Releases) and reuses them. Only if an episode was never seen in a listing does it make a single release-API request, at most one per home-page visit, never while a video plays, and a "no snapshot" answer is remembered so it isn't asked again. The anime poster is the final fallback.
+- **Continue Watching saves less often**: progress is written to storage at most every 5 seconds (immediately on a seek, an episode change, or when the tab is hidden or closed) instead of rewriting the whole list on every 2-second tick.
+- **Smart Search "429" errors**: Smart Search called animepahe's search API directly, one request per keystroke, ignoring the shared rate limiter. It now goes through the throttler (spaced requests, back-off and retry on 429, priority over background dub scans), caches results for 5 minutes, skips lookups for queries you've already typed past, and logs rate limits quietly instead of as extension errors. The default debounce is now 400 ms (was 100 ms).
+- **Continue Watching alignment**: the shelf now lines up with the Latest Releases grid. It re-aligns when the site fills in Latest Releases late, and falls back to the heading/container edge if the cards aren't rendered yet, instead of staying flush against the left edge of the page.
+- **Dub summary showing "1 of 1"**: the "N of M dubbed" summary and the "episodes dubbed" toast were computed from only the cards found in the latest scan pass. When the site re-rendered part of the list, a later pass saw a single card and overwrote the correct "10 of 10". They now count every episode on the page once, so an episode with more than one link (e.g. thumbnail and title) is no longer counted twice (which showed "11 of 11" on a 10-episode list).
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.1.5 — 2026-10-13
 
 This release rolls up the v0.3.1.4 popup redesign, new icon, Skip Wait feature, and source-tree cleanup, plus the Firefox build/permissions and Chromium bundling fixes needed for a clean release.

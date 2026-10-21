@@ -1,6 +1,7 @@
 export const KEYS = {
   SETTINGS: "ape_settings",
   CONTINUE_WATCHING: "ape_cw_v1",
+  CW_SNAPSHOTS: "ape_cw_snaps",
 };
 
 export const CW_MAX_ENTRIES = 24;
@@ -166,7 +167,7 @@ export const ADVANCED_SETTINGS_SCHEMA = [
         min: 0,
         max: 1000,
         step: 10,
-        default: 100,
+        default: 400,
       },
       {
         key: "ssMaxSynonyms",

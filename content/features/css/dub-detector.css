@@ -1,65 +1,178 @@
-/* dub-detector.css — badges + spinner for DUB Detector. */
+/* dub-detector.css — badges, scan chip and summary for DUB Detector.
+ *
+ * Design language: DUB is the loud, positive signal (solid brand pink);
+ * SUB ONLY is the default state so it stays quiet (dark glass + amber dot).
+ * `!important` is kept on the overlay badges because they sit inside the
+ * site's own card markup. */
 
 @keyframes ape-dub-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
+/* ── Overlay chips (episode cards + home cards) ───────────────────────── */
 .ape-dub-badge,
-.ape-dub-badge-home {
-  position: absolute !important;
-  top: 5px !important;
-  right: 5px !important;
-  left: auto !important;
-  z-index: 9999 !important;
-  color: #fff !important;
-  font: 700 10px/1 system-ui, sans-serif !important;
-  padding: 3px 7px !important;
-  border-radius: 3px !important;
-  letter-spacing: 0.5px !important;
-  pointer-events: none !important;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65) !important;
-  display: inline-block !important;
-  text-indent: 0 !important;
-  white-space: nowrap !important;
-  background: #d92558 !important;
-}
-
-.ape-sub-badge-ep,
-.ape-dub-badge-home.ape-sub-badge-home {
-  background: #e8710a !important;
-}
-
+.ape-dub-badge-home,
 .ape-dub-spin {
   position: absolute !important;
-  top: 7px !important;
-  right: 7px !important;
+  top: 8px !important;
+  right: 8px !important;
+  left: auto !important;
+  bottom: auto !important;
   z-index: 9999 !important;
-  width: 10px !important;
-  height: 10px !important;
-  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  height: 22px !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
+  border-radius: 4px !important;
+  font: 700 11px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  letter-spacing: 0.06em !important;
+  text-indent: 0 !important;
+  white-space: nowrap !important;
   pointer-events: none !important;
-  border: 2px solid rgba(255, 255, 255, 0.25) !important;
-  border-top-color: #fff !important;
-  animation: ape-dub-spin 0.7s linear infinite !important;
 }
 
-/* Inline badge shown next to the <h1> on a player page. */
+/* Guard: the host site may style bare `span`/`i`/`b` inside its cards, so
+ * pin every child of our chips back into normal flex flow. */
+.ape-dub-badge > *,
+.ape-dub-spin > * {
+  position: static !important;
+  inset: auto !important;
+  float: none !important;
+  margin: 0 !important;
+}
+
+/* DUB — solid brand pink */
+.ape-dub-badge {
+  background: #d5015b !important;
+  color: #fff !important;
+  box-shadow: 0 2px 10px rgba(213, 1, 91, 0.45) !important;
+}
+.ape-dub-badge svg {
+  width: 11px !important;
+  height: 11px !important;
+  display: block !important;
+  flex: none !important;
+}
+
+/* coverage meter inside the home-card chip */
+.ape-dub-meter {
+  display: block !important;
+  width: 26px !important;
+  height: 3px !important;
+  border-radius: 2px !important;
+  background: rgba(255, 255, 255, 0.38) !important;
+  overflow: hidden !important;
+}
+.ape-dub-meter b {
+  display: block !important;
+  height: 100% !important;
+  background: #fff !important;
+}
+
+/* SUB ONLY — quiet dark glass with an amber dot */
+.ape-dub-badge.ape-sub-badge-ep,
+.ape-dub-badge-home.ape-sub-badge-home {
+  background: rgba(0, 0, 0, 0.62) !important;
+  color: #ffb066 !important;
+  border: 1px solid rgba(255, 176, 102, 0.4) !important;
+  padding: 0 7px !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  backdrop-filter: blur(6px) !important;
+}
+.ape-dub-badge.ape-sub-badge-ep::before,
+.ape-dub-badge-home.ape-sub-badge-home::before {
+  content: "" !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #ff8a1f !important;
+  flex: none !important;
+}
+
+/* SCANNING — glass chip with a spinning ring, shown while a card is checked */
+.ape-dub-spin {
+  background: rgba(0, 0, 0, 0.62) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  padding: 0 7px !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  backdrop-filter: blur(6px) !important;
+}
+.ape-dub-ring {
+  display: block !important;
+  width: 9px !important;
+  height: 9px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(255, 255, 255, 0.28) !important;
+  border-top-color: #fff !important;
+  animation: ape-dub-spin 0.8s linear infinite !important;
+}
+
+/* ── Inline badge next to the <h1> on a player page ───────────────────── */
 .ape-dub-inline,
 .ape-sub-inline {
-  background: #d92558;
-  color: #fff;
-  font: 700 11px system-ui, sans-serif;
-  padding: 3px 9px;
-  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  box-sizing: border-box;
+  padding: 0 8px;
   margin-left: 10px;
+  border-radius: 4px;
   vertical-align: middle;
-  display: inline-block;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
+  font: 700 11px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0.06em;
+  background: #d5015b;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(213, 1, 91, 0.35);
+}
+.ape-dub-inline svg { width: 11px; height: 11px; flex: none; }
+.ape-sub-inline {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffb066;
+  border: 1px solid rgba(255, 176, 102, 0.4);
+  padding: 0 7px;
+  box-shadow: none;
+}
+.ape-sub-inline::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff8a1f;
 }
 
-.ape-sub-inline {
-  background: #e8710a;
+/* ── "6 of 9 dubbed" summary next to the Episodes (N) heading ─────────── */
+.ape-dub-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: 16px;
+  vertical-align: middle;
+  font: 500 13px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #e8e8e8;
+  white-space: nowrap;
+}
+.ape-dub-summary svg { color: #ff5c9d; flex: none; }
+.ape-dub-seg {
+  display: inline-flex;
+  gap: 2px;
+  width: 72px;
+}
+.ape-dub-seg i {
+  flex: 1;
+  height: 4px;
+  background: #3a3a3e;
+}
+.ape-dub-seg i.on { background: #d5015b; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ape-dub-ring { animation: none !important; }
 }

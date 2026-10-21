@@ -23,10 +23,10 @@ When you watch an episode on animepahe:
 1. The extension automatically records your progress after the video starts playing. No manual action is required.
 2. The next time you visit the **animepahe home page**, a **Continue Watching** section appears above the Latest Releases grid.
 3. Each card shows:
-   - The anime's poster thumbnail
-   - A red progress bar at the bottom of the thumbnail indicating how far through the episode you are
-   - The episode number badge (bottom-right of the thumbnail)
-   - The anime title below the thumbnail
+   - The **episode's own thumbnail** (the same still you see in the episode list), not the anime poster. If it can't be found, the anime poster is used instead
+   - A pink progress bar at the bottom of the thumbnail indicating how far through the episode you are
+   - The episode number (`EP 6`, bottom-right of the thumbnail)
+   - The anime title (bottom-left of the thumbnail)
 4. Click any card to jump directly back to that episode. The video will automatically seek to your saved position.
 5. Hover over a card to reveal the **✕** remove button (top-right of the thumbnail) to remove that individual entry.
 6. Use **Show More / Show Less** if you have more than 6 entries in your history.

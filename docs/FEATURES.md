@@ -23,6 +23,8 @@ Never lose your place again. animepahe Enhancer tracks your exact playback posit
 - Automatically saves your progress every 2 seconds by default (configurable) while the video plays
 - Resumes exactly where you left off when you revisit an episode
 - Displays a visual progress bar on each card in the Continue Watching grid
+- Each card shows the **episode's own thumbnail** (the episode-list still), not the anime poster. The extension remembers the stills animepahe already shows next to episode links as you browse (no extra requests); only if an episode was never seen it makes at most one lookup per home-page visit to animepahe's own episode-list API, and falls back to the anime poster
+- Progress is written to storage at most every 5 seconds (immediately on seeks, episode changes, and when the tab is hidden or closed)
 - Supports up to **24 episodes** by default in your watch history (FIFO — oldest entries are pruned automatically; this limit is configurable)
 - Individual episodes can be removed with a hover-reveal ✕ button
 - The entire list can be cleared in one click from the popup or the home page
