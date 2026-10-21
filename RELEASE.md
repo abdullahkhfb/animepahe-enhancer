@@ -60,6 +60,18 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.17 — 2026-10-21
+
+### Added
+
+- **Classic style option for Continue Watching**: the popup's Continue Watching card has a new **Classic style** switch (off by default). It brings back the old look: small poster cards with the title in a bar underneath and an `EP n` pill, with no count pill next to the heading. It applies immediately, no page reload needed. The anime poster is now saved with each entry so this style can show it (episodes watched before this update fall back to their episode still until watched again).
+
+### Changed
+
+- **Continue Watching default size**: the shelf is back to a single row of small thumbnails, matching the README screenshot, instead of the large 3-column cards introduced in v0.3.1.16. The large cards were removed; use **Classic style** for the older poster look.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.1.16 — 2026-10-21
 
 ### Fixed

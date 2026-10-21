@@ -11,6 +11,14 @@ export const CW_MAX_ENTRIES = 24;
 // caching/request tuning) render directly inside that feature's own card
 // in the Features tab, keyed by the card's short id (dub, is, bw, ...).
 export const FEATURE_SUBOPTIONS = {
+  cw: [
+    {
+      key: "cwClassicLayout",
+      label: "Classic style",
+      note: "Brings back the old look: poster cards with the title underneath.",
+      default: false,
+    },
+  ],
   dub: [
     {
       key: "dubHomeScanEnabled",

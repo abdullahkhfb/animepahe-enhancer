@@ -1,9 +1,14 @@
 /* continue-watching.css — "Continue Watching" shelf above Latest Releases.
  *
+ * Default look: a single row of six small 16:9 episode thumbnails (see the
+ * README screenshot). The "Classic style" option in the popup adds
+ * .ape-cw-classic to the section, which switches to the old look: portrait
+ * poster cards with the title underneath. Every classic rule lives in the
+ * last block of this file.
+ *
  * Blends with the site: the JS measures the real "Latest Releases" heading
  * and card grid and feeds their font, gap, radius and left/right edges in,
- * so these values are only fallbacks. Same 3-column grid as Latest Releases,
- * so the cards are the same size and every edge lines up with it. */
+ * so the variables below are only fallbacks. */
 
 #ape-cw-section {
   --ape-cw-gap: 12px;
@@ -24,7 +29,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 .ape-cw-title-row {
   display: flex;
@@ -107,18 +112,21 @@
   margin-top: 14px;
 }
 
-/* ── Grid ─────────────────────────────────────────────────────────────── */
+/* ── Grid: six per row, fewer on narrow windows ───────────────────────── */
 .ape-cw-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: var(--ape-cw-gap);
 }
 .ape-cw-grid.collapsed .ape-cw-extra { display: none; }
-@media (max-width: 1000px) {
-  .ape-cw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1100px) {
+  .ape-cw-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-@media (max-width: 560px) {
-  .ape-cw-grid { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 780px) {
+  .ape-cw-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 520px) {
+  .ape-cw-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ape-cw-heading { font-size: 26px; }
 }
 
@@ -131,8 +139,8 @@
 }
 .ape-cw-card:hover,
 .ape-cw-card:focus-within {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.8);
   z-index: 3;
 }
 .ape-cw-link {
@@ -163,7 +171,7 @@
 .ape-cw-grad {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0) 58%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 55%);
 }
 .ape-cw-overlay {
   position: absolute;
@@ -181,26 +189,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #d5015b;
   color: #fff;
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
   transition: transform 0.2s;
 }
+.ape-cw-play svg { width: 14px; height: 14px; }
 .ape-cw-card:hover .ape-cw-play { transform: scale(1.08); }
 .ape-cw-left {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  font-size: 12px;
+  top: 8px;
+  left: 8px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1;
   color: #fff;
   background: rgba(0, 0, 0, 0.7);
-  border-radius: 4px;
-  padding: 4px 7px;
+  border-radius: 3px;
+  padding: 3px 5px;
   opacity: 0;
   transition: opacity 0.2s;
   pointer-events: none;
@@ -209,11 +218,11 @@
 .ape-cw-card:focus-within .ape-cw-left { opacity: 1; }
 .ape-cw-title {
   position: absolute;
-  left: 18px;
-  right: 80px;
-  bottom: 14px;
-  font-size: 15px;
-  font-weight: 500;
+  left: 12px;
+  right: 58px;
+  bottom: 9px;
+  font-size: 13px;
+  font-weight: 400;
   line-height: 1.3;
   color: #fff;
   white-space: nowrap;
@@ -223,9 +232,9 @@
 }
 .ape-cw-ep {
   position: absolute;
-  right: 18px;
-  bottom: 12px;
-  font-size: 24px;
+  right: 10px;
+  bottom: 8px;
+  font-size: 19px;
   font-weight: 600;
   line-height: 1;
   color: #fff;
@@ -233,12 +242,13 @@
   user-select: none;
 }
 .ape-cw-ep small {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.08em;
   opacity: 0.7;
-  margin-right: 4px;
+  margin-right: 3px;
 }
+.ape-cw-caption { display: none; } /* classic style only */
 .ape-cw-prog-bg {
   position: absolute;
   left: 0;
@@ -253,14 +263,14 @@
   box-shadow: 0 0 8px rgba(213, 1, 91, 0.8);
 }
 
-/* remove (✕) — revealed on hover / focus */
+/* remove (✕) — small, always visible */
 .ape-cw-remove-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 8px;
+  right: 8px;
   z-index: 10;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   padding: 0;
   border-radius: 50%;
   border: 0;
@@ -270,17 +280,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.18s, transform 0.18s, background 0.15s;
+  transition: background 0.15s, transform 0.18s;
 }
-.ape-cw-card:hover .ape-cw-remove-btn,
-.ape-cw-card:focus-within .ape-cw-remove-btn { opacity: 1; transform: scale(1); }
+.ape-cw-remove-btn svg { width: 10px; height: 10px; }
 .ape-cw-remove-btn:hover { background: #d5015b; transform: scale(1.1); }
-.ape-cw-remove-btn:focus-visible { outline: 2px solid #ff4d94; outline-offset: 2px; opacity: 1; }
-@media (hover: none) {
-  .ape-cw-remove-btn { opacity: 1; transform: none; }
-}
+.ape-cw-remove-btn:focus-visible { outline: 2px solid #ff4d94; outline-offset: 2px; }
 
 @keyframes ape-cw-pop-out { to { opacity: 0; transform: scale(0.8); } }
 @keyframes ape-cw-section-out { to { opacity: 0; transform: translateY(-12px); } }
@@ -290,4 +294,101 @@
 @media (prefers-reduced-motion: reduce) {
   .ape-cw-card, .ape-cw-thumb, .ape-cw-play { transition: none; }
   .ape-cw-pop-out, .ape-cw-remove-anim { animation-duration: 0.01s; }
+}
+
+/* ══ Classic style (popup option "Classic style") ═════════════════════════
+ * The old look: small portrait poster cards in a row, the title in a dark
+ * bar underneath, a small "EP n" pill on the poster, and a plain bold
+ * heading with no count pill and no icon. */
+
+#ape-cw-section.ape-cw-classic { margin-bottom: 40px; }
+.ape-cw-classic .ape-cw-header { margin-bottom: 14px; }
+.ape-cw-classic .ape-cw-heading {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #e4e4e4;
+}
+.ape-cw-classic .ape-cw-count { display: none; }
+.ape-cw-classic .ape-cw-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e8e8e8;
+  background: #090909;
+  border: 1px solid #1a1a1a;
+  padding: 8px 14px;
+}
+.ape-cw-classic .ape-cw-btn:hover { background: #151515; }
+.ape-cw-classic .ape-cw-btn.danger:hover,
+.ape-cw-classic .ape-cw-btn.danger.is-open,
+.ape-cw-classic .ape-cw-btn.primary { background: #d5015b; border-color: #d5015b; }
+
+#ape-cw-section.ape-cw-classic .ape-cw-grid {
+  grid-template-columns: repeat(auto-fill, 126px);
+  justify-content: start;
+  gap: 9px;
+}
+
+.ape-cw-classic .ape-cw-card { border-radius: 6px; }
+.ape-cw-classic .ape-cw-card:hover,
+.ape-cw-classic .ape-cw-card:focus-within { transform: translateY(-2px); }
+.ape-cw-classic .ape-cw-link {
+  border-radius: 6px;
+  background: #0d0d17;
+  overflow: hidden;
+}
+.ape-cw-classic .ape-cw-thumb-wrap {
+  aspect-ratio: 2 / 3;
+  border-radius: 6px 6px 0 0;
+}
+.ape-cw-classic .ape-cw-thumb { object-position: center top; }
+.ape-cw-classic .ape-cw-grad,
+.ape-cw-classic .ape-cw-title { display: none; }
+
+.ape-cw-classic .ape-cw-caption {
+  display: block;
+  padding: 7px 8px 8px;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #a8a8b3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ape-cw-classic .ape-cw-ep {
+  right: 6px;
+  bottom: 9px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(0, 0, 0, 0.68);
+  border-radius: 4px;
+}
+.ape-cw-classic .ape-cw-ep small {
+  font-size: inherit;
+  letter-spacing: 0;
+  opacity: 1;
+  margin-right: 3px;
+}
+.ape-cw-classic .ape-cw-prog-bg { height: 4px; }
+.ape-cw-classic .ape-cw-prog-bar { box-shadow: none; }
+.ape-cw-classic .ape-cw-play { width: 34px; height: 34px; }
+
+/* the ✕ appears on hover / focus only (always on touch screens) */
+.ape-cw-classic .ape-cw-remove-btn {
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.18s, transform 0.18s, background 0.15s;
+}
+.ape-cw-classic .ape-cw-card:hover .ape-cw-remove-btn,
+.ape-cw-classic .ape-cw-card:focus-within .ape-cw-remove-btn { opacity: 1; transform: scale(1); }
+.ape-cw-classic .ape-cw-remove-btn:focus-visible { opacity: 1; }
+@media (hover: none) {
+  .ape-cw-classic .ape-cw-remove-btn { opacity: 1; transform: none; }
 }

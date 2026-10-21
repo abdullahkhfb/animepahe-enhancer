@@ -24,15 +24,15 @@ When you watch an episode on animepahe:
 
 1. The extension automatically tracks your playback position every 2 seconds (by default) and coalesces storage writes at most every 5 seconds (or immediately when you seek, switch episodes, or hide/close the tab). No manual action is required.
 2. Only the latest watched episode per anime series is kept (up to **24 shows** by default), ordered with the most recently watched series first.
-3. The next time you visit the **animepahe home page**, a **Continue Watching** shelf appears directly above the **Latest Releases** grid, aligned to the same 3-column layout (**2 columns** below 1000 px, **1 column** below 560 px) and matching the site's heading font and card spacing.
+3. The next time you visit the **animepahe home page**, a **Continue Watching** shelf appears directly above the **Latest Releases** grid, shown as a row of six small thumbnails by default, matching the site's heading font and card spacing. Prefer the old look (portrait poster cards with the title underneath)? Open the popup, expand **Continue Watching** and switch **Classic style** on.
 4. Each 16:9 card displays:
     - The **episode's own thumbnail** (harvested passively as you browse episode listings, with a single release-API lookup per home-page visit if an episode still wasn't seen yet, or the anime poster as a final fallback)
     - A glowing pink progress bar (<img src="assets/cw-prog-bar.svg" width="70" height="8" align="absmiddle" alt="Progress bar" />) along the bottom edge showing how far through the episode you are
     - The anime title in the bottom-left and the episode badge (<img src="assets/cw-ep-badge.svg" height="20" align="absmiddle" alt="EP 6" />) in the bottom-right
-    - On hover or keyboard focus: a centered pink circular **play button** (<img src="assets/play.svg" width="18" height="18" align="absmiddle" alt="▶" />), a top-left **time-remaining badge** (<img src="assets/cw-time-left.svg" height="18" align="absmiddle" alt="14 min left" />, or `Almost done` when under 60 seconds remain), and a top-right **remove button** (<img src="assets/close.svg" width="18" height="18" align="absmiddle" alt="✕" />, always visible on touch devices)
+    - On hover or keyboard focus (the remove button is always visible in the default style): a centered pink circular **play button** (<img src="assets/play.svg" width="18" height="18" align="absmiddle" alt="▶" />), a top-left **time-remaining badge** (<img src="assets/cw-time-left.svg" height="18" align="absmiddle" alt="14 min left" />, or `Almost done` when under 60 seconds remain), and a top-right **remove button** (<img src="assets/close.svg" width="18" height="18" align="absmiddle" alt="✕" />, always visible on touch devices)
 5. Click any card to jump directly back to that episode; the video player will automatically seek to your saved timestamp.
 6. Click the top-right **✕** button on a card to remove that series from your list.
-7. Use **Show more / Show less** (<img src="assets/cw-btn-more.svg" height="20" align="absmiddle" alt="Show more" />) in the shelf header (next to the pink entry count pill <img src="assets/cw-count.svg" height="18" align="absmiddle" alt="6" />) when you have more than 6 entries (configurable in Advanced Settings).
+7. Use **Show more / Show less** (<img src="assets/cw-btn-more.svg" height="20" align="absmiddle" alt="Show more" />) in the shelf header (next to the pink entry count pill <img src="assets/cw-count.svg" height="18" align="absmiddle" alt="6" />) when you have more than 6 entries (configurable in Advanced Settings). 6 entries fill exactly one row of the default style.
 8. Click **Clear all** (<img src="assets/cw-btn-clear.svg" height="20" align="absmiddle" alt="Clear all" />) in the shelf header to open the inline confirmation dialog (`Clear all N episodes from Continue Watching?`), or use **Clear list** inside the Continue Watching row in the popup.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
@@ -146,6 +146,7 @@ Click the extension icon in the browser toolbar to open the settings popup (`400
 - View a live stat chip (`N items` for Continue Watching, `N cached` for DUB Detector and Smart Search, or `Database cached` / `N IDs cached` / `Not cached` for Intro / Outro Skip)
 - Clear that feature's saved list or cache with one click (`Clear list` / `Clear cache`)
 - Toggle feature sub-options right on the card:
+    - **Continue Watching**: `Classic style` (default **Off**; turn it On for the old poster-card look — the shelf updates instantly, no reload needed)
     - **DUB Detector**: `Scan homepage cards` (default **On**)
     - **Intro / Outro Skip**: `Auto-skip automatically` (default **Off**) and `Highlight on progress bar` (default **On**)
 

@@ -28,6 +28,8 @@ export class ContinueWatching {
     this._storage = storage;
     this._cardsPerPage = settings.cwCardsPerPage ?? 6;
     this._maxEntries = settings.cwMaxEntries ?? CW_MAX_ENTRIES;
+    // false = the default compact shelf, true = the old poster-card style
+    this._classic = settings.cwClassicLayout === true;
   }
 
   async init(initialPageType) {
@@ -47,6 +49,7 @@ export class ContinueWatching {
 
     this._listenForIframe();
     this._startHarvesting();
+    this._listenForLayoutChange();
     const flushNow = () => this._flush();
     window.addEventListener("pagehide", flushNow);
     document.addEventListener("visibilitychange", () => {
@@ -54,7 +57,29 @@ export class ContinueWatching {
     });
   }
 
-  // ── Free episode thumbnails ─────────────────────────────────────────────
+  /** Switch between the default and classic style the moment the popup
+   *  toggle changes, without needing a page reload. */
+  _listenForLayoutChange() {
+    chrome.storage?.onChanged?.addListener((changes, area) => {
+      if (area !== "local" || !changes[KEYS.SETTINGS]) return;
+      const next = changes[KEYS.SETTINGS].newValue?.cwClassicLayout === true;
+      if (next === this._classic) return;
+      this._classic = next;
+      const section = document.getElementById(SECTION_ID);
+      if (!section) return;
+      section.classList.toggle("ape-cw-classic", next);
+      // The two styles use different images (poster vs. episode still).
+      section.querySelectorAll(".ape-cw-card").forEach((card) => {
+        const img = card.querySelector(".ape-cw-thumb");
+        if (img && card._apeEntry) {
+          img.style.display = "";
+          img.src = this._imgUrl(card._apeEntry);
+        }
+      });
+      this._applyMatch?.();
+    });
+  }
+
   // Every listing (episode list, home "Latest Releases") already renders the
   // episode's snapshot next to its /play/<anime>/<episode> link. Remember
   // those pairs as we browse (pure DOM reading, zero network) so a Continue
@@ -205,7 +230,9 @@ export class ContinueWatching {
 
       const heading = this._findLatestHeading(target);
       const ours = section.querySelector(".ape-cw-heading");
-      if (heading && ours) {
+      const classic = section.classList.contains("ape-cw-classic");
+      if (classic && ours) ours.removeAttribute("style");
+      if (!classic && heading && ours) {
         const cs = getComputedStyle(heading);
         for (const prop of [
           "fontFamily",
@@ -256,13 +283,16 @@ export class ContinueWatching {
 
       if (row.length > 1) {
         const gap = row[1].r.left - row[0].r.right;
-        if (gap >= 0 && gap < 60) section.style.setProperty("--ape-cw-gap", `${gap}px`);
+        if (gap >= 0 && gap < 60)
+          section.style.setProperty("--ape-cw-gap", `${gap}px`);
       }
       if (!row.length) return;
       const radius = getComputedStyle(row[0].a).borderRadius;
-      if (radius && radius !== "0px") section.style.setProperty("--ape-cw-radius", radius);
+      if (radius && radius !== "0px")
+        section.style.setProperty("--ape-cw-radius", radius);
     };
 
+    this._applyMatch = apply;
     requestAnimationFrame(apply);
     window.addEventListener("load", apply, { once: true });
     window.addEventListener("resize", apply);
@@ -298,6 +328,7 @@ export class ContinueWatching {
   _buildSection(list) {
     const section = document.createElement("section");
     section.id = SECTION_ID;
+    section.classList.toggle("ape-cw-classic", this._classic);
     section.setAttribute("aria-label", "Continue Watching");
 
     const header = document.createElement("div");
@@ -386,7 +417,8 @@ export class ContinueWatching {
       if (e.key === "Escape") closeConfirm(true);
     };
     outside = (e) => {
-      if (!confirmBox.contains(e.target) && e.target !== clearBtn) closeConfirm();
+      if (!confirmBox.contains(e.target) && e.target !== clearBtn)
+        closeConfirm();
     };
 
     clearBtn.addEventListener("click", (e) => {
@@ -427,6 +459,14 @@ export class ContinueWatching {
     if (!needsToggle) grid.classList.add("collapsed");
   }
 
+  /** Classic style shows the anime poster; the default shows the episode
+   *  still. Entries saved before posters were kept fall back to the still. */
+  _imgUrl(entry) {
+    return this._classic
+      ? entry.posterUrl || entry.thumbnailUrl
+      : entry.thumbnailUrl;
+  }
+
   _timeLeftLabel(entry) {
     if (!(entry.duration > 0)) return "";
     const left = Math.max(0, entry.duration - (entry.time || 0));
@@ -447,6 +487,7 @@ export class ContinueWatching {
     const card = document.createElement("div");
     card.className = "ape-cw-card";
     card.dataset.apeCw = `${entry.animeSession}/${entry.epSession}`;
+    card._apeEntry = entry;
 
     const link = document.createElement("a");
     link.href = entry.playUrl;
@@ -461,7 +502,7 @@ export class ContinueWatching {
     thumbWrap.className = "ape-cw-thumb-wrap";
 
     const img = document.createElement("img");
-    img.src = entry.thumbnailUrl;
+    img.src = this._imgUrl(entry);
     img.alt = "";
     img.className = "ape-cw-thumb";
     img.loading = "lazy";
@@ -512,6 +553,12 @@ export class ContinueWatching {
     }
 
     link.appendChild(thumbWrap);
+
+    // Title bar under the poster (only shown in the classic style).
+    const caption = document.createElement("span");
+    caption.className = "ape-cw-caption";
+    caption.textContent = entry.animeTitle;
+    link.appendChild(caption);
 
     const removeBtn = document.createElement("button");
     removeBtn.className = "ape-cw-remove-btn";
@@ -619,6 +666,7 @@ export class ContinueWatching {
       animeTitle,
       epNumber,
       thumbnailUrl,
+      posterUrl: thumbnailUrl,
       playUrl: window.location.href,
     };
   }
@@ -671,8 +719,7 @@ export class ContinueWatching {
     // Playing normally, the position advances as fast as the clock does; a
     // bigger discrepancy means the viewer seeked, so save right away.
     const seeked =
-      last &&
-      Math.abs(time - last.time - (now - last.at) / 1000) > SEEK_JUMP_S;
+      last && Math.abs(time - last.time - (now - last.at) / 1000) > SEEK_JUMP_S;
 
     if (episodeChanged || seeked || now - (last?.at ?? 0) >= FLUSH_MS) {
       return this._flush();
@@ -704,6 +751,7 @@ export class ContinueWatching {
     // a snapshot seen while browsing > the one already saved > the poster.
     const snap = snaps[meta.epSession];
     const entry = { ...meta, time, duration };
+    if (!entry.posterUrl && prev?.posterUrl) entry.posterUrl = prev.posterUrl;
     if (snap) {
       entry.thumbnailUrl = snap;
       entry.thumbKind = "episode";
@@ -742,10 +790,14 @@ export class ContinueWatching {
       if (!e.animeSession || !e.epSession) continue;
       const snap = snaps[e.epSession];
       if (snap && e.thumbnailUrl !== snap) {
+        // Keep the poster before it is replaced by the episode still.
+        if (!e.posterUrl && e.thumbKind !== "episode" && e.thumbnailUrl) {
+          e.posterUrl = e.thumbnailUrl;
+        }
         e.thumbnailUrl = snap;
         e.thumbKind = "episode";
         updated = true;
-        this._setCardThumb(e, snap);
+        this._setCardThumb(e);
       } else if (!snap && !e.thumbKind) {
         missing.push(e);
       }
@@ -755,11 +807,13 @@ export class ContinueWatching {
       const current = await this._storage.getCwList();
       for (const e of list) {
         const cur = current.find(
-          (x) => x.animeSession === e.animeSession && x.epSession === e.epSession,
+          (x) =>
+            x.animeSession === e.animeSession && x.epSession === e.epSession,
         );
         if (cur && e.thumbKind === "episode") {
           cur.thumbnailUrl = e.thumbnailUrl;
           cur.thumbKind = "episode";
+          if (e.posterUrl) cur.posterUrl = e.posterUrl;
         }
       }
       await this._storage.setCwList(current);
@@ -768,13 +822,13 @@ export class ContinueWatching {
     if (missing.length) await this._lookupOne(missing[0]);
   }
 
-  _setCardThumb(entry, url) {
+  _setCardThumb(entry) {
     const key = `${entry.animeSession}/${entry.epSession}`;
     document
       .querySelectorAll(`[data-ape-cw="${CSS.escape(key)}"] .ape-cw-thumb`)
       .forEach((img) => {
         img.style.display = "";
-        img.src = url;
+        img.src = this._imgUrl(entry);
       });
   }
 
@@ -793,7 +847,9 @@ export class ContinueWatching {
       const eps = Array.isArray(data?.data)
         ? data.data
         : Object.values(data?.data || {});
-      url = String(eps.find((e) => e?.session === entry.epSession)?.snapshot || "");
+      url = String(
+        eps.find((e) => e?.session === entry.epSession)?.snapshot || "",
+      );
     } catch {
       return; // rate-limited / offline: stay silent, try again next visit
     }
@@ -801,12 +857,21 @@ export class ContinueWatching {
     const list = await this._storage.getCwList();
     const cur = list.find(
       (x) =>
-        x.animeSession === entry.animeSession && x.epSession === entry.epSession,
+        x.animeSession === entry.animeSession &&
+        x.epSession === entry.epSession,
     );
     if (!cur) return;
     cur.thumbKind = url ? "episode" : "poster"; // "poster" = don't ask again
-    if (url) cur.thumbnailUrl = url;
+    if (url) {
+      if (!cur.posterUrl && cur.thumbnailUrl) cur.posterUrl = cur.thumbnailUrl;
+      cur.thumbnailUrl = url;
+    }
     await this._storage.setCwList(list);
-    if (url) this._setCardThumb(entry, url);
+    if (url) {
+      entry.posterUrl = cur.posterUrl;
+      entry.thumbnailUrl = url;
+      entry.thumbKind = "episode";
+      this._setCardThumb(entry);
+    }
   }
 }

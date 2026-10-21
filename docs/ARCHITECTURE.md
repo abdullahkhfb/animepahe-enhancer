@@ -40,7 +40,7 @@
 │   │   │   ├── 📄 binge-watch.js        # Binge Watch — auto-loads embed + auto-plays next episode
 │   │   │   └── 📄 skip-wait.js          # Skip Wait — download links bypass the pahe.win countdown page
 │   │   └── 📁 css/
-│   │       ├── 🎨 continue-watching.css
+│   │       ├── 🎨 continue-watching.css # Shelf styles; classic style scoped to .ape-cw-classic
 │   │       ├── 🎨 dub-detector.css
 │   │       ├── 🎨 intro-skip.css        # Also loaded inside the kwik iframe (see iframe-player.js)
 │   │       └── 🎨 binge-watch.css
@@ -404,10 +404,18 @@ The popup automatically renders a labeled stepper, an info button for the descri
 
 ## Adding a Sub-Feature
 
-Sub-features are toggleable options that belong to a specific feature but aren't "advanced" (no timing/caching/request tuning) — they render directly on that feature's own card in the popup instead of the Advanced Settings tab. Add an entry to `FEATURE_SUBOPTIONS` in `content/helpers/storage.js`, keyed by the feature card's id (`dub`, `is`, `bw`, ...):
+Sub-features are toggleable options that belong to a specific feature but aren't "advanced" (no timing/caching/request tuning) — they render directly on that feature's own card in the popup instead of the Advanced Settings tab. Add an entry to `FEATURE_SUBOPTIONS` in `content/helpers/storage.js`, keyed by the feature card's id (`cw`, `dub`, `is`, `bw`, ...):
 
 ```js
 export const FEATURE_SUBOPTIONS = {
+  cw: [
+    {
+      key: "cwClassicLayout",
+      label: "Classic style",
+      note: "Brings back the old look: poster cards with the title underneath.",
+      default: false,
+    },
+  ],
   dub: [
     {
       key: "dubHomeScanEnabled",
@@ -420,5 +428,7 @@ export const FEATURE_SUBOPTIONS = {
 ```
 
 `popup/scripts/features.js` renders every row's list generically (through `FeatureRow`), so no popup markup or JS needs to change. Read the setting in the feature module the same way as any other: `settings.dubHomeScanEnabled !== false`.
+
+If the option only changes presentation, you can make it apply live: `continue-watching.js` does this for `cwClassicLayout` by listening to `chrome.storage.onChanged` for the `ape_settings` key and toggling an `ape-cw-classic` CSS class on its shelf (see `_listenForLayoutChange()`), with all classic styles scoped to that class in `continue-watching.css`.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>

@@ -24,7 +24,7 @@ Every feature is a self-contained ES module loaded dynamically by `content/main.
 
 | Icon | Feature | Default | Active Pages | Popup Sub-Options | Storage / Cache Keys |
 | :---: | :--- | :---: | :--- | :--- | :--- |
-| <img src="assets/continue-watching.svg" width="28" height="28" align="absmiddle" alt="Continue Watching" /> | **[Continue Watching](#-continue-watching)** | **On** | Home (`/`) · Player (`/play/…`) · All pages (snapshot harvesting) | — | `ape_cw_v1` · `ape_cw_snaps` |
+| <img src="assets/continue-watching.svg" width="28" height="28" align="absmiddle" alt="Continue Watching" /> | **[Continue Watching](#-continue-watching)** | **On** | Home (`/`) · Player (`/play/…`) · All pages (snapshot harvesting) | `Classic style` (**Off**) | `ape_cw_v1` · `ape_cw_snaps` |
 | <img src="assets/dub-detector.svg" width="28" height="28" align="absmiddle" alt="DUB Detector" /> | **[DUB Detector](#-dub-detector)** | **On** | Episode list (`/anime/…`) · Home (`/`) · Player (`/play/…`) | `Scan homepage cards` (**On**) | `d2_{epSession}` · `h2_{animeSession}` |
 | <img src="assets/smart-search.svg" width="28" height="28" align="absmiddle" alt="Smart Search" /> | **[Smart Search](#-smart-search)** | **On** | All pages with search bar (`input[name="q"]`) | — | `ape_ss_{query}` · 5-min in-memory `apCache` |
 | <img src="assets/intro-skip.svg" width="28" height="28" align="absmiddle" alt="Intro / Outro Skip" /> | **[Intro / Outro Skip](#-intro--outro-skip)** | **On** | Player (`/play/…`) + Kwik iframe (`kwik.cx`) | `Auto-skip automatically` (**Off**) · `Highlight on progress bar` (**On**) | `ape_isid_v1_{session}` · `ape_is_db_meta` · IndexedDB `ape_intro_skip` |
@@ -44,15 +44,18 @@ Never lose your place again. **Continue Watching** tracks your exact playback po
 
 ### Shelf & Card Anatomy
 
-The Continue Watching shelf (`#ape-cw-section`) dynamically inspects animepahe's own **Latest Releases** heading and card grid at runtime (`_matchSite()`) — copying its exact typography, left/right alignment bounds, grid gap (`--ape-cw-gap`), and border radius (`--ape-cw-radius`) and re-aligning automatically on window resize, font load, or late DOM updates. Cards sit in the same responsive **3-column grid** as Latest Releases (**2 columns** at `≤ 1000px`, **1 column** at `≤ 560px`).
+The Continue Watching shelf (`#ape-cw-section`) dynamically inspects animepahe's own **Latest Releases** heading and card grid at runtime (`_matchSite()`) — copying its exact typography, left/right alignment bounds, grid gap (`--ape-cw-gap`), and border radius (`--ape-cw-radius`) and re-aligning automatically on window resize, font load, or late DOM updates. Two styles are available, switched by the **Classic style** sub-option in the popup (`cwClassicLayout`, **Off** by default, applies live without a reload; the heading typography is only copied from the site in the default style):
+
+- **Default** — a single row of **6** small 16:9 episode thumbnails (**4** at `≤ 1100px`, **3** at `≤ 780px`, **2** at `≤ 520px`), with the remove (✕) button always visible. This is the layout shown in the README screenshot.
+- **Classic style** — the older look, switched on with the **Classic style** option in the popup (off by default): small portrait poster cards in a row with the title in a bar underneath, an `EP n` pill on the poster, a plain bold heading (no count pill) and a dark **Clear All** button.
 
 | UI Element / Icon | Visual / Badge | Location | Behaviour & Details |
 | :--- | :---: | :--- | :--- |
 | **Entry Count Pill** (`.ape-cw-count`) | <img src="assets/cw-count.svg" height="22" align="absmiddle" alt="6" /> | Shelf header (next to `Continue Watching` heading) | Displays the total number of anime series currently saved in your Continue Watching list; updates live as cards are removed. |
 | **Show more / Show less** (`#ape-cw-toggle`) | <img src="assets/cw-btn-more.svg" height="24" align="absmiddle" alt="Show more" /> | Shelf header (top-right controls) | Appears automatically when your saved list exceeds **6 cards** by default (`cwCardsPerPage`, configurable 2–20). Toggles visibility of overflow rows (`.ape-cw-extra`). |
 | **Clear all & Inline Confirm** (`#ape-cw-clear` / `.ape-cw-confirm`) | <img src="assets/cw-btn-clear.svg" height="24" align="absmiddle" alt="Clear all" /> | Shelf header (top-right controls) | Opens an inline confirmation popover (`Clear all N episodes from Continue Watching?` with `Cancel` and `Clear all` actions, `Escape` key and click-outside dismissal) instead of a blocking browser `confirm()` dialog. |
-| **Center Play Overlay** (`playIcon` in `.ape-cw-play`) | <img src="assets/play.svg" width="26" height="26" align="absmiddle" alt="▶" /> | Center of 16:9 card thumbnail (on hover / focus) | A 56×56 px brand-pink (`#d5015b`) circular play button containing the inline SVG `playIcon` from `content/helpers/icons.js`, revealed over a darkened backdrop when hovering or keyboard-focusing a card. |
-| **Remove Entry Button** (`closeIcon` in `.ape-cw-remove-btn`) | <img src="assets/close.svg" width="24" height="24" align="absmiddle" alt="✕" /> | Top-right of card thumbnail (on hover / focus; always visible on touch) | A 30×30 px circular button containing the inline SVG `closeIcon` (`✕`) from `content/helpers/icons.js`. Clicking removes that anime from `ape_cw_v1`, animates the card out (`.ape-cw-pop-out`), and removes the entire shelf if no entries remain. |
+| **Center Play Overlay** (`playIcon` in `.ape-cw-play`) | <img src="assets/play.svg" width="26" height="26" align="absmiddle" alt="▶" /> | Center of 16:9 card thumbnail (on hover / focus) | A 36×36 px brand-pink (`#d5015b`) circular play button containing the inline SVG `playIcon` from `content/helpers/icons.js`, revealed over a darkened backdrop when hovering or keyboard-focusing a card. |
+| **Remove Entry Button** (`closeIcon` in `.ape-cw-remove-btn`) | <img src="assets/close.svg" width="24" height="24" align="absmiddle" alt="✕" /> | Top-right of card thumbnail (always visible; on hover / focus only in the classic style, and always on touch) | A 26×26 px (24×24 px in the classic style) circular button containing the inline SVG `closeIcon` (`✕`) from `content/helpers/icons.js`. Clicking removes that anime from `ape_cw_v1`, animates the card out (`.ape-cw-pop-out`), and removes the entire shelf if no entries remain. |
 | **Time Remaining Pill** (`.ape-cw-left`) | <img src="assets/cw-time-left.svg" height="22" align="absmiddle" alt="14 min left" /> | Top-left of card thumbnail (on hover / focus) | Calculated from `duration - time`: shows **`N min left`** (rounded up to the nearest minute), or **`Almost done`** when less than 60 seconds remain. |
 | **Anime Title** (`.ape-cw-title`) | `Kill Blue` | Bottom-left of card thumbnail | Single-line ellipsis-truncated series title over a dark bottom gradient (`.ape-cw-grad`). |
 | **Episode Badge** (`.ape-cw-ep`) | <img src="assets/cw-ep-badge.svg" height="24" align="absmiddle" alt="EP 6" /> | Bottom-right of card thumbnail | Styled `<small>EP</small>` prefix next to a large bold episode number. |
@@ -76,6 +79,14 @@ The Continue Watching shelf (`#ape-cw-section`) dynamically inspects animepahe's
         2. **Saved episode snapshot** already stored on the entry (`thumbKind: "episode"`).
         3. **Single release-API lookup** (`/api?m=release&id={animeSession}&sort=episode_asc&page={page}`, jumping directly to `Math.ceil(epNumber / 30)` via `RequestThrottler` with `maxRetries: 1`) — executed for **at most one missing entry per home-page visit**, never while a video is playing. If the API returns no snapshot, the entry is marked `thumbKind: "poster"` so it is never queried again.
         4. **Anime poster fallback** extracted from the player page DOM.
+
+### Classic Style (Popup Sub-Option)
+
+- **Classic style** (`cwClassicLayout`, default **Off**) is a toggle on the Continue Watching row in the popup's Features tab. When on, `#ape-cw-section` gets the `ape-cw-classic` class; every classic rule sits in the last block of `continue-watching.css`, so turning it **Off** simply removes the class and the default compact shelf is shown unchanged.
+- The setting is read when the shelf is built and is also watched through `chrome.storage.onChanged` (`_listenForLayoutChange()`), so flipping the toggle restyles an already-open home page immediately — no reload needed, even though the popup still shows its generic *Reload page to apply* notice.
+- **Images:** the default shows the episode still; the classic style shows the anime **poster**. Each entry therefore stores `posterUrl` next to `thumbnailUrl` (read by `_imgUrl()`). Entries saved before `posterUrl` existed have no stored poster, so classic falls back to their episode still (cropped to portrait) until the show is watched again.
+- Classic sizing: 126 px wide poster cards (2:3) with a 9 px gap, left-aligned in a wrapping row. The heading uses its own 20 px bold style instead of copying Latest Releases; alignment to Latest Releases' left/right edges still applies.
+- With `cwCardsPerPage` at its default of **6**, the default shelf is exactly one row; higher values wrap onto a second row before `Show more` appears.
 
 ```mermaid
 sequenceDiagram
@@ -386,7 +397,7 @@ Every timing, caching, batching, and rate-limiting threshold in the extension is
 | Group (Chip Label) | Setting Label | Key | Default | Range (Step) | What It Controls |
 | :--- | :--- | :--- | :---: | :---: | :--- |
 | **Continue Watching** (`Continue`) | Max saved entries | `cwMaxEntries` | **24** | 5 – 100 (1) | How many shows are kept in your Continue Watching list before the oldest is dropped. |
-| **Continue Watching** (`Continue`) | Cards before "Show More" | `cwCardsPerPage` | **6** | 2 – 20 (1) | How many cards are visible on the homepage before the list collapses behind `Show more`. |
+| **Continue Watching** (`Continue`) | Cards before "Show More" | `cwCardsPerPage` | **6** | 2 – 20 (1) | How many cards are visible on the homepage before the list collapses behind `Show more`. The default of 6 fills one row of the default layout. |
 | **DUB Detector** (`DUB`) | Cache duration (hours) | `cacheTtlHours` | **24** | 1 – 168 (1) | How long detected DUB/SUB results (`d2_`, `h2_`) and Smart Search AniList lookups (`ape_ss_`) stay cached before being re-checked. |
 | **DUB Detector** (`DUB`) | Delay between batches (ms) | `dubBatchDelay` | **2000** | 0 – 10000 (100) | Pause inserted between scan batches/rounds so the site isn't hammered. |
 | **DUB Detector** (`DUB`) | Homepage scan batch size | `dubHomeBatchSize` | **2** | 1 – 10 (1) | How many homepage cards are checked for dubs at the same time. |

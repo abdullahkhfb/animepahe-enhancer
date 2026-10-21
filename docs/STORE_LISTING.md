@@ -14,7 +14,7 @@ animepahe Enhancer makes watching anime on animepahe a bit nicer.
 
 **Features**
 
-- **Continue Watching** — picks up exactly where you left off, every time
+- **Continue Watching** — picks up exactly where you left off, every time, with a compact thumbnail shelf (or the classic poster-card style if you prefer)
 - **DUB Detector** — shows which episodes have an English dub before you open them
 - **Smart Search** — finds a show even if you only know a nickname or a title in a different language
 - **Intro / Outro Skip** — skips openings and endings automatically, or with one click
