@@ -46,7 +46,7 @@ Each feature can be turned on or off separately from the extension's popup. Sett
 <img src="screenshots/sc2.png" alt="Episode list showing the 6 of 9 dubbed summary bar, DUB and SUB ONLY badges, and status toast" width="100%" />
 <img src="screenshots/sc3.png" alt="Player page showing the inline DUB badge and English audio stream options" width="100%" />
 <img src="screenshots/sc4.png" alt="animepahe home page with the Continue Watching shelf of episode thumbnails, each with an episode number, progress bar and remove button, aligned above Latest Releases" width="100%" />
-<img src="screenshots/sc5.png" alt="The redesigned popup (v0.3.1.16), three tabs side by side: Features with Continue Watching expanded and all six features listed, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" width="100%" />
+<img src="screenshots/sc5.png" alt="The redesigned popup (v0.3.1.17), three tabs side by side: Features with Continue Watching expanded to show its Classic style switch and all six features listed, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" />
 <img src="screenshots/sc6.png" alt="Player page with the Skip Intro button and intro/outro progress bar highlights" width="100%" />
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
@@ -81,12 +81,12 @@ Each feature can be turned on or off separately from the extension's popup. Sett
   <sub>Free · takes about 10 seconds · no account needed</sub>
 </p>
 
-| Browser                    | Where to get it                                                                                    | Notes                                                                                                                                        |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)              | Ready to install right now                                                                                                                   |
-| **Chrome**                 | Chrome Web Store                                                                                   | **Release date: TBA** — not submitted yet; Chrome Web Store review has not been tested |
-| **Edge**                   | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Ready to install right now                                                                                                                   |
-| Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally)                                                |
+| Browser                    | Where to get it                                                                                    | Notes                                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)              | Ready to install right now                                                                    |
+| **Chrome**                 | Chrome Web Store                                                                                   | **Release date: TBA** — not submitted yet; Chrome Web Store review has not been tested        |
+| **Edge**                   | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Ready to install right now                                                                    |
+| Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally) |
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
