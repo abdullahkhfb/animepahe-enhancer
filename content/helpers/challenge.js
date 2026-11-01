@@ -1,8 +1,4 @@
-/** Cloudflare interstitials ("Just a moment...", "Attention Required!") are
- *  served on the same URL as the real page, so the content script loads on
- *  them too. Features must stay completely idle there: their requests would
- *  only get the challenge HTML back, and retrying them hammers the site while
- *  the page is trying to verify you. */
+/** Cloudflare interstitials are served on the page's own URL, so detect them by content. */
 
 const TITLE_RE =
   /^\s*(just a moment|attention required|checking your browser|one moment|verify(ing)? you are human|ddos protection)/i;
@@ -27,11 +23,6 @@ export function isChallengePage() {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/** Resolves true once the real animepahe page is showing and has finished
- *  loading (plus a short settle so the site's own requests go first), or
- *  false if a challenge never cleared. Usually the challenge ends with a
- *  full reload, in which case this simply never resolves on the old page and
- *  the content script starts fresh on the new one. */
 export async function whenSiteReady({ challengeTimeoutMs = 5 * 60_000 } = {}) {
   const t0 = Date.now();
   while (isChallengePage()) {

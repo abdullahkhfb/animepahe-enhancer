@@ -1,4 +1,3 @@
-// One import point for every icon component.
 export { ContinueWatchingIcon } from "./ContinueWatchingIcon.js";
 export { DubDetectorIcon } from "./DubDetectorIcon.js";
 export { SmartSearchIcon } from "./SmartSearchIcon.js";

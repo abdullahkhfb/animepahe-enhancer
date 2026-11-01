@@ -1,12 +1,3 @@
-// ── Tiny DOM helpers ─────────────────────────────────────────────────────
-// Every component builds its markup with h() so the popup stays plain
-// HTML/CSS/JS — no framework, no build step.
-
-/**
- * Creates an element.
- * `class`, `dataset`, `style` (object) and `onXxx` handlers get special
- * treatment; `true` becomes a bare attribute and `false`/null is skipped.
- */
 export function h(tag, props = {}, ...children) {
   const el = document.createElement(tag);
   for (const [key, value] of Object.entries(props ?? {})) {
@@ -23,7 +14,6 @@ export function h(tag, props = {}, ...children) {
   return el;
 }
 
-/** Appends strings, nodes and (nested) arrays, skipping null/false. */
 export function append(el, ...children) {
   for (const child of children.flat(Infinity)) {
     if (child == null || child === false) continue;
@@ -32,7 +22,6 @@ export function append(el, ...children) {
   return el;
 }
 
-/** Removes every child of `el`. */
 export function clear(el) {
   el.replaceChildren();
   return el;

@@ -1,14 +1,6 @@
 import { h } from "../dom.js";
 import { Stepper } from "../ui/Stepper.js";
 
-/**
- * One tunable from ADVANCED_SETTINGS_SCHEMA: label, description, a
- * "Default N" reset link (only while changed) and a stepper.
- *
- * @param {{item: {key: string, label: string, desc: string, min: number,
- *   max: number, step: number, default: number}, value: number,
- *   onChange: (value: number) => void}} opts
- */
 export function SettingRow({ item, value, onChange, onInfo }) {
   const dot = h("span", { class: "setting__dot", title: "Unapplied change", hidden: true });
   const resetBtn = h("button", {
@@ -37,8 +29,6 @@ export function SettingRow({ item, value, onChange, onInfo }) {
     onChange(v);
   }
 
-  // The description lives in a shared help line below the list (see
-  // advanced.js), so every row stays one line tall.
   const infoBtn = h("button", {
     type: "button",
     class: "setting__info",

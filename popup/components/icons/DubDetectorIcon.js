@@ -1,6 +1,5 @@
 import { lineIcon, path } from "./svg.js";
 
-/** Speech bubble with a voice waveform. */
 export function DubDetectorIcon(opts) {
   return lineIcon(
     opts,

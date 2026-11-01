@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 30" width="108" height="30">
-  <rect x="0.5" y="0.5" width="107" height="29" rx="7" fill="#080816" fill-opacity="0.92" stroke="#ffffff" stroke-opacity="0.22"/>
-  <g transform="translate(11, 7) scale(0.67)" fill="#ffffff">
-    <path d="M5 5 L14 12 L5 19 Z"/>
-    <rect x="15" y="5" width="2.5" height="14" rx="0.6"/>
-    <rect x="20" y="5" width="2.5" height="14" rx="0.6"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 36" width="118" height="36">
+  <rect x="0.5" y="0.5" width="117" height="35" rx="4" fill="#0e0e10" fill-opacity="0.92" stroke="#ffffff" stroke-opacity="0.22"/>
+  <g transform="translate(11, 11) scale(0.583)" fill="#ffffff" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 5l10 7-10 7z"/>
+    <path d="M19 5v14" fill="none"/>
   </g>
-  <text x="34" y="19.5" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="700" letter-spacing="0.25">Skip Intro</text>
+  <text x="34" y="22.5" fill="#ffffff" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="0.26">Skip Intro</text>
 </svg>

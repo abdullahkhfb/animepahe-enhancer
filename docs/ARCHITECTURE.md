@@ -26,7 +26,7 @@
 ├── 📁 content/
 │   ├── 📄 main.js                 # Entry point — waits for whenSiteReady(), loads settings,
 │   │                              #   detects page, dynamically imports and initializes features
-│   ├── 🎨 main.css                # Shared base styles (status toast: plain + rich states)
+│   ├── 🎨 main.css                # Shared base styles (status toast and action pill)
 │   ├── 📄 iframe-player.js        # Kwik iframe script — ensurePlayback() + postMessage bridge for
 │   │                              #   Continue Watching, Intro/Outro Skip, and Binge Watch (ended)
 │   │
@@ -42,8 +42,7 @@
 │   │   └── 📁 css/
 │   │       ├── 🎨 continue-watching.css # Shelf styles; classic style scoped to .ape-cw-classic
 │   │       ├── 🎨 dub-detector.css
-│   │       ├── 🎨 intro-skip.css        # Also loaded inside the kwik iframe (see iframe-player.js)
-│   │       └── 🎨 binge-watch.css
+│   │       └── 🎨 intro-skip.css        # Also loaded inside the kwik iframe (see iframe-player.js)
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + KEYS + DEFAULT_SETTINGS
@@ -54,10 +53,10 @@
 │       ├── 📄 cache.js            # Shared TTL cache read/write/GC (d2_, h2_, ape_ss_, ape_isid_)
 │       ├── 📄 throttler.js        # RequestThrottler — concurrency, interval+jitter, priority queue,
 │       │                          #   exponential backoff on 429/403, 60s pause on CF challenges
-│       ├── 📄 icons.js            # Shared inline-SVG factory (micIcon, checkIcon, playIcon, closeIcon)
+│       ├── 📄 icons.js            # Shared inline-SVG factory (micIcon, checkIcon, playIcon, closeIcon, skipIcon, bingeIcon, waitIcon, countdownRing)
 │       ├── 📄 styles.js           # injectStylesheet() — one-line CSS loading, shared by every feature
-│       ├── 📄 pill.js             # showPill() (plain text) + showStatus() (rich toast with progress
-│       │                          #   ring, pink check icon, or amber dot)
+│       ├── 📄 pill.js             # showPill() (plain text), showStatus() (DUB Detector toast) and
+│       │                          #   showAction() (icon chip, label, detail, optional action; used by Intro Skip, Binge Watch, Skip Wait)
 │       └── 📄 timestamps-db.js    # open-anime-timestamps dataset access (IndexedDB cache, ETag refresh,
 │                                  #   AniList → relations.yuna.moe → AniDB ID resolution, episode lookup)
 │

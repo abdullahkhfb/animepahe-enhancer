@@ -1,28 +1,3 @@
-/**
- * timestamps-db.js
- *
- * Provides access to the open-anime-timestamps dataset
- * (https://github.com/Ellivers/open-anime-timestamps) for the
- * Intro/Outro Skip feature.
- *
- * Responsibilities:
- *   1. Resolve animepahe animeSession -> animeTitle -> AniList ID
- *   2. Resolve AniList ID -> AniDB ID via relations.yuna.moe
- *   3. Fetch and cache the (large, ~27 MB) timestamps.json blob
- *      in IndexedDB, with conditional GET (ETag) refresh
- *   4. Look up intro/outro timestamps for a given episode
- *
- * Caching strategy:
- *   - ID resolution (animeSession -> AniDB ID) goes through the
- *     existing chrome.storage.local helper cache (`ape_isid_` prefix)
- *     so we don't re-query AniList and yuna.moe on every visit.
- *   - The big timestamps JSON lives in IndexedDB (chrome.storage.local
- *     has a 10 MB quota — too small). We store the raw text + ETag +
- *     fetchedAt, and refresh on a configurable schedule.
- *   - The parsed object is cached in module scope for the lifetime
- *     of the page so repeated lookups on the same page are free.
- */
-
 import { storage } from "./storage.js";
 import { readCache, writeCache } from "./cache.js";
 
@@ -35,26 +10,17 @@ const RELATIONS_URL = "https://relations.yuna.moe/api/ids";
 const ID_CACHE_PREFIX = "ape_isid_";
 const ID_CACHE_VERSION = "v1";
 
-// The big timestamps JSON lives in IndexedDB (chrome.storage.local would
-// need the unlimitedStorage permission for a 27 MB value, and every get()
-// would re-deserialize the whole thing).
 const DB_NAME = "ape_intro_skip";
 const DB_STORE = "kv";
 const DB_KEY_TIMESTAMPS = "timestamps_blob";
 const DB_VERSION = 1;
 
-// Small metadata record shared between the content script and the popup
-// via chrome.storage.local. The popup can't see the content script's
-// IndexedDB (different origin), so it reads this instead.
+// Mirrored to chrome.storage: the popup cannot read the content script's IndexedDB.
 const META_KEY = "ape_is_db_meta";
 
 let _dbPromise = null;
 let _parsedCache = null;
 let _inflightFetch = null;
-
-// ────────────────────────────────────────────────────────────────────────
-// IndexedDB wrapper (minimal key-value store)
-// ────────────────────────────────────────────────────────────────────────
 
 function openDb() {
   if (_dbPromise) return _dbPromise;
@@ -92,10 +58,6 @@ async function idbSet(key, value) {
     tx.onabort = () => reject(tx.error);
   });
 }
-
-// ────────────────────────────────────────────────────────────────────────
-// ID resolution: animeSession -> animeTitle -> AniList ID -> AniDB ID
-// ────────────────────────────────────────────────────────────────────────
 
 function normalizeTitle(s) {
   return (s ?? "")
@@ -167,7 +129,6 @@ async function resolveAnilistId(animeTitle) {
 
   const nTitle = normalizeTitle(animeTitle);
 
-  // Pick the closest match by title similarity, preferring English > romaji > synonym.
   let best = null;
   let bestScore = -1;
   for (const m of media) {
@@ -186,14 +147,12 @@ async function resolveAnilistId(animeTitle) {
     }
   }
 
-  // Reject poor matches — if the best similarity is below 0.5 we likely
-  // matched the wrong series and would feed garbage into the timestamps DB.
   if (!best || bestScore < 0.5) return null;
   return best;
 }
 
 async function resolveAniDbId(anilistId, idMal) {
-  // Try via AniList ID first, fall back to MAL ID — yuna.moe supports both.
+  // AniList ID first, MAL as fallback.
   const trySources = [];
   if (anilistId) trySources.push({ source: "anilist", id: anilistId });
   if (idMal) trySources.push({ source: "myanimelist", id: idMal });
@@ -212,19 +171,11 @@ async function resolveAniDbId(anilistId, idMal) {
   return null;
 }
 
-/**
- * Returns the AniDB ID for a given animepahe animeSession + animeTitle.
- * Cached per animeSession in chrome.storage.local with TTL.
- */
 export async function getAniDbIdForAnime(animeSession, animeTitle, ttlMs) {
   const ids = await resolveIdsForAnime(animeSession, animeTitle, ttlMs);
   return ids?.anidbId ?? null;
 }
 
-/**
- * Returns ALL the IDs we can resolve for a given animepahe animeSession +
- * animeTitle: AniDB, AniList, and MAL. Cached per animeSession with TTL.
- */
 export async function resolveIdsForAnime(animeSession, animeTitle, ttlMs) {
   const cacheKey = `${ID_CACHE_PREFIX}${ID_CACHE_VERSION}_${animeSession}`;
   const cached = await readCache(cacheKey, ttlMs);
@@ -232,7 +183,7 @@ export async function resolveIdsForAnime(animeSession, animeTitle, ttlMs) {
 
   const anilistHit = await resolveAnilistId(animeTitle);
   if (!anilistHit) {
-    // Cache negative results too, with a short TTL, to avoid spamming AniList.
+    // Negative results are cached briefly to avoid hammering AniList.
     await writeCache(cacheKey, { anidbId: null });
     return null;
   }
@@ -247,24 +198,10 @@ export async function resolveIdsForAnime(animeSession, animeTitle, ttlMs) {
   return entry;
 }
 
-// ────────────────────────────────────────────────────────────────────────
-// Timestamps JSON database (IndexedDB + conditional GET)
-// ────────────────────────────────────────────────────────────────────────
-
-/**
- * Returns the parsed timestamps database object, fetching and caching
- * it as needed. Re-uses an in-memory cache so repeated calls on the
- * same page are free.
- *
- * @param {number} refreshHours  Max age in hours before re-fetching.
- * @param {(msg: string, pct?: number) => void} [onProgress]  Optional callback for status updates.
- */
 export async function getTimestampsDb(refreshHours, onProgress) {
   const refreshMs = refreshHours * 60 * 60 * 1_000;
   const cached = await idbGet(DB_KEY_TIMESTAMPS);
-  // Meta lives in chrome.storage.local (shared with the popup). If it's
-  // missing, the user cleared the cache from the popup — force a re-fetch
-  // even if the IndexedDB blob is still around.
+  // Cache cleared from the popup: force a re-fetch.
   const meta = await readMeta();
 
   if (_parsedCache) return _parsedCache;
@@ -276,7 +213,7 @@ export async function getTimestampsDb(refreshHours, onProgress) {
     !rawText || !meta || Date.now() - fetchedAt > refreshMs;
 
   if (isStale) {
-    if (onProgress) onProgress("Downloading skip database…");
+    if (onProgress) onProgress("Downloading skip database");
     try {
       const headers = { Accept: "application/json" };
       if (etag) headers["If-None-Match"] = etag;
@@ -285,7 +222,6 @@ export async function getTimestampsDb(refreshHours, onProgress) {
         _inflightFetch = (async () => {
           const res = await fetch(TIMESTAMPS_URL, { headers });
           if (res.status === 304 && rawText) {
-            // Not modified — refresh metadata only.
             const now = Date.now();
             await idbSet(DB_KEY_TIMESTAMPS, {
               text: rawText,
@@ -325,7 +261,7 @@ export async function getTimestampsDb(refreshHours, onProgress) {
       rawText = result.text;
       etag = result.etag;
     } catch (err) {
-      // Network/CDN failure — fall back to the cached copy if we have one.
+      // Network/CDN failure: use the cached copy if present.
       if (!rawText) throw err;
       console.warn(
         "[IntroSkip] Failed to refresh timestamps DB, using cached copy:",
@@ -334,7 +270,7 @@ export async function getTimestampsDb(refreshHours, onProgress) {
     }
   }
 
-  if (onProgress) onProgress("Parsing skip database…");
+  if (onProgress) onProgress("Parsing skip database");
   _parsedCache = JSON.parse(rawText);
   return _parsedCache;
 }
@@ -353,20 +289,6 @@ async function readMeta() {
   }
 }
 
-/**
- * Look up intro/outro timestamps for a specific episode from the local
- * open-anime-timestamps dataset.
- *
- * The dataset uses -1 to mean "unknown" and -2 to mean "explicitly none".
- * For start-only entries we extend with a default duration so users still
- * get a usable skip target.
- *
- * @param {string|number} anidbId
- * @param {string|number} episodeNumber
- * @param {object} settings
- * @param {(msg: string) => void} [onProgress]
- * @returns {Promise<{ intro: {start:number,end:number}|null, outro: {start:number,end:number}|null, recap: {start:number,end:number}|null, previewStart: number|null, source: 'oat'|null }>}
- */
 export async function getTimestampsForEpisode(
   anidbId,
   episodeNumber,
@@ -419,15 +341,12 @@ function normalizeSegment(seg, defaultDuration) {
   end = Number(end);
   if (!Number.isFinite(start)) return null;
 
-  // -2 = explicitly no segment exists; -1 = unknown.
   if (start < 0) return null;
 
   if (!Number.isFinite(end) || end < 0) {
     if (defaultDuration > 0) {
       end = start + defaultDuration;
     } else {
-      // No default duration available — surface a start-only hint so the
-      // caller can still show a Skip button without a target.
       return { start, end: null };
     }
   }
@@ -441,10 +360,6 @@ function normalizeScalar(v) {
   if (!Number.isFinite(n) || n < 0) return null;
   return n;
 }
-
-// ────────────────────────────────────────────────────────────────────────
-// Cache management (used by popup "Clear Cache" button)
-// ────────────────────────────────────────────────────────────────────────
 
 export async function clearTimestampsCache() {
   _parsedCache = null;

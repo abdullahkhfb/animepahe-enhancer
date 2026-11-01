@@ -1,19 +1,3 @@
-/**
- * main.js — animepahe Enhancer entry point
- *
- * Responsibilities:
- *   1. Load user settings from storage
- *   2. Detect which animepahe page we are on
- *   3. Dynamically import each enabled feature module
- *   4. Run per-feature initialization
- *   5. Run cache garbage-collection in the background
- *
- * Adding a new feature:
- *   - Create content/features/js/my-feature.js that exports a class with an init(pageType) method
- *   - Add a settings key for it in helpers/storage.js  ->  DEFAULT_SETTINGS
- *   - Register it in the FEATURES array below
- */
-
 (async () => {
   function extUrl(path) {
     return chrome.runtime.getURL(path);
@@ -33,8 +17,7 @@
     import(extUrl("content/helpers/styles.js")),
   ]);
 
-  // Stay idle on Cloudflare challenge pages and let the site load its own
-  // content first; the extension's requests must never compete with it.
+  // Stay idle on Cloudflare challenge pages so we never compete with the site's own load.
   const { whenSiteReady } = await import(extUrl("content/helpers/challenge.js"));
   if (!(await whenSiteReady())) return;
 
@@ -51,22 +34,9 @@
 
   const cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
 
-  // main.js only needs its shared base CSS now; each feature injects
-  // its own stylesheet when it initializes (see helpers/styles.js).
   injectStylesheet("ape-main-styles", "content/main.css");
 
   setTimeout(() => gcDubCache(cacheTtlMs), 3_000);
-
-  // feature registry
-  //
-  // each entry:
-  //   module  – path to the feature module (relative to extension root)
-  //   export  – named export that is the feature class
-  //   enabled – whether the user has this feature switched on
-  //
-  // the feature class must implement:
-  //   constructor(storage)
-  //   async init(pageType: string): Promise<void>
 
   const FEATURES = [
     {
@@ -99,15 +69,7 @@
       export: "SkipWait",
       enabled: settings.skipWaitEnabled,
     },
-    //  to add a new feature, append an entry here
-    // {
-    //   module:  "content/features/js/my-feature.js",
-    //   export:  "MyFeature",
-    //   enabled: settings.myFeatureEnabled,
-    // },
   ];
-
-  // init enabled features
 
   await Promise.all(
     FEATURES.filter((f) => f.enabled).map(async (f) => {

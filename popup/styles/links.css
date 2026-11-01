@@ -1,4 +1,3 @@
-/* ── Quick Links tab ───────────────────────────────────────────────────── */
 .group-label {
   padding: 18px 10px 8px;
   font-family: var(--mono);
@@ -8,7 +7,6 @@
   color: var(--muted);
 }
 
-/* Hero card: the real animepahe wordmark */
 .site-card {
   display: flex;
   flex-direction: column;

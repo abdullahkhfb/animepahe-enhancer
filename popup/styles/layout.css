@@ -1,10 +1,5 @@
-/* ── App shell: header, timeline strip, tabs, panels ───────────────────── */
 .app { padding-bottom: 4px; }
 
-/* The popup has a fixed 600px budget (Chrome's popup max) and must never
-   scroll — every tab is sized to fit inside it. */
-
-/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -30,7 +25,6 @@
   letter-spacing: 0.01em;
   color: var(--muted);
 }
-/* Echoes the wordmark: "anime" light, "pahe" bold */
 .header__sub-light { font-weight: 400; color: var(--wordmark-light); }
 .header__sub-bold  { font-weight: 700; color: var(--brand-2); }
 .header__version {
@@ -42,7 +36,6 @@
   padding: 3px 9px;
 }
 
-/* Timeline strip — one segment per feature */
 .timeline { position: relative; padding: 0 20px 10px; }
 .timeline__bar { display: flex; gap: 3px; height: 6px; }
 .timeline__seg {
@@ -61,7 +54,6 @@
   color: var(--muted);
 }
 
-/* Tabs */
 .tabs {
   display: flex;
   gap: 2px;
@@ -84,7 +76,6 @@
   color: var(--text);
 }
 
-/* Panels */
 .panel { padding: 4px 12px 0; }
 .panel-intro {
   margin: 2px 8px 12px;
@@ -93,7 +84,6 @@
   color: var(--muted);
 }
 
-/* Reload notice rides on the readout line ("N of 5 active"), right-aligned */
 .timeline .notice {
   position: absolute;
   right: 20px;

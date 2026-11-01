@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 28" width="176" height="28">
-  <rect x="0.5" y="0.5" width="175" height="27" rx="13.5" fill="#0e0e10" stroke="#ffffff" stroke-opacity="0.15"/>
-  <text x="14" y="18" fill="#f1f1f1" font-family="system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="500">✓ Skip Wait: opened kwik</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 36" width="132" height="36">
+  <rect x="0.5" y="0.5" width="131" height="35" rx="17.5" fill="#0e0e10" fill-opacity="0.94" stroke="#ffffff" stroke-opacity="0.1"/>
+  <circle cx="18" cy="18" r="11" fill="#d5015b"/>
+  <path d="M13.2 18l3.3 3.3 6.3-7" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="37" y="22" fill="#f1f1f1" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="500">Opened kwik</text>
 </svg>

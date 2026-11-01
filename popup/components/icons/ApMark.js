@@ -1,11 +1,8 @@
 import { s } from "./svg.js";
 
-// A thin "a" beside a heavy "p" whose counter is a play button. The thin
-// vs. bold contrast is borrowed from the animepahe wordmark.
 const P_PATH =
   "M62 42 H84 A20 20 0 0 1 84 82 H80 V104 H62 Z M84.42 52.77 L84.42 52.77 Q82.00 51.00 82.00 54.00 L82.00 70.00 Q82.00 73.00 84.42 71.23 L94.58 63.77 Q97.00 62.00 94.58 60.23 Z";
 
-/** The extension's logo tile (magenta, white letters). */
 export function ApMark({ size = 38 } = {}) {
   return s(
     "svg",

@@ -1,17 +1,24 @@
-/** Shared bottom-right status toast used by DUB Detector, Intro/Outro
- *  Skip, and Binge Watch — one pill instead of each feature stacking
- *  its own copy on top of the others.
- *
- *  showPill()   — plain-text toast (used by every feature).
- *  showStatus() — structured toast with a state icon: a progress ring,
- *                 a pink check, or an amber dot (used by DUB Detector). */
-
 import { injectStylesheet } from "./styles.js";
-import { checkIcon } from "./icons.js";
+import {
+  bingeIcon,
+  checkIcon,
+  closeIcon,
+  countdownRing,
+  skipIcon,
+  waitIcon,
+} from "./icons.js";
+
+const GLYPHS = {
+  skip: skipIcon,
+  binge: bingeIcon,
+  wait: waitIcon,
+  check: (size) => checkIcon(size),
+  close: (size) => closeIcon(size),
+};
 
 const PILL_ID = "ape-pill";
 let hideTimer = null;
-let parts = null; // live references for in-place updates of a rich toast
+let parts = null;
 
 function getOrCreatePill() {
   injectStylesheet("ape-main-styles", "content/main.css");
@@ -27,6 +34,13 @@ function getOrCreatePill() {
   return pill;
 }
 
+function resetPill(pill) {
+  pill.className = "ape-pill";
+  pill.style.pointerEvents = "";
+  delete pill.dataset.state;
+  parts = null;
+}
+
 function scheduleHide(pill, autohideMs) {
   if (autohideMs > 0) {
     hideTimer = setTimeout(() => {
@@ -35,32 +49,16 @@ function scheduleHide(pill, autohideMs) {
   }
 }
 
-/**
- * @param {string} text
- * @param {number} [autohideMs] 0 = stays visible until the next call.
- * @param {boolean} [live] true while updating in place (e.g. a percentage)
- *   many times a second — skips resetting the auto-hide timer.
- */
 export function showPill(text, autohideMs = 0, live = false) {
   const pill = getOrCreatePill();
   if (!live) clearTimeout(hideTimer);
-  pill.classList.remove("ape-pill--rich");
-  delete pill.dataset.state;
-  parts = null;
+  resetPill(pill);
   pill.textContent = text;
   pill.style.opacity = "1";
   scheduleHide(pill, autohideMs);
   return pill;
 }
 
-/**
- * @param {object} o
- * @param {"progress"|"success"|"empty"} [o.state]
- * @param {string} o.text
- * @param {number|null} [o.percent] 0-100; null/undefined = indeterminate ring
- * @param {number} [o.autohideMs]
- * @param {boolean} [o.live] update in place without resetting the hide timer
- */
 export function showStatus({ state = "progress", text, percent = null, autohideMs = 0, live = false }) {
   const pill = getOrCreatePill();
   if (!live) clearTimeout(hideTimer);
@@ -69,6 +67,7 @@ export function showStatus({ state = "progress", text, percent = null, autohideM
     live && parts && parts.state === state && pill.contains(parts.label);
 
   if (!reusable) {
+    resetPill(pill);
     pill.textContent = "";
     pill.classList.add("ape-pill--rich");
     pill.dataset.state = state;
@@ -97,6 +96,78 @@ export function showStatus({ state = "progress", text, percent = null, autohideM
   if (state === "progress") {
     parts.icon.classList.toggle("is-indeterminate", !hasPct);
     if (hasPct) parts.icon.style.setProperty("--ape-p", String(percent));
+  }
+
+  pill.style.opacity = "1";
+  scheduleHide(pill, autohideMs);
+  return pill;
+}
+
+/**
+ * Action pill: leading icon chip, label, optional muted detail and action.
+ * @param {object} o
+ * @param {"skip"|"binge"|"wait"|"check"|"close"|"spinner"|"dot"} [o.icon]
+ * @param {"intro"|"binge"|"wait"|"brand"} [o.tone] accent of the icon chip
+ * @param {string} o.text
+ * @param {string} [o.detail]
+ * @param {{secondsLeft: number, total: number}} [o.countdown] replaces the icon with a ring
+ * @param {{label: string, onClick: () => void}} [o.action]
+ */
+export function showAction({
+  icon,
+  tone = "brand",
+  text,
+  detail = "",
+  countdown = null,
+  action = null,
+  autohideMs = 0,
+  live = false,
+}) {
+  const pill = getOrCreatePill();
+  if (!live) clearTimeout(hideTimer);
+  resetPill(pill);
+  pill.textContent = "";
+  pill.classList.add("ape-pill--action");
+
+  let lead;
+  if (countdown) {
+    lead = document.createElement("span");
+    lead.className = "ape-pill-count";
+    const num = document.createElement("b");
+    num.textContent = String(countdown.secondsLeft);
+    lead.append(countdownRing(countdown.secondsLeft, countdown.total), num);
+  } else if (icon === "spinner") {
+    lead = document.createElement("span");
+    lead.className = "ape-pill-spin";
+    lead.appendChild(document.createElement("i"));
+  } else if (icon === "dot") {
+    lead = document.createElement("span");
+    lead.className = "ape-pill-dot";
+  } else {
+    lead = document.createElement("span");
+    lead.className = `ape-pill-chip ape-tone-${tone}`;
+    lead.appendChild(GLYPHS[icon](12));
+  }
+
+  const label = document.createElement("span");
+  label.textContent = text;
+  pill.append(lead, label);
+
+  if (detail) {
+    const d = document.createElement("span");
+    d.className = "ape-pill-detail";
+    d.textContent = detail;
+    pill.appendChild(d);
+  }
+
+  if (action) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "ape-pill-act";
+    btn.textContent = action.label;
+    btn.addEventListener("click", action.onClick);
+    pill.appendChild(btn);
+    pill.style.pointerEvents = "auto";
   }
 
   pill.style.opacity = "1";

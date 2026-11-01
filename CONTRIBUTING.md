@@ -89,7 +89,7 @@ animepahe-enhancer/
 │
 ├── content/
 │   ├── main.js                   # Entry point — awaits whenSiteReady(), loads settings, imports features
-│   ├── main.css                  # Shared base styles (status toast: plain + rich states)
+│   ├── main.css                  # Shared base styles (status toast and action pill)
 │   ├── iframe-player.js          # Injected into Kwik iframe; ensurePlayback() + postMessage bridge for
 │   │                             #   Continue Watching, Intro/Outro Skip, and Binge Watch
 │   │
@@ -104,8 +104,7 @@ animepahe-enhancer/
 │   │   └── css/                  #   Stylesheets for features that need them
 │   │       ├── continue-watching.css
 │   │       ├── dub-detector.css
-│   │       ├── intro-skip.css
-│   │       └── binge-watch.css
+│   │       └── intro-skip.css
 │   │
 │   └── helpers/                  # Shared utilities imported by any feature
 │       ├── storage.js            # chrome.storage.local wrapper + KEYS + DEFAULT_SETTINGS
@@ -115,9 +114,9 @@ animepahe-enhancer/
 │       ├── cache.js              # Shared TTL cache read/write/garbage collection
 │       ├── throttler.js          # RequestThrottler — concurrency, jitter, priority queue, back-off
 │       │                         #   (tunable at runtime via updateOptions())
-│       ├── icons.js              # Shared inline-SVG factory (micIcon, checkIcon, playIcon, closeIcon)
+│       ├── icons.js              # Shared inline-SVG factory (checkIcon, skipIcon, bingeIcon, waitIcon, countdownRing, ...)
 │       ├── styles.js             # injectStylesheet() — shared one-line CSS loading
-│       ├── pill.js               # showPill() + showStatus() — shared bottom-right status toast
+│       ├── pill.js               # showPill() + showStatus() + showAction() — shared bottom-right pill
 │       └── timestamps-db.js      # open-anime-timestamps dataset access (IndexedDB cache,
 │                                 #   AniList → AniDB ID resolution, episode lookup)
 │
@@ -258,7 +257,7 @@ A few conventions to follow:
 ### Documentation
 
 - Update the documentation page that covers the affected feature or workflow; update `PRIVACY.md` or `SECURITY.md` as well when data flows or security-relevant behavior changes.
-- Code comments are valued — explain _why_ something is done, not just _what_ it does.
+- Keep code comments rare and short. Add one only where the reason behind the code is not obvious from reading it (workarounds, race conditions, rate-limit or Cloudflare handling, browser quirks), and say _why_, not _what_. Do not restate the code, add file-header banners or section dividers, or leave commented-out code.
 - Diagrams in `docs/ARCHITECTURE.md` and `docs/FEATURES.md` use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
 
 ---
@@ -276,7 +275,9 @@ There is no linter or formatter enforced by CI. Follow the conventions already i
 | **Strings**          | Double quotes for HTML attribute strings; single or template literals for JavaScript                                  |
 | **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied, animepahe-sourced, or AniList-sourced data |
 | **Error handling**   | Follow existing feature-specific error handling and logging patterns; use `[animepahe-enhancer]` for shared entry-point messages |
-| **Comments**         | JSDoc for exported classes and public methods; inline comments for non-obvious logic                                  |
+| **Comments**         | Only for non-obvious logic: one or two lines explaining _why_. No JSDoc blocks, banners or comments that restate the code |
+| **UI text & icons**  | No emoji or text symbols in on-page UI. Use the inline SVG helpers in `content/helpers/icons.js` and show messages with `showAction()` from `pill.js` |
+| **Visual design**    | Match the site: brand pink `#d5015b`, dark glass `rgba(14, 14, 16, 0.94)`, Inter, 4px corners for badges and buttons, fully rounded pills for status messages |
 | **Storage keys**     | Use established key prefixes (`ape_`, `d2_`, `h2_`) and document new keys in `storage.js` or the relevant helper |
 
 ---

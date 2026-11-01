@@ -1,10 +1,6 @@
 import { h } from "../dom.js";
 import { ExternalLinkIcon } from "../icons/index.js";
 
-/**
- * A quick-link row: icon tile, title + description, ↗.
- * `tile` is any node — a line icon component or a real logo image.
- */
 export function LinkRow({ href, title, desc, tile, accent = false }) {
   return h(
     "a",

@@ -12,23 +12,17 @@ const MSG = {
 
 const SECTION_ID = "ape-cw-section";
 
-// ── Efficiency tuning ────────────────────────────────────────────────────
-// Progress arrives every ~2 s; storage is only written this often (plus on
-// seeks, episode changes and when the tab is hidden/closed).
 const FLUSH_MS = 5_000;
 const SEEK_JUMP_S = 10;
-// Episode snapshots seen while browsing, kept for when they are needed.
 const SNAP_MAX = 300;
 const SNAP_SAVE_DEBOUNCE_MS = 2_000;
 const HARVEST_DEBOUNCE_MS = 400;
 
 export class ContinueWatching {
-  /** @param {import("../../helpers/storage.js").storage} storage */
   constructor(storage, settings = {}) {
     this._storage = storage;
     this._cardsPerPage = settings.cwCardsPerPage ?? 6;
     this._maxEntries = settings.cwMaxEntries ?? CW_MAX_ENTRIES;
-    // false = the default compact shelf, true = the old poster-card style
     this._classic = settings.cwClassicLayout === true;
   }
 
@@ -57,8 +51,6 @@ export class ContinueWatching {
     });
   }
 
-  /** Switch between the default and classic style the moment the popup
-   *  toggle changes, without needing a page reload. */
   _listenForLayoutChange() {
     chrome.storage?.onChanged?.addListener((changes, area) => {
       if (area !== "local" || !changes[KEYS.SETTINGS]) return;
@@ -68,7 +60,6 @@ export class ContinueWatching {
       const section = document.getElementById(SECTION_ID);
       if (!section) return;
       section.classList.toggle("ape-cw-classic", next);
-      // The two styles use different images (poster vs. episode still).
       section.querySelectorAll(".ape-cw-card").forEach((card) => {
         const img = card.querySelector(".ape-cw-thumb");
         if (img && card._apeEntry) {
@@ -79,11 +70,6 @@ export class ContinueWatching {
       this._applyMatch?.();
     });
   }
-
-  // Every listing (episode list, home "Latest Releases") already renders the
-  // episode's snapshot next to its /play/<anime>/<episode> link. Remember
-  // those pairs as we browse (pure DOM reading, zero network) so a Continue
-  // Watching card can use the right thumbnail without asking the API.
 
   async _snaps() {
     if (!this._snapMap) {
@@ -127,7 +113,6 @@ export class ContinueWatching {
         img?.getAttribute("src") ||
         img?.getAttribute("data-src") ||
         "";
-      // Only real episode stills (never the anime poster or a placeholder).
       if (!/\/snapshots\//.test(url)) continue;
       found.push([m[1], url]);
     }
@@ -137,7 +122,7 @@ export class ContinueWatching {
     let changed = false;
     for (const [ep, url] of found) {
       if (map[ep] === url) continue;
-      delete map[ep]; // re-insert so the most recently seen stay last (LRU)
+      delete map[ep];
       map[ep] = url;
       changed = true;
     }
@@ -205,8 +190,6 @@ export class ContinueWatching {
     );
   }
 
-  /** Find the "Latest Releases" heading element (it may sit inside or just
-   *  above the target container). */
   _findLatestHeading(target) {
     for (const root of [target, target.parentElement]) {
       if (!root) continue;
@@ -222,8 +205,6 @@ export class ContinueWatching {
     return null;
   }
 
-  /** Copy the site's real heading style and card-grid geometry onto the
-   *  shelf so it lines up with Latest Releases whatever the viewport. */
   _matchSite(section, target) {
     const apply = () => {
       if (!section.isConnected) return;
@@ -252,7 +233,6 @@ export class ContinueWatching {
         .map((a) => ({ a, r: a.getBoundingClientRect() }))
         .filter(({ r }) => r.width > 0);
 
-      // Reset first so we measure the section's natural position.
       section.style.marginLeft = "";
       section.style.width = "";
       const base = section.getBoundingClientRect();
@@ -267,9 +247,6 @@ export class ContinueWatching {
         left = row[0].r.left;
         right = Math.max(...row.map(({ r }) => r.right));
       } else {
-        // Cards aren't rendered yet (the site fills Latest Releases in
-        // late). Align to the heading / container for now; the observer
-        // below re-runs this as soon as the cards appear.
         const anchor = heading || target;
         const ar = anchor.getBoundingClientRect();
         const tr = target.getBoundingClientRect();
@@ -297,8 +274,6 @@ export class ContinueWatching {
     window.addEventListener("load", apply, { once: true });
     window.addEventListener("resize", apply);
 
-    // Latest Releases is rendered/updated after we inject, and the page
-    // layout can shift as images and fonts load — re-align on any change.
     let pending = false;
     const schedule = () => {
       if (pending) return;
@@ -363,7 +338,6 @@ export class ContinueWatching {
 
     controls.append(toggleBtn, clearBtn);
 
-    // Inline confirmation (replaces window.confirm)
     const confirmBox = document.createElement("div");
     confirmBox.className = "ape-cw-confirm";
     confirmBox.setAttribute("role", "alertdialog");
@@ -446,8 +420,6 @@ export class ContinueWatching {
     return section;
   }
 
-  /** Keep the count pill, the "Show more" button and the collapsed overflow
-   *  in step with however many cards are currently in the grid. */
   _syncSection(section, grid, count, toggleBtn) {
     const cards = [...grid.children];
     count.textContent = String(cards.length);
@@ -459,8 +431,6 @@ export class ContinueWatching {
     if (!needsToggle) grid.classList.add("collapsed");
   }
 
-  /** Classic style shows the anime poster; the default shows the episode
-   *  still. Entries saved before posters were kept fall back to the still. */
   _imgUrl(entry) {
     return this._classic
       ? entry.posterUrl || entry.thumbnailUrl
@@ -554,7 +524,6 @@ export class ContinueWatching {
 
     link.appendChild(thumbWrap);
 
-    // Title bar under the poster (only shown in the classic style).
     const caption = document.createElement("span");
     caption.className = "ape-cw-caption";
     caption.textContent = entry.animeTitle;
@@ -701,12 +670,6 @@ export class ContinueWatching {
     });
   }
 
-  // ── Saving progress ─────────────────────────────────────────────────────
-  // Coalesced: the latest tick is kept in memory and written at most every
-  // FLUSH_MS (immediately on a seek, an episode change, or when the tab is
-  // hidden/closed), instead of a read-modify-write of the whole list every
-  // couple of seconds.
-
   _saveProgress(meta, time, duration) {
     this._pending = { meta, time, duration };
 
@@ -716,8 +679,6 @@ export class ContinueWatching {
       !last ||
       last.animeSession !== meta.animeSession ||
       last.epSession !== meta.epSession;
-    // Playing normally, the position advances as fast as the clock does; a
-    // bigger discrepancy means the viewer seeked, so save right away.
     const seeked =
       last && Math.abs(time - last.time - (now - last.at) / 1000) > SEEK_JUMP_S;
 
@@ -747,8 +708,6 @@ export class ContinueWatching {
         x.animeSession === meta.animeSession && x.epSession === meta.epSession,
     );
 
-    // Best thumbnail we can get without any network request:
-    // a snapshot seen while browsing > the one already saved > the poster.
     const snap = snaps[meta.epSession];
     const entry = { ...meta, time, duration };
     if (!entry.posterUrl && prev?.posterUrl) entry.posterUrl = prev.posterUrl;
@@ -773,14 +732,6 @@ export class ContinueWatching {
     await this._storage.setCwList(list);
   }
 
-  // ── Resolving thumbnails for the shelf ──────────────────────────────────
-  // Order of preference, cheapest first:
-  //   1. snapshot harvested from a listing (no network)
-  //   2. already saved on the entry
-  //   3. ONE API lookup per home-page load, only for the first entry still
-  //      missing one (never while a video plays), result remembered
-  //   4. the anime poster
-
   async _resolveThumbnails(list) {
     const snaps = await this._snaps();
     let updated = false;
@@ -790,7 +741,6 @@ export class ContinueWatching {
       if (!e.animeSession || !e.epSession) continue;
       const snap = snaps[e.epSession];
       if (snap && e.thumbnailUrl !== snap) {
-        // Keep the poster before it is replaced by the episode still.
         if (!e.posterUrl && e.thumbKind !== "episode" && e.thumbnailUrl) {
           e.posterUrl = e.thumbnailUrl;
         }
@@ -851,7 +801,7 @@ export class ContinueWatching {
         eps.find((e) => e?.session === entry.epSession)?.snapshot || "",
       );
     } catch {
-      return; // rate-limited / offline: stay silent, try again next visit
+      return;
     }
 
     const list = await this._storage.getCwList();
@@ -861,7 +811,7 @@ export class ContinueWatching {
         x.epSession === entry.epSession,
     );
     if (!cur) return;
-    cur.thumbKind = url ? "episode" : "poster"; // "poster" = don't ask again
+    cur.thumbKind = url ? "episode" : "poster";
     if (url) {
       if (!cur.posterUrl && cur.thumbnailUrl) cur.posterUrl = cur.thumbnailUrl;
       cur.thumbnailUrl = url;

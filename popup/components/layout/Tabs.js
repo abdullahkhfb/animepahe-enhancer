@@ -1,9 +1,5 @@
 import { h } from "../dom.js";
 
-/**
- * Segmented tab bar. Panels are toggled by the caller through onSelect.
- * @param {{tabs: {id: string, label: string}[], onSelect: (id: string) => void}} opts
- */
 export function Tabs({ tabs, onSelect }) {
   const buttons = tabs.map((t) =>
     h("button", {

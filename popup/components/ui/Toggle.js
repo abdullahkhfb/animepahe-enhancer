@@ -1,13 +1,5 @@
 import { h } from "../dom.js";
 
-/**
- * Accessible on/off switch (a real <button role="switch">).
- * The 44px-tall hit area is larger than the visible track.
- *
- * @param {{label: string, checked?: boolean, small?: boolean,
- *          onChange?: (checked: boolean) => void}} opts
- * @returns {HTMLButtonElement & {setChecked(v: boolean): void}}
- */
 export function Toggle({ label, checked = false, small = false, onChange }) {
   const el = h(
     "button",

@@ -1,29 +1,13 @@
-/**
- * binge-watch.js — off by default. Auto-plays the next episode when the
- * current one ends: iframe-player.js posts AP_BW_ENDED on "ended", we
- * find the next episode via the release API DUB Detector also uses, then
- * navigate after a short cancelable countdown.
- */
-
 import { PAGE, getPageType, getPageSessions } from "../../helpers/router.js";
 import { throttler } from "../../helpers/throttler.js";
-import { injectStylesheet } from "../../helpers/styles.js";
-import { showPill } from "../../helpers/pill.js";
+import { showAction } from "../../helpers/pill.js";
 
 const MSG = { ENDED: "AP_BW_ENDED" };
 
-// animepahe doesn't embed the kwik iframe on page load — it renders a
-// "Click to load" placeholder (div.click-to-load) and only injects the
-// real <iframe> once that's clicked. Since this class only runs at all
-// when Binge Watch is switched on, we auto-click that placeholder on
-// every player page we land on — however we got there (a scripted
-// Binge Watch navigation, or just a normal click on an episode) — so
-// the whole point of the feature (no clicking required) actually holds.
 const CLICK_TO_LOAD_SELECTOR = ".click-to-load";
 const CLICK_TO_LOAD_WAIT_MS = 8000;
 
 export class BingeWatch {
-  /** @param {import("../../helpers/storage.js").storage} storage */
   constructor(storage, settings = {}) {
     this._storage = storage;
     this._countdownMs = settings.bingeWatchCountdownMs ?? 5000;
@@ -33,7 +17,6 @@ export class BingeWatch {
   }
 
   async init(_initialPageType) {
-    injectStylesheet("ape-bw-styles", "content/features/css/binge-watch.css");
     window.addEventListener("message", this._boundOnMessage);
     this._handleRoute();
 
@@ -46,8 +29,6 @@ export class BingeWatch {
     }).observe(document.body, { childList: true, subtree: true });
   }
 
-  /** Clicks animepahe's own embed placeholder so the kwik iframe loads
-   *  without the user having to click it themselves. */
   _maybeAutoLoadEmbed() {
     const tryClick = () => {
       const el = document.querySelector(CLICK_TO_LOAD_SELECTOR);
@@ -58,8 +39,6 @@ export class BingeWatch {
 
     if (tryClick()) return;
 
-    // The placeholder is usually already in the initial HTML, but give
-    // it a moment in case the page is still assembling the player.
     const observer = new MutationObserver(() => {
       if (tryClick()) observer.disconnect();
     });
@@ -68,7 +47,6 @@ export class BingeWatch {
   }
 
   _handleRoute() {
-    // Reset per-episode state whenever we land on a (new) player page.
     if (getPageType() === PAGE.PLAYER) {
       this._cancelled = false;
       clearTimeout(this._navigateTimer);
@@ -86,7 +64,7 @@ export class BingeWatch {
     const sessions = getPageSessions();
     if (!sessions?.animeSession || !sessions?.epSession) return;
 
-    showPill("🔁 Binge Watch: finding next episode…");
+    showAction({ icon: "spinner", text: "Finding next episode" });
 
     const nextEpSession = await this._findNextEpisodeSession(
       sessions.animeSession,
@@ -94,7 +72,12 @@ export class BingeWatch {
     );
 
     if (!nextEpSession) {
-      showPill("🔁 Binge Watch: no next episode found", 4000);
+      showAction({
+        icon: "binge",
+        tone: "binge",
+        text: "Last episode reached",
+        autohideMs: 4000,
+      });
       return;
     }
 
@@ -106,28 +89,41 @@ export class BingeWatch {
     this._cancelled = false;
 
     if (this._countdownMs <= 0) {
-      showPill("🔁 Binge Watch: playing next episode…", 2000);
+      showAction({
+        icon: "binge",
+        tone: "binge",
+        text: "Playing next episode",
+        autohideMs: 2000,
+      });
       location.href = nextUrl;
       return;
     }
 
-    let secondsLeft = Math.ceil(this._countdownMs / 1000);
+    const total = Math.ceil(this._countdownMs / 1000);
+    let secondsLeft = total;
 
-    const pill = showPill(this._countdownText(secondsLeft), 0, true);
-    pill.classList.add("ape-bw-pill");
-    pill.style.pointerEvents = "auto";
-    pill.title = "Click to cancel";
+    const render = () =>
+      showAction({
+        tone: "binge",
+        countdown: { secondsLeft, total },
+        text: `Next episode in ${secondsLeft}s`,
+        action: { label: "Cancel", onClick: cancel },
+        live: true,
+      });
 
-    const onClick = () => {
+    const cancel = () => {
       this._cancelled = true;
       clearInterval(tickInterval);
       clearTimeout(this._navigateTimer);
-      pill.classList.remove("ape-bw-pill");
-      pill.style.pointerEvents = "none";
-      showPill("🔁 Binge Watch: cancelled", 2500);
-      pill.removeEventListener("click", onClick);
+      showAction({
+        icon: "close",
+        tone: "binge",
+        text: "Binge Watch cancelled",
+        autohideMs: 2500,
+      });
     };
-    pill.addEventListener("click", onClick);
+
+    render();
 
     const tickInterval = setInterval(() => {
       secondsLeft--;
@@ -135,27 +131,18 @@ export class BingeWatch {
         clearInterval(tickInterval);
         return;
       }
-      showPill(this._countdownText(secondsLeft), 0, true);
+      render();
     }, 1000);
 
     this._navigateTimer = setTimeout(() => {
       clearInterval(tickInterval);
-      if (this._cancelled) return;
-      pill.style.pointerEvents = "none";
-      location.href = nextUrl;
+      if (!this._cancelled) location.href = nextUrl;
     }, this._countdownMs);
   }
 
-  _countdownText(secondsLeft) {
-    return `▶ Binge Watch: next episode in ${secondsLeft}s (click to cancel)`;
-  }
-
-  /** Returns the session id of the episode after `currentEpSession`, or
-   *  null if it's the last one / not found. */
   async _findNextEpisodeSession(animeSession, currentEpSession) {
     try {
       let page = 1;
-      // Release list is paginated; walk forward until found or exhausted.
       while (page <= 20) {
         const data = await throttler.fetch(
           `/api?m=release&id=${animeSession}&sort=episode_asc&page=${page}`,
@@ -174,8 +161,6 @@ export class BingeWatch {
             const next = eps[idx + 1];
             return next.session || next.anime_session || null;
           }
-          // Current episode is the last one on this page — if this page
-          // is also the last overall page, there's no next episode.
           if (page >= totalPages) return null;
           page++;
           continue;

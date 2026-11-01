@@ -4,22 +4,6 @@ import { Button } from "../ui/Button.js";
 import { StatChip } from "../ui/StatChip.js";
 import { animateButton } from "../../scripts/common.js";
 
-/**
- * One feature: icon + name + description (click to expand), a master
- * switch, and an expandable body with cache stats, a clear button,
- * sub-option switches and/or a short note.
- *
- * @param {{
- *   feature: import("./feature-config.js").FEATURES[number],
- *   enabled: boolean,
- *   subopts?: {key: string, label: string, note: string, checked: boolean,
- *              onChange: (v: boolean) => void}[],
- *   onToggle: (enabled: boolean) => void,
- *   onClear?: () => Promise<void>,
- *   onOpen?: () => void,   // called when the user expands this row
- *   open?: boolean,
- * }} opts
- */
 export function FeatureRow({ feature, enabled, subopts = [], onToggle, onClear, onOpen, open = false }) {
   const { Icon } = feature;
 
@@ -45,7 +29,6 @@ export function FeatureRow({ feature, enabled, subopts = [], onToggle, onClear, 
     },
   });
 
-  // Body ------------------------------------------------------------
   const chip = StatChip("");
   const clearBtn = onClear
     ? Button({
@@ -99,7 +82,6 @@ export function FeatureRow({ feature, enabled, subopts = [], onToggle, onClear, 
       toggle.setChecked(v);
       el.classList.toggle("is-on", v);
     },
-    /** @param {string} text @param {boolean} canClear */
     setStat(text, canClear) {
       chip.textContent = text;
       if (clearBtn) clearBtn.hidden = !canClear;

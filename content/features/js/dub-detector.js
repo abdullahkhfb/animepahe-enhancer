@@ -121,7 +121,6 @@ export class DubDetector {
     this._maxTotalReqs = 0;
     this._batchDelay = settings.dubBatchDelay ?? 2000;
     this._homeBatchSize = settings.dubHomeBatchSize ?? 2;
-    // Sub-feature: also scan homepage cards, not just episode lists.
     this._homeScanEnabled = settings.dubHomeScanEnabled !== false;
     this._cacheTtlMs = (settings.cacheTtlHours ?? 24) * 60 * 60 * 1_000;
     this._itemsScanned = 0;
@@ -241,9 +240,6 @@ export class DubDetector {
 
     let searchPending = 0;
     for (const size of this._activeSearches.values()) {
-      // The search is a sequential gallop-then-binary-search, so a bracket
-      // of `size` remaining episodes takes roughly 2*log2(size) more
-      // one-at-a-time requests to resolve (gallop out, then narrow).
       if (size > 1) {
         searchPending += 2 * Math.ceil(Math.log2(size));
       }
@@ -269,9 +265,6 @@ export class DubDetector {
     const sessions = getPageSessions();
     if (!sessions) return;
 
-    // No status pill yet: the episode list is filled in by the site after
-    // load (and may never arrive if the site is rate-limiting). The pill
-    // appears only once there are episodes to scan.
     await this._scanEpisodeList(sessions.animeSession);
 
     if (!this._episodeListObserver) {
@@ -331,7 +324,6 @@ export class DubDetector {
     } catch (err) {
       this._stopEta();
       if (!err?.rateLimited) throw err;
-      // Nothing was badged. Un-mark the cards so a later pass retries them.
       for (const { el } of episodes) delete el.dataset.apeDubDone;
       showStatus({
         state: "empty",
@@ -347,10 +339,6 @@ export class DubDetector {
     }
 
     this._stopEta();
-    // This pass only saw the cards that were new since the last one (the
-    // site re-renders the list, so a later pass can see just a few). Report
-    // the totals for every badged episode on the page instead, otherwise the
-    // summary flips from "10 of 10" to "1 of 1".
     const totals = this._countPageBadges();
     const pageDubs = totals.total ? totals.dubs : dubCount;
     const pageTotal = totals.total || episodes.length;
@@ -366,10 +354,7 @@ export class DubDetector {
     );
   }
 
-  /** Dub / total counts across every episode badge currently on the page. */
   _countPageBadges() {
-    // One episode can have several links (thumbnail, title, ...), so count
-    // each episode session once, however many badges it ended up with.
     const seen = new Map();
     document
       .querySelectorAll(".ape-dub-badge-ep, .ape-sub-badge-ep")
@@ -541,7 +526,7 @@ export class DubDetector {
     } catch (err) {
       if (err?.rateLimited) {
         delete anchor.dataset.apeDubDone;
-        // Back off for a while instead of rescanning on the next DOM change.
+        // Back off instead of rescanning on every DOM change.
         this._homeCooldownUntil = Date.now() + 90_000;
       }
     } finally {
@@ -598,10 +583,6 @@ export class DubDetector {
       await this._delay(this._batchDelay);
     }
 
-    // Dubs are almost always a contiguous run starting at the oldest
-    // episode, with only the most recent handful still sub-only, so gallop
-    // backward from the newest episode -- one request at a time, never in
-    // parallel -- to find that cutoff quickly without bursting the API.
     const searchId = ++this._searchIdCounter;
     let notDubbedIdx = eps.length - 1;
     let dubbedIdx = 0;
@@ -622,8 +603,6 @@ export class DubDetector {
       this._tickEta();
     }
 
-    // Binary search narrows the now-small remaining bracket to the exact
-    // split, still one request at a time.
     let left = dubbedIdx;
     let right = notDubbedIdx;
     while (right - left > 1) {
@@ -713,7 +692,6 @@ export class DubDetector {
     }
   }
 
-  /** "6 of 9 dubbed" + segmented bar, appended to the "Episodes (N)" heading. */
   _renderSummary(dubCount, total) {
     document.querySelectorAll(".ape-dub-summary").forEach((n) => n.remove());
     if (!total) return;
@@ -784,9 +762,7 @@ export class DubDetector {
       dubbed = await this._checkDubViaApi(animeSession, epSession);
     } catch (err) {
       apiError = err;
-      // Rate limited / Cloudflare challenge: we know nothing about this
-      // episode. Never report it as "not dubbed" — let the scan abort and
-      // retry later.
+      // Rate limit or challenge: status unknown, so never report "not dubbed"; abort the scan.
       if (err?.rateLimited) throw err;
     }
 

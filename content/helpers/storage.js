@@ -6,10 +6,6 @@ export const KEYS = {
 
 export const CW_MAX_ENTRIES = 24;
 
-// ── Sub-features ─────────────────────────────────────────────────────────
-// Toggles that belong to a feature but aren't "advanced" (no timing/
-// caching/request tuning) render directly inside that feature's own card
-// in the Features tab, keyed by the card's short id (dub, is, bw, ...).
 export const FEATURE_SUBOPTIONS = {
   cw: [
     {
@@ -297,8 +293,6 @@ export const DEFAULT_SETTINGS = {
   dubEnabled: true,
   smartSearchEnabled: true,
   introSkipEnabled: true,
-  // Navigates on its own with no click required, so unlike the rest
-  // above, it defaults to off.
   bingeWatchEnabled: false,
   skipWaitEnabled: true,
   ...FEATURE_SUBOPTIONS_DEFAULTS,

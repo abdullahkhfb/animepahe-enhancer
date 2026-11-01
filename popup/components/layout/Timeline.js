@@ -1,11 +1,5 @@
 import { h } from "../dom.js";
 
-/**
- * One segment per feature, lit in that feature's colour while it's on —
- * an at-a-glance status strip styled like a video timeline.
- *
- * @param {{id: string, color: string, weight: number}[]} features
- */
 export function Timeline(features) {
   const segs = new Map();
   const readout = h("span", {});
@@ -22,7 +16,6 @@ export function Timeline(features) {
   );
   const el = h("div", { class: "timeline" }, bar, h("div", { class: "timeline__readout" }, readout));
 
-  /** @param {Record<string, boolean>} states feature id → enabled */
   el.update = (states) => {
     let n = 0;
     for (const f of features) {

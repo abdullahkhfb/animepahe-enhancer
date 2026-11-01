@@ -8,16 +8,11 @@ import { FEATURES } from "../components/features/feature-config.js";
 import { FeatureRow } from "../components/features/FeatureRow.js";
 
 const CW_KEY = "ape_cw_v1";
-// Must match CACHE_PFX in content/features/js/smart-search.js — smart
-// search results are cached under this prefix, not "ape_alt_".
+// Must match CACHE_PFX in smart-search.js.
 const SS_CACHE_PREFIX = "ape_ss_";
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
-/**
- * Per-feature stat readers and clear actions. A reader returns
- * `{ text, canClear }`; `clear` wipes whatever that feature has cached.
- */
 const STATS = {
   cw: {
     async read() {
@@ -41,8 +36,6 @@ const STATS = {
     clear: () => removePrefixed([SS_CACHE_PREFIX]),
   },
   is: {
-    // The timestamps database is only ever "cached" or "not cached" from
-    // the user's point of view — we don't surface its size or age here.
     async read() {
       try {
         const info = await getTimestampsCacheInfo();
@@ -50,7 +43,6 @@ const STATS = {
         if (info.idEntries > 0)
           return { text: `${plural(info.idEntries, "ID")} cached`, canClear: true };
       } catch {
-        /* fall through to "not cached" */
       }
       return { text: "Not cached", canClear: false };
     },
@@ -70,11 +62,6 @@ async function removePrefixed(prefixes) {
   await chrome.storage.local.remove(await keysWithPrefixes(prefixes));
 }
 
-/**
- * Builds the Features tab.
- * @param {{panel: HTMLElement, timeline: HTMLElement & {update(s: object): void},
- *          notifyReload: () => void}} ctx
- */
 export async function initFeaturesTab({ panel, timeline, notifyReload }) {
   let settings = await storage.getSettings();
 
@@ -106,8 +93,6 @@ export async function initFeaturesTab({ panel, timeline, notifyReload }) {
       enabled: !!settings[feature.settingKey],
       subopts,
       onToggle: (enabled) => save({ [feature.settingKey]: enabled }),
-      // Accordion: only one body is open at a time so the popup never grows
-      // past its fixed height and needs no scrolling.
       onOpen: () => {
         for (const [id, other] of rows) if (id !== feature.id) other.setOpen(false);
       },

@@ -1,14 +1,9 @@
-/**
- * skip-wait.js - skips the pahe.win countdown page.
- */
-
 import { PAGE, getPageType } from "../../helpers/router.js";
-import { showPill } from "../../helpers/pill.js";
+import { showAction } from "../../helpers/pill.js";
 
 const MSG_SKIP_WAIT = "AP_SKIP_WAIT";
 
 export class SkipWait {
-  /** @param {import("../../helpers/storage.js").storage} storage */
   constructor(storage, _settings = {}) {
     this._storage = storage;
     this._busy = false;
@@ -16,12 +11,9 @@ export class SkipWait {
   }
 
   async init(_initialPageType) {
-    // Capture phase: runs before animepahe's own handlers and before the
-    // browser follows the link's target="_blank".
     document.addEventListener("click", this._onClick, true);
   }
 
-  /** @returns {{label: string, url: string} | null} */
   _findPaheLink(event) {
     if (!(event.target instanceof Element)) return null;
     const a = event.target.closest("a[href]");
@@ -49,7 +41,7 @@ export class SkipWait {
       event.shiftKey ||
       event.altKey
     ) {
-      return; // user wants the original behaviour
+      return;
     }
 
     const hit = this._findPaheLink(event);
@@ -59,7 +51,7 @@ export class SkipWait {
     event.stopImmediatePropagation();
 
     if (this._busy) {
-      showPill("⏩ Skip Wait: already working on one…", 2500);
+      showAction({ icon: "spinner", text: "Already working on a link", autohideMs: 2500 });
       return;
     }
     this._open(hit.url, hit.label);
@@ -67,7 +59,7 @@ export class SkipWait {
 
   async _open(paheUrl, label) {
     this._busy = true;
-    showPill(`⏩ Skip Wait: getting link${label ? ` (${label})` : ""}…`);
+    showAction({ icon: "spinner", text: "Getting link", detail: label });
 
     try {
       const res = await chrome.runtime.sendMessage({
@@ -76,18 +68,30 @@ export class SkipWait {
       });
 
       if (res?.ok) {
-        showPill("✓ Skip Wait: opened kwik", 2500);
+        showAction({ icon: "check", tone: "brand", text: "Opened kwik", autohideMs: 2500 });
       } else if (res?.fellBack) {
-        showPill(
-          "⏩ Skip Wait: couldn't find the link, opened the normal page",
-          5000,
-        );
+        showAction({
+          icon: "dot",
+          text: "Opened the normal page",
+          detail: "link not found",
+          autohideMs: 5000,
+        });
       } else {
-        showPill(`⏩ Skip Wait failed: ${res?.error ?? "unknown error"}`, 5000);
+        showAction({
+          icon: "dot",
+          text: "Skip Wait failed",
+          detail: res?.error ?? "unknown error",
+          autohideMs: 5000,
+        });
       }
     } catch (err) {
       console.error("[SkipWait]", err);
-      showPill("⏩ Skip Wait failed (extension not responding)", 5000);
+      showAction({
+        icon: "dot",
+        text: "Skip Wait failed",
+        detail: "extension not responding",
+        autohideMs: 5000,
+      });
     } finally {
       this._busy = false;
     }

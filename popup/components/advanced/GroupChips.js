@@ -1,11 +1,5 @@
 import { h } from "../dom.js";
 
-/**
- * Pill selector for the advanced-setting groups — only the selected
- * group's rows are shown, which keeps the tab short.
- *
- * @param {{groups: {id: string, title: string}[], onSelect: (id: string) => void}} opts
- */
 export function GroupChips({ groups, onSelect }) {
   const chips = new Map();
   const el = h(

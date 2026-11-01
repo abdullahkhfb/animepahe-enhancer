@@ -18,7 +18,7 @@
 
 <a id="continue-watching"></a>
 
-## <img src="assets/continue-watching.svg" width="26" height="26" align="absmiddle" alt="▶" /> Continue Watching
+## <img src="assets/continue-watching.svg" width="26" height="26" align="absmiddle" alt="Continue Watching" /> Continue Watching
 
 When you watch an episode on animepahe:
 
@@ -29,7 +29,7 @@ When you watch an episode on animepahe:
     - The **episode's own thumbnail** (harvested passively as you browse episode listings, with a single release-API lookup per home-page visit if an episode still wasn't seen yet, or the anime poster as a final fallback)
     - A glowing pink progress bar (<img src="assets/cw-prog-bar.svg" width="70" height="8" align="absmiddle" alt="Progress bar" />) along the bottom edge showing how far through the episode you are
     - The anime title in the bottom-left and the episode badge (<img src="assets/cw-ep-badge.svg" height="20" align="absmiddle" alt="EP 6" />) in the bottom-right
-    - On hover or keyboard focus (the remove button is always visible in the default style): a centered pink circular **play button** (<img src="assets/play.svg" width="18" height="18" align="absmiddle" alt="▶" />), a top-left **time-remaining badge** (<img src="assets/cw-time-left.svg" height="18" align="absmiddle" alt="14 min left" />, or `Almost done` when under 60 seconds remain), and a top-right **remove button** (<img src="assets/close.svg" width="18" height="18" align="absmiddle" alt="✕" />, always visible on touch devices)
+    - On hover or keyboard focus (the remove button is always visible in the default style): a centered pink circular **play button** (<img src="assets/play.svg" width="18" height="18" align="absmiddle" alt="Play" />), a top-left **time-remaining badge** (<img src="assets/cw-time-left.svg" height="18" align="absmiddle" alt="14 min left" />, or `Almost done` when under 60 seconds remain), and a top-right **remove button** (<img src="assets/close.svg" width="18" height="18" align="absmiddle" alt="✕" />, always visible on touch devices)
 5. Click any card to jump directly back to that episode; the video player will automatically seek to your saved timestamp.
 6. Click the top-right **✕** button on a card to remove that series from your list.
 7. Use **Show more / Show less** (<img src="assets/cw-btn-more.svg" height="20" align="absmiddle" alt="Show more" />) in the shelf header (next to the pink entry count pill <img src="assets/cw-count.svg" height="18" align="absmiddle" alt="6" />) when you have more than 6 entries (configurable in Advanced Settings). 6 entries fill exactly one row of the default style.
@@ -46,15 +46,15 @@ The DUB Detector runs automatically in the background on three page types (after
 **Anime episode list page (`/anime/{session}`):**
 
 - Once episode cards appear on the page, they are scanned using a sequential gallop-then-binary-search algorithm.
-- Dubbed episodes receive a solid brand-pink **DUB** badge (<img src="assets/badge-dub.svg" height="18" align="absmiddle" alt="🎙 DUB" />) with a microphone icon in the top-right corner of their card; sub-only episodes receive a dark frosted-glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />) with an amber dot.
+- Dubbed episodes receive a solid brand-pink **DUB** badge (<img src="assets/badge-dub.svg" height="18" align="absmiddle" alt="DUB" />) with a microphone icon in the top-right corner of their card; sub-only episodes receive a dark frosted-glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />) with an amber dot.
 - Next to the page's `Episodes (N)` heading, an inline summary (<img src="assets/badge-dub-summary.svg" height="20" align="absmiddle" alt="🎙 6 of 9 dubbed" />) shows the total dubbed count (`6 of 9 dubbed`) alongside a segmented pink/grey progress bar.
-- A rich status toast in the bottom-right corner displays a pink progress ring (<img src="assets/progress-ring.svg" width="16" height="16" align="absmiddle" alt="◌" />) and live percentage while scanning (`Scanning dubs 67%`), resolving to a pink checkmark badge (<img src="assets/check.svg" width="16" height="16" align="absmiddle" alt="✓" /> `6 episodes dubbed`) or an amber dot (<img src="assets/amber-dot.svg" width="12" height="12" align="absmiddle" alt="•" /> `No dub found`). If rate-limited, it shows `Dub scan paused (rate limited)` without applying false `SUB ONLY` badges and retries after 90 seconds.
+- A rich status toast in the bottom-right corner displays a pink progress ring (<img src="assets/progress-ring.svg" width="16" height="16" align="absmiddle" alt="Progress ring" />) and live percentage while scanning (`Scanning dubs 67%`), resolving to a pink checkmark badge (<img src="assets/check.svg" width="16" height="16" align="absmiddle" alt="Check" /> `6 episodes dubbed`) or an amber dot (<img src="assets/amber-dot.svg" width="12" height="12" align="absmiddle" alt="Amber dot" /> `No dub found`). If rate-limited, it shows `Dub scan paused (rate limited)` without applying false `SUB ONLY` badges and retries after 90 seconds.
 - The scan re-runs automatically when the episode list is paginated or updated via AJAX.
 
 **Player page (`/play/{animeSession}/{epSession}`):**
 
 - Checks the active episode on load while showing `Checking dub` in the bottom-right status toast.
-- Appends an inline pink **DUB** badge (<img src="assets/badge-dub.svg" height="18" align="absmiddle" alt="🎙 DUB" />) or dark glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />) directly next to the episode's `<h1>` heading, and updates the toast to `Dub available` or `Sub only`.
+- Appends an inline pink **DUB** badge (<img src="assets/badge-dub.svg" height="18" align="absmiddle" alt="DUB" />) or dark glass **SUB ONLY** badge (<img src="assets/badge-sub-only.svg" height="18" align="absmiddle" alt="• SUB ONLY" />) directly next to the episode's `<h1>` heading, and updates the toast to `Dub available` or `Sub only`.
 
 **Home page (Latest Releases grid):**
 
@@ -86,17 +86,17 @@ Smart Search activates automatically while you type in the animepahe search bar 
 
 <a id="intro--outro-skip"></a>
 
-## <img src="assets/intro-skip.svg" width="26" height="26" align="absmiddle" alt="⏭" /> Intro / Outro Skip
+## <img src="assets/intro-skip.svg" width="26" height="26" align="absmiddle" alt="Intro / Outro Skip" /> Intro / Outro Skip
 
 The Intro / Outro Skip feature activates automatically on the player page (`/play/{animeSession}/{epSession}`):
 
 1. When you navigate to a player page, the extension extracts the anime title and episode number from the page.
-2. It resolves the anime to an AniDB ID (via AniList search → `relations.yuna.moe`) and looks up intro/outro/recap timestamps for that episode in the cached `open-anime-timestamps` database. A status pill in the bottom-right corner shows progress (`⏭ Resolving anime…` → `⏭ Looking up timestamps…`).
-3. If timestamps are found, a result pill appears (e.g., `⏭ Intro/Outro (database): OP ✓ · ED ✓`) and the skip ranges are sent to the Kwik player iframe.
-4. In **manual mode** (default): A styled **Skip Intro** or **Skip Outro** button (<img src="assets/badge-skip-intro.svg" height="22" align="absmiddle" alt="Skip Intro" />) appears overlaid in the bottom-right corner of the video (in both normal and fullscreen playback) when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after **8 seconds** by default (configurable) and reappears when you move your mouse.
+2. It resolves the anime to an AniDB ID (via AniList search → `relations.yuna.moe`) and looks up intro/outro/recap timestamps for that episode in the cached `open-anime-timestamps` database. A status pill in the bottom-right corner shows progress (`Resolving anime` → `Looking up timestamps`, each with a spinner).
+3. If timestamps are found, a result pill appears (`Skip data ready`, with `Intro and outro`, `Intro` or `Outro` as detail) and the skip ranges are sent to the Kwik player iframe.
+4. In **manual mode** (default): A dark glass **Skip Intro** or **Skip Outro** button (<img src="assets/badge-skip-intro.svg" height="22" align="absmiddle" alt="Skip Intro" />) (4px corners, bold label, turning brand pink on hover) appears overlaid in the bottom-right corner of the video (in both normal and fullscreen playback) when playback enters an intro or outro range. Click it to jump past the segment. The button auto-hides after **8 seconds** by default (configurable) and reappears when you move your mouse.
 5. In **auto-skip mode** (opt-in via the **Auto-skip automatically** sub-option on the Intro / Outro Skip card in the popup): The player automatically seeks past intros and outros as soon as playback enters the range, with a 1-second grace period after manual seeks so you can still scrub into an OP/ED if you want to.
-6. **Progress bar highlights** (on by default, toggleable via **Highlight on progress bar** on the Intro / Outro Skip card): Coloured segments are drawn directly inside the Kwik player's scrubber — **blue** (<img src="assets/scrubber-intro.svg" width="48" height="12" align="absmiddle" alt="Blue" />) for intros, **orange** (<img src="assets/scrubber-outro.svg" width="48" height="12" align="absmiddle" alt="Orange" />) for outros, and **purple** (<img src="assets/scrubber-recap.svg" width="48" height="12" align="absmiddle" alt="Purple" />) for recaps.
-7. If the title or episode cannot be matched to timestamp data, nothing is skipped for that episode and the status pill reports `not found in database` or `no data for this episode`.
+6. **Progress bar highlights** (on by default, toggleable via **Highlight on progress bar** on the Intro / Outro Skip card): Rounded segments are drawn directly inside the Kwik player's scrubber — **blue** (<img src="assets/scrubber-intro.svg" width="48" height="12" align="absmiddle" alt="Blue" />) for intros, **amber** (<img src="assets/scrubber-outro.svg" width="48" height="12" align="absmiddle" alt="Amber" />) for outros, and **violet** (<img src="assets/scrubber-recap.svg" width="48" height="12" align="absmiddle" alt="Violet" />) for recaps. The bar and segments thicken when you hover it, and hovering a segment shows its label and time range (for example `Intro 0:25 to 1:55`).
+7. If the title or episode cannot be matched to timestamp data, nothing is skipped for that episode and the status pill reports `not in database` or `none for this episode`.
 
 **Data sources and caching:**
 
@@ -108,15 +108,15 @@ The Intro / Outro Skip feature activates automatically on the player page (`/pla
 
 <a id="binge-watch"></a>
 
-## <img src="assets/binge-watch.svg" width="26" height="26" align="absmiddle" alt="🔁" /> Binge Watch
+## <img src="assets/binge-watch.svg" width="26" height="26" align="absmiddle" alt="Binge Watch" /> Binge Watch
 
 Binge Watch auto-loads the player and auto-plays the next episode when the current one ends. It's **off by default** since it navigates your browser on its own — turn it on from its row in the popup's Features tab.
 
 1. While Binge Watch is on, animepahe's `"Click to load"` placeholder (`div.click-to-load`) over the video embed is clicked automatically on **every** episode page you land on — including ones you open yourself from an episode list — and Kwik's player starts playback automatically.
-2. When the video hits its native `ended` event inside Kwik, the extension shows `🔁 Binge Watch: finding next episode…` and looks up the next episode via animepahe's own release listing (walking across paginated release pages if needed).
-3. A clickable countdown pill (<img src="assets/pill-bw-countdown.svg" height="22" align="absmiddle" alt="▶ Binge Watch: next episode in 5s (click to cancel)" />) appears in the bottom-right corner. Click it any time before the timer finishes to cancel and stay on the current episode (`🔁 Binge Watch: cancelled`).
+2. When the video hits its native `ended` event inside Kwik, the extension shows `Finding next episode` and looks up the next episode via animepahe's own release listing (walking across paginated release pages if needed).
+3. A countdown pill (<img src="assets/pill-bw-countdown.svg" height="22" align="absmiddle" alt="Next episode in 5s with a Cancel action" />) with a pink ring appears in the bottom-right corner. Press **Cancel** any time before the timer finishes to stay on the current episode (`Binge Watch cancelled`).
 4. If you don't cancel, the browser navigates to the next episode automatically once the countdown ends.
-5. If there is no next episode (you're on the latest one), the pill shows `🔁 Binge Watch: no next episode found` and playback ends normally.
+5. If there is no next episode (you're on the latest one), the pill shows `Last episode reached` and playback ends normally.
 
 **Tuning:** The countdown length is configurable in the Advanced tab (`Countdown before next episode`, under `Binge`) and can be set to **0** to skip the countdown pill entirely and jump straight to the next episode.
 
@@ -124,14 +124,14 @@ Binge Watch auto-loads the player and auto-plays the next episode when the curre
 
 <a id="skip-wait"></a>
 
-## <img src="assets/skip-wait.svg" width="26" height="26" align="absmiddle" alt="⏩" /> Skip Wait
+## <img src="assets/skip-wait.svg" width="26" height="26" align="absmiddle" alt="Skip Wait" /> Skip Wait
 
 Skip Wait removes the `pahe.win` countdown page from the download flow. It's **on by default** and can be switched off from its row in the popup's Features tab.
 
 1. Open an episode player page and click the **Download** menu as usual.
-2. Left-click a quality link (for example `SubsPlease · 1080p`). A status pill appears in the bottom-right corner (`⏩ Skip Wait: getting link (SubsPlease · 1080p)…`).
-3. A new tab opens directly on the `kwik.cx/f/…` page right next to your episode tab (<img src="assets/pill-sw-opened.svg" height="22" align="absmiddle" alt="✓ Skip Wait: opened kwik" />) — no 5-second `pahe.win` wait. Click Kwik's **Download** button there to save the file as usual.
-4. If the extension can't find the Kwik link (or the request times out after 15 seconds), it opens the original `pahe.win` page instead (`⏩ Skip Wait: couldn't find the link, opened the normal page`).
+2. Left-click a quality link (for example `SubsPlease · 1080p`). A status pill appears in the bottom-right corner (`Getting link`, with the option label such as `SubsPlease · 1080p`).
+3. A new tab opens directly on the `kwik.cx/f/…` page right next to your episode tab (<img src="assets/pill-sw-opened.svg" height="22" align="absmiddle" alt="Opened kwik" />) — no 5-second `pahe.win` wait. Click Kwik's **Download** button there to save the file as usual.
+4. If the extension can't find the Kwik link (or the request times out after 15 seconds), it opens the original `pahe.win` page instead (`Opened the normal page`, detail `link not found`).
 
 **Want the original behaviour for one click?** Hold **Ctrl**, **Shift**, **Alt**, or **Cmd** while clicking (or **middle-click**) and the link opens the normal `pahe.win` page.
 

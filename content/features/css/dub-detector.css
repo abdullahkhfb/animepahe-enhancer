@@ -1,15 +1,7 @@
-/* dub-detector.css — badges, scan chip and summary for DUB Detector.
- *
- * Design language: DUB is the loud, positive signal (solid brand pink);
- * SUB ONLY is the default state so it stays quiet (dark glass + amber dot).
- * `!important` is kept on the overlay badges because they sit inside the
- * site's own card markup. */
-
 @keyframes ape-dub-spin {
   to { transform: rotate(360deg); }
 }
 
-/* ── Overlay chips (episode cards + home cards) ───────────────────────── */
 .ape-dub-badge,
 .ape-dub-badge-home,
 .ape-dub-spin {
@@ -34,8 +26,6 @@
   pointer-events: none !important;
 }
 
-/* Guard: the host site may style bare `span`/`i`/`b` inside its cards, so
- * pin every child of our chips back into normal flex flow. */
 .ape-dub-badge > *,
 .ape-dub-spin > * {
   position: static !important;
@@ -44,7 +34,6 @@
   margin: 0 !important;
 }
 
-/* DUB — solid brand pink */
 .ape-dub-badge {
   background: #d5015b !important;
   color: #fff !important;
@@ -57,7 +46,6 @@
   flex: none !important;
 }
 
-/* coverage meter inside the home-card chip */
 .ape-dub-meter {
   display: block !important;
   width: 26px !important;
@@ -72,7 +60,6 @@
   background: #fff !important;
 }
 
-/* SUB ONLY — quiet dark glass with an amber dot */
 .ape-dub-badge.ape-sub-badge-ep,
 .ape-dub-badge-home.ape-sub-badge-home {
   background: rgba(0, 0, 0, 0.62) !important;
@@ -93,7 +80,6 @@
   flex: none !important;
 }
 
-/* SCANNING — glass chip with a spinning ring, shown while a card is checked */
 .ape-dub-spin {
   background: rgba(0, 0, 0, 0.62) !important;
   color: #fff !important;
@@ -113,7 +99,6 @@
   animation: ape-dub-spin 0.8s linear infinite !important;
 }
 
-/* ── Inline badge next to the <h1> on a player page ───────────────────── */
 .ape-dub-inline,
 .ape-sub-inline {
   display: inline-flex;
@@ -147,7 +132,6 @@
   background: #ff8a1f;
 }
 
-/* ── "6 of 9 dubbed" summary next to the Episodes (N) heading ─────────── */
 .ape-dub-summary {
   display: inline-flex;
   align-items: center;

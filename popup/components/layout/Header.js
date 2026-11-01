@@ -1,7 +1,6 @@
 import { h } from "../dom.js";
 import { ApMark } from "../icons/index.js";
 
-/** Logo tile, product name, "animepahe companion" subtitle and version. */
 export function Header({ version }) {
   return h(
     "header",

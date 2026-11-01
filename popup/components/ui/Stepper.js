@@ -1,12 +1,5 @@
 import { h } from "../dom.js";
 
-/**
- * − [ value ] + number control. The centre is a real <input type=number>,
- * so values can still be typed; the buttons nudge by `step`.
- *
- * @param {{id: string, label: string, value: number, min: number,
- *          max: number, step: number, onChange: (v: number) => void}} opts
- */
 export function Stepper({ id, label, value, min, max, step, onChange }) {
   const input = h("input", {
     id,

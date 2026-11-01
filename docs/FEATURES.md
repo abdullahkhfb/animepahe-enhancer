@@ -38,7 +38,7 @@ Every feature is a self-contained ES module loaded dynamically by `content/main.
 <a id="-continue-watching"></a>
 <a id="continue-watching"></a>
 
-## <img src="assets/continue-watching.svg" width="32" height="32" align="absmiddle" alt="▶" /> Continue Watching
+## <img src="assets/continue-watching.svg" width="32" height="32" align="absmiddle" alt="Continue Watching" /> Continue Watching
 
 Never lose your place again. **Continue Watching** tracks your exact playback position for every anime you watch inside the embedded Kwik video player and surfaces a native-looking **Continue Watching** shelf directly above **Latest Releases** on the animepahe home page.
 
@@ -129,9 +129,9 @@ The visual design makes **DUB** a high-contrast positive signal (solid brand pin
 | **Home Card — Sub Only** (`/`) | <img src="assets/badge-sub-only.svg" height="22" align="absmiddle" alt="• SUB ONLY" /> | `.ape-sub-badge-home` | Dark frosted-glass chip with an amber dot (`• SUB ONLY`) when 0 episodes of that series are dubbed. |
 | **Home Card — Scanning** (`/`) | <img src="assets/badge-scanning.svg" height="22" align="absmiddle" alt="◌ SCANNING" /> | `.ape-dub-spin` | Temporary dark frosted-glass chip with an animated spinning ring (`.ape-dub-ring`) and `SCANNING` label shown on a home card while an uncached network check is in flight. |
 | **Player Page Inline Badge** (`/play/{anime}/{ep}`) | <img src="assets/badge-dub.svg" height="22" align="absmiddle" alt="🎙 DUB" /> / <img src="assets/badge-sub-only.svg" height="22" align="absmiddle" alt="• SUB ONLY" /> | `.ape-dub-inline` / `.ape-sub-inline` | Appended inline next to the episode's `<h1>` title to confirm audio availability on the active player page. |
-| **Status Toast — Scanning** (`showStatus` in `pill.js`) | <img src="assets/progress-ring.svg" width="18" height="18" align="absmiddle" alt="◌" /> `Scanning dubs 67%` | `.ape-pill-ring` | Bottom-right status toast with a conic-gradient pink progress ring (`#ff4d94`) and live percentage (`Scanning dubs`, `Scanning home cards`), or an indeterminate spinning ring (`Checking dub` on player pages). Appears on episode lists only after episode cards have loaded. |
-| **Status Toast — Complete** (`showStatus` in `pill.js`) | <img src="assets/check.svg" width="18" height="18" align="absmiddle" alt="✓" /> `6 episodes dubbed` | `.ape-pill-ok` | Pink circle (`#d5015b`) with white SVG `checkIcon` shown when dubs are found (`N episode(s) dubbed`, `Dub available`, `Home scan complete`). |
-| **Status Toast — Sub Only / Paused** (`showStatus` in `pill.js`) | <img src="assets/amber-dot.svg" width="14" height="14" align="absmiddle" alt="•" /> `No dub found` | `.ape-pill-dot` | Amber dot (`#ff8a1f`) shown when a scan finds no dubs (`No dub found`, `Sub only`) or pauses on a rate limit (`Dub scan paused (rate limited)`). |
+| **Status Toast — Scanning** (`showStatus` in `pill.js`) | <img src="assets/progress-ring.svg" width="18" height="18" align="absmiddle" alt="Progress ring" /> `Scanning dubs 67%` | `.ape-pill-ring` | Bottom-right status toast with a conic-gradient pink progress ring (`#ff4d94`) and live percentage (`Scanning dubs`, `Scanning home cards`), or an indeterminate spinning ring (`Checking dub` on player pages). Appears on episode lists only after episode cards have loaded. |
+| **Status Toast — Complete** (`showStatus` in `pill.js`) | <img src="assets/check.svg" width="18" height="18" align="absmiddle" alt="Check" /> `6 episodes dubbed` | `.ape-pill-ok` | Pink circle (`#d5015b`) with white SVG `checkIcon` shown when dubs are found (`N episode(s) dubbed`, `Dub available`, `Home scan complete`). |
+| **Status Toast — Sub Only / Paused** (`showStatus` in `pill.js`) | <img src="assets/amber-dot.svg" width="14" height="14" align="absmiddle" alt="Amber dot" /> `No dub found` | `.ape-pill-dot` | Amber dot (`#ff8a1f`) shown when a scan finds no dubs (`No dub found`, `Sub only`) or pauses on a rate limit (`Dub scan paused (rate limited)`). |
 
 ### Two-Tier Detection & Gallop-Then-Binary-Search Algorithm
 
@@ -229,7 +229,7 @@ Filter results via isRelevant() & deduplicate against native rows"]
 <a id="-intro--outro-skip"></a>
 <a id="intro-outro-skip"></a>
 
-## <img src="assets/intro-skip.svg" width="32" height="32" align="absmiddle" alt="⏭" /> Intro / Outro Skip
+## <img src="assets/intro-skip.svg" width="32" height="32" align="absmiddle" alt="Intro / Outro Skip" /> Intro / Outro Skip
 
 Skip anime openings (OP) and endings (ED) automatically or with a single click, and see non-story segments highlighted right on the video timeline. **Intro / Outro Skip** resolves the current anime to its AniDB ID and looks up episode timestamps in the community-maintained [open-anime-timestamps](https://github.com/Ellivers/open-anime-timestamps) dataset (~27 MB, cached locally in IndexedDB).
 
@@ -237,12 +237,12 @@ Skip anime openings (OP) and endings (ED) automatically or with a single click, 
 
 | UI Element / Sub-Feature | Visual / Icon | Location / Key | Behaviour & Details |
 | :--- | :---: | :--- | :--- |
-| **Manual Skip Button** (`#ape-is-skip-btn`) | <img src="assets/badge-skip-intro.svg" height="28" align="absmiddle" alt="Skip Intro" /> | Bottom-right of Kwik video player (`bottom: 64px, right: 18px`) | Appears with a smooth slide-up transition when playback enters an `intro` (**Skip Intro**) or `outro` (**Skip Outro**) range while auto-skip is off. Includes the custom skip-forward double-bar SVG icon (`.ape-is-skip-icon`). Auto-hides after **8 seconds** by default (`introSkipButtonAutoHideMs`, `0` = stay visible) and reappears whenever you move the mouse. |
+| **Manual Skip Button** (`#ape-is-skip-btn`) | <img src="assets/badge-skip-intro.svg" height="28" align="absmiddle" alt="Skip Intro" /> | Bottom-right of Kwik video player (`bottom: 64px, right: 18px`) | 36px dark-glass button with 4px corners (matching the DUB badge), a bold 13px Inter label and the skip glyph (`.ape-is-skip-icon`: triangle plus a single bar). Hover turns it brand pink (`#d5015b`) with a pink glow and a 1px lift, pressed is `#b00149` at 97% size, and keyboard focus shows a `#ff5c9d` ring. Appears with a smooth slide-up transition when playback enters an `intro` (**Skip Intro**) or `outro` (**Skip Outro**) range while auto-skip is off. Auto-hides after **8 seconds** by default (`introSkipButtonAutoHideMs`, `0` = stay visible) and reappears whenever you move the mouse. |
 | **Auto-Skip Mode** (`introSkipAutoSkip`) | Toggle in Popup (**Off** by default) | Popup → Features → Intro / Outro Skip card | When enabled, the player immediately seeks to the end of `intro` and `outro` segments with no button press required. Includes a **1-second manual-seek grace period** (`Math.abs(t - lastSeekTime) < 1.0`) so you can still scrub back into an OP/ED intentionally without fighting the player. |
-| **Intro Scrubber Highlight** (`.ape-is-hl-intro`) | <img src="assets/scrubber-intro.svg" width="72" height="14" align="absmiddle" alt="Blue intro bar" /> `#3b82f6` | Inside Kwik player progress bar (`title="Intro"`) | Positioned directly inside the Kwik scrubber track from `start / duration` to `end / duration` when **Highlight on progress bar** (`introSkipShowHighlights`, default **On**) is enabled. |
-| **Outro Scrubber Highlight** (`.ape-is-hl-outro`) | <img src="assets/scrubber-outro.svg" width="72" height="14" align="absmiddle" alt="Orange outro bar" /> `#e8710a` | Inside Kwik player progress bar (`title="Outro"`) | Highlights the ending (ED) segment in orange on the Kwik progress bar. |
-| **Recap Scrubber Highlight** (`.ape-is-hl-recap`) | <img src="assets/scrubber-recap.svg" width="72" height="14" align="absmiddle" alt="Purple recap bar" /> `#a855f7` | Inside Kwik player progress bar (`title="Recap"`) | Highlights recap segments in purple on the Kwik progress bar for visual orientation (recaps are highlighted on the scrubber but not auto-skipped). |
-| **Status Toast** (`showPill`) | `⏭ Intro/Outro (database): OP ✓ · ED ✓` | Bottom-right of player page | Shows step-by-step lookup status (`⏭ Resolving anime…` → `⏭ Downloading skip database…` / `⏭ Parsing skip database…` → `⏭ Looking up timestamps…`) and the final result (`OP ✓ · ED ✓`, `not found in database`, or `no data for this episode`). |
+| **Intro Scrubber Highlight** (`.ape-is-hl-intro`) | <img src="assets/scrubber-intro.svg" width="72" height="14" align="absmiddle" alt="Blue intro bar" /> `#4f9dff` | Inside Kwik player progress bar (hover label `Intro 0:25 to 1:55`) | Positioned directly inside the Kwik scrubber track from `start / duration` to `end / duration` when **Highlight on progress bar** (`introSkipShowHighlights`, default **On**) is enabled. Segments are 6px tall with rounded ends, a 2px gap ring and a 6px minimum width; the track and segments grow to 10px while the bar is hovered. |
+| **Outro Scrubber Highlight** (`.ape-is-hl-outro`) | <img src="assets/scrubber-outro.svg" width="72" height="14" align="absmiddle" alt="Amber outro bar" /> `#ff8a1f` | Inside Kwik player progress bar (hover label `Outro 21:10 to 22:40`) | Highlights the ending (ED) segment in amber on the Kwik progress bar. |
+| **Recap Scrubber Highlight** (`.ape-is-hl-recap`) | <img src="assets/scrubber-recap.svg" width="72" height="14" align="absmiddle" alt="Violet recap bar" /> `#a98bff` | Inside Kwik player progress bar (hover label `Recap 0:00 to 0:30`) | Highlights recap segments in violet on the Kwik progress bar for visual orientation (recaps are highlighted on the scrubber but not auto-skipped). |
+| **Status Pill** (`showAction` in `pill.js`) | `Skip data ready` + `Intro and outro` | Bottom-right of player page | Shows step-by-step lookup status (`Resolving anime` → `Downloading skip database` / `Parsing skip database` → `Looking up timestamps`) with a spinner, then the result: `Skip data ready` (detail `Intro and outro`, `Intro` or `Outro`), `No skip data` (`not in database` / `none for this episode`) or `Skip data unavailable` (`database fetch failed`). |
 
 ### Timestamp Resolution & Cross-Frame Pipeline
 
@@ -260,14 +260,14 @@ Pick best titleSimilarity >= 0.5 (English > Romaji > Synonym)"]
 and cache in ape_isid_v1_{animeSession}"]
     D --> E
     E --> F{"anidbId found?"}
-    F -->|No| G["Show pill: '⏭ Intro/Outro: not found in database'"]
+    F -->|No| G["Show pill: 'No skip data: not in database'"]
     F -->|Yes| H["Load open-anime-timestamps from IndexedDB (ape_intro_skip)
 If missing or older than 168h, conditional GET with If-None-Match (ETag)"]
     H --> I["Look up db[anidbId] for matching episode_number
 Normalize opening, ending, recap (extend start-only ranges by 90s default)"]
     I --> J{"Has intro or outro?"}
-    J -->|No| K["Show pill: '⏭ Intro/Outro: no data for this episode'"]
-    J -->|Yes| L["Show pill: '⏭ Intro/Outro (database): OP ✓ · ED ✓'
+    J -->|No| K["Show pill: 'No skip data: none for this episode'"]
+    J -->|Yes| L["Show pill: 'Skip data ready: Intro and outro'
 Post AP_IS_SET_RANGES to Kwik iframe (and on AP_IS_READY)"]
 ```
 
@@ -284,7 +284,7 @@ Post AP_IS_SET_RANGES to Kwik iframe (and on AP_IS_READY)"]
 <a id="-binge-watch"></a>
 <a id="binge-watch"></a>
 
-## <img src="assets/binge-watch.svg" width="32" height="32" align="absmiddle" alt="🔁" /> Binge Watch
+## <img src="assets/binge-watch.svg" width="32" height="32" align="absmiddle" alt="Binge Watch" /> Binge Watch
 
 Sit back and watch multiple episodes hands-free. **Binge Watch** automatically loads the embedded video player on every episode page, detects when an episode finishes playing inside the Kwik iframe, resolves the next episode via animepahe's release API, and navigates to it after a cancelable countdown. It is **Off by default** because it navigates the browser automatically.
 
@@ -293,11 +293,11 @@ Sit back and watch multiple episodes hands-free. **Binge Watch** automatically l
 | Stage / Event | Status Pill / UI | Interactive? | Behaviour |
 | :--- | :---: | :---: | :--- |
 | **Player Page Load** | Auto-clicks `.click-to-load` overlay | Automatic | Immediately clicks animepahe's `"Click to load"` placeholder (`div.click-to-load`, watching up to 8s via `MutationObserver`) on **every** player page you open while Binge Watch is enabled, then triggers `ensurePlayback()` inside the Kwik iframe. |
-| **Episode Ends (`ended`)** | `🔁 Binge Watch: finding next episode…` | No | Shown as soon as the Kwik `<video>` element emits its native `ended` event and posts `AP_BW_ENDED` to the parent page. |
-| **Countdown Active** (`bingeWatchCountdownMs > 0`) | <img src="assets/pill-bw-countdown.svg" height="26" align="absmiddle" alt="▶ Binge Watch: next episode in 5s (click to cancel)" /> | **Yes** (`.ape-bw-pill`) | Interactive blue-bordered pill (`cursor: pointer`, turns solid blue `rgba(59, 130, 246, 0.92)` on hover) that ticks down every second from `Math.ceil(countdownMs / 1000)`. Clicking anywhere on the pill cancels auto-navigation. |
-| **Countdown Cancelled** | `🔁 Binge Watch: cancelled` | No | Shown for 2.5 seconds after clicking the countdown pill; stays on the current episode page. |
-| **Immediate Jump** (`bingeWatchCountdownMs === 0`) | `🔁 Binge Watch: playing next episode…` | No | When **Countdown before next episode** is set to `0` in Advanced Settings, skips the countdown pill and navigates straight to `/play/{animeSession}/{nextEpSession}`. |
-| **Final Episode Reached** | `🔁 Binge Watch: no next episode found` | No | Shown for 4 seconds when you finish the latest available episode in the release list. |
+| **Episode Ends (`ended`)** | Spinner + `Finding next episode` | No | Shown as soon as the Kwik `<video>` element emits its native `ended` event and posts `AP_BW_ENDED` to the parent page. |
+| **Countdown Active** (`bingeWatchCountdownMs > 0`) | <img src="assets/pill-bw-countdown.svg" height="26" align="absmiddle" alt="Next episode in 5s with a Cancel action" /> | **Yes** (`.ape-pill-act`) | Pill with a pink countdown ring, `Next episode in Ns` and a **Cancel** action separated by a divider. It re-renders every second from `Math.ceil(countdownMs / 1000)`; only the Cancel action is clickable and it stops auto-navigation. |
+| **Countdown Cancelled** | Close icon + `Binge Watch cancelled` | No | Shown for 2.5 seconds after pressing Cancel; stays on the current episode page. |
+| **Immediate Jump** (`bingeWatchCountdownMs === 0`) | Binge icon + `Playing next episode` | No | When **Countdown before next episode** is set to `0` in Advanced Settings, skips the countdown pill and navigates straight to `/play/{animeSession}/{nextEpSession}`. |
+| **Final Episode Reached** | Binge icon + `Last episode reached` | No | Shown for 4 seconds when you finish the latest available episode in the release list. |
 
 ### Next-Episode Resolution & Autoplay Engine
 
@@ -332,18 +332,18 @@ sequenceDiagram
 <a id="-skip-wait"></a>
 <a id="skip-wait"></a>
 
-## <img src="assets/skip-wait.svg" width="32" height="32" align="absmiddle" alt="⏩" /> Skip Wait
+## <img src="assets/skip-wait.svg" width="32" height="32" align="absmiddle" alt="Skip Wait" /> Skip Wait
 
 Clicking a quality link in an episode page's **Download** menu opens the `kwik.cx/f/…` download page right away — bypassing the 5-second `pahe.win` ad/countdown intermediary page completely. You still click Kwik's own **Download** button as usual. **On by default.**
 
 ### On-Page Status Pills & Click Handling
 
-| User Action / State | Status Pill (`showPill`) | Behaviour |
+| User Action / State | Status Pill (`showAction`) | Behaviour |
 | :--- | :---: | :--- |
-| **Left-click a `pahe.win` link** | `⏩ Skip Wait: getting link (SubsPlease · 1080p)…` | Intercepts the click in the DOM **capture phase** on player pages (`PAGE.PLAYER`), prevents the `pahe.win` tab from opening, and sends `AP_SKIP_WAIT` to `background.js` with the link URL. Includes the clicked option's label text in the pill. |
-| **Kwik URL resolved** | <img src="assets/pill-sw-opened.svg" height="26" align="absmiddle" alt="✓ Skip Wait: opened kwik" /> | `background.js` opens `https://kwik.cx/f/{id}` in a new active tab immediately to the right of your episode tab (`senderTab.index + 1`). Pill auto-hides after 2.5s. |
-| **Click while another is resolving** | `⏩ Skip Wait: already working on one…` | Prevents duplicate concurrent background fetches while a link resolution is already in flight (`_busy` guard). |
-| **Fallback on error / missing link** | `⏩ Skip Wait: couldn't find the link, opened the normal page` | If `pahe.win` times out (15s cap) or no Kwik URL is found in its HTML, `background.js` opens the original `pahe.win` URL in the new tab so your click never fails silently. |
+| **Left-click a `pahe.win` link** | Spinner + `Getting link` + the option label (for example `SubsPlease · 1080p`) | Intercepts the click in the DOM **capture phase** on player pages (`PAGE.PLAYER`), prevents the `pahe.win` tab from opening, and sends `AP_SKIP_WAIT` to `background.js` with the link URL. Includes the clicked option's label text in the pill. |
+| **Kwik URL resolved** | <img src="assets/pill-sw-opened.svg" height="26" align="absmiddle" alt="Opened kwik" /> | `background.js` opens `https://kwik.cx/f/{id}` in a new active tab immediately to the right of your episode tab (`senderTab.index + 1`). Pill auto-hides after 2.5s. |
+| **Click while another is resolving** | Spinner + `Already working on a link` | Prevents duplicate concurrent background fetches while a link resolution is already in flight (`_busy` guard). |
+| **Fallback on error / missing link** | Amber dot + `Opened the normal page` + `link not found` | If `pahe.win` times out (15s cap) or no Kwik URL is found in its HTML, `background.js` opens the original `pahe.win` URL in the new tab so your click never fails silently. |
 | **Modifier-click (`Ctrl` / `Shift` / `Alt` / `Cmd` / middle-click)** | _(None — native browser action)_ | Ignored by `skip-wait.js` so you can always open the normal `pahe.win` page whenever you want. |
 
 ### Background Resolution Flow

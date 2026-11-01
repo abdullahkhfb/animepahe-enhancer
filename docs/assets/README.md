@@ -46,8 +46,8 @@ Derived from [`content/helpers/icons.js`](../../content/helpers/icons.js), [`con
 | `ss-extra-row.svg` | <img src="ss-extra-row.svg" height="36" align="absmiddle" alt="Extra search row" /> | Smart Search — `li[data-ape-ss-extra="1"]` row |
 | `skip-btn-icon.svg` | <img src="skip-btn-icon.svg" width="18" height="18" align="absmiddle" alt="Skip icon" /> | Intro / Outro Skip — `.ape-is-skip-icon` |
 | `badge-skip-intro.svg` | <img src="badge-skip-intro.svg" height="26" align="absmiddle" alt="Skip Intro" /> | Intro / Outro Skip — `#ape-is-skip-btn` |
-| `scrubber-intro.svg` | <img src="scrubber-intro.svg" width="72" height="14" align="absmiddle" alt="Intro scrubber" /> | Intro / Outro Skip — `.ape-is-hl-intro` (`#3b82f6`) |
-| `scrubber-outro.svg` | <img src="scrubber-outro.svg" width="72" height="14" align="absmiddle" alt="Outro scrubber" /> | Intro / Outro Skip — `.ape-is-hl-outro` (`#e8710a`) |
-| `scrubber-recap.svg` | <img src="scrubber-recap.svg" width="72" height="14" align="absmiddle" alt="Recap scrubber" /> | Intro / Outro Skip — `.ape-is-hl-recap` (`#a855f7`) |
-| `pill-bw-countdown.svg` | <img src="pill-bw-countdown.svg" height="26" align="absmiddle" alt="Binge Watch countdown" /> | Binge Watch — `.ape-bw-pill` cancelable countdown toast |
-| `pill-sw-opened.svg` | <img src="pill-sw-opened.svg" height="26" align="absmiddle" alt="Skip Wait opened kwik" /> | Skip Wait — completion toast |
+| `scrubber-intro.svg` | <img src="scrubber-intro.svg" width="72" height="14" align="absmiddle" alt="Intro scrubber" /> | Intro / Outro Skip — `.ape-is-hl-intro` (`#4f9dff`) |
+| `scrubber-outro.svg` | <img src="scrubber-outro.svg" width="72" height="14" align="absmiddle" alt="Outro scrubber" /> | Intro / Outro Skip — `.ape-is-hl-outro` (`#ff8a1f`) |
+| `scrubber-recap.svg` | <img src="scrubber-recap.svg" width="72" height="14" align="absmiddle" alt="Recap scrubber" /> | Intro / Outro Skip — `.ape-is-hl-recap` (`#a98bff`) |
+| `pill-bw-countdown.svg` | <img src="pill-bw-countdown.svg" height="26" align="absmiddle" alt="Binge Watch countdown" /> | Binge Watch — countdown pill with Cancel action (`showAction`) |
+| `pill-sw-opened.svg` | <img src="pill-sw-opened.svg" height="26" align="absmiddle" alt="Skip Wait opened kwik" /> | Skip Wait — completion pill (`showAction`) |

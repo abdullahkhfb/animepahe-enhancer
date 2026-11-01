@@ -131,8 +131,7 @@ async function getAltTitles(query, ttlMs) {
   return resObj;
 }
 
-// Short-lived in-memory cache so retyping / backspacing over a query never
-// hits animepahe's search API twice.
+// Short-lived cache so retyping never re-requests a query.
 const AP_CACHE_MS = 5 * 60 * 1000;
 const apCache = new Map();
 
@@ -142,10 +141,7 @@ async function apSearch(q) {
   if (hit && Date.now() - hit.t < AP_CACHE_MS) return hit.data;
 
   try {
-    // Goes through the shared throttler: it spaces requests out, backs off
-    // and retries on HTTP 429, and cooperates with the other features that
-    // use the same API. Search is interactive, so it jumps the queue and
-    // only retries a couple of times before giving up as stale.
+    // Via the shared throttler: spaced requests with 429 backoff.
     const json = await throttler.fetch(
       `/api?m=search&q=${encodeURIComponent(q)}`,
       true,
@@ -155,8 +151,6 @@ async function apSearch(q) {
     apCache.set(key, { t: Date.now(), data });
     return data;
   } catch (err) {
-    // Not cached, so the next attempt tries again. Quiet on purpose: a
-    // rate limit is expected and shouldn't appear as an extension error.
     console.debug(`[SmartSearch] AnimePahe search failed for "${q}":`, err?.message ?? err);
     return [];
   }
@@ -407,7 +401,7 @@ export class SmartSearch {
     const seen = new Set(nativeNorms);
 
     for (const c of candidates) {
-      // The user kept typing: this lookup is stale, don't spend requests.
+      // The user kept typing: skip this stale lookup.
       if (norm(this._lastQuery) !== nq) return result;
       console.log(`[SmartSearch] Querying AnimePahe API for synonym: "${c}"`);
       const batch = await apSearch(c);

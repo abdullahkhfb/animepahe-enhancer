@@ -23,9 +23,6 @@ export class RequestThrottler {
     if (opts.baseBackoff != null) this._baseBackoff = opts.baseBackoff;
   }
 
-  /** @param {{maxRetries?: number, priority?: boolean}} [opts]
-   *  `priority` jumps the queue (interactive requests such as search);
-   *  `maxRetries` caps 429 retries for requests that go stale quickly. */
   fetch(url, wantJson = true, opts = {}) {
     return new Promise((resolve, reject) => {
       const task = {
@@ -86,8 +83,7 @@ export class RequestThrottler {
       task.resolve(result);
     } catch (err) {
       if (err.isCfChallenge) {
-        // A Cloudflare challenge isn't something retries can solve; they
-        // only add load. Fail this request and pause everything for a while.
+        // Retries cannot solve a Cloudflare challenge.
         this._backoffUntil = Math.max(this._backoffUntil, Date.now() + 60_000);
         task.reject(err);
       } else if (err.rateLimited && task.retries < task.maxRetries) {

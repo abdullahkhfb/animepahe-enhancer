@@ -7,15 +7,6 @@ import {
   SkipWaitIcon,
 } from "../icons/index.js";
 
-/**
- * Presentation metadata for the six features, in display order.
- *
- *   id          matches FEATURE_SUBOPTIONS keys in content/helpers/storage.js
- *   settingKey  the boolean in DEFAULT_SETTINGS that switches it on/off
- *   color/tint  accent used by its icon, switch and timeline segment
- *   weight      relative width of its segment in the timeline strip
- *   Icon        its icon component (one file each in components/icons/)
- */
 export const FEATURES = [
   {
     id: "cw",

@@ -1,7 +1,6 @@
 import { h } from "../dom.js";
 import { ExternalLinkIcon, SiteLogo } from "../icons/index.js";
 
-/** Hero card for the animepahe site: its real wordmark, large. */
 export function SiteCard({ href, desc }) {
   return h(
     "a",

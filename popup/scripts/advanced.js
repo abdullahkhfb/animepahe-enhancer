@@ -3,7 +3,6 @@ import { h, clear } from "../components/dom.js";
 import { GroupChips } from "../components/advanced/GroupChips.js";
 import { SettingRow } from "../components/advanced/SettingRow.js";
 
-/** Short chip labels so all groups fit on two rows (full name shown as tooltip). */
 const CHIP_LABELS = {
   "Continue Watching": "Continue",
   "DUB Detector": "DUB",
@@ -13,24 +12,14 @@ const CHIP_LABELS = {
   "Binge Watch": "Binge",
 };
 
-/**
- * Builds the Advanced tab. Everything is generated from
- * ADVANCED_SETTINGS_SCHEMA, so adding a tunable there needs no popup edit.
- * Edits are staged and only saved when "Apply" is pressed.
- *
- * @param {{panel: HTMLElement, notifyReload: () => void}} ctx
- */
 export async function initAdvancedTab({ panel, notifyReload }) {
   let settings = await storage.getSettings();
-  /** Staged edits — nothing here is persisted until Apply. */
   let pending = {};
-  /** key → row, for every setting (across all groups) */
   const rowByKey = new Map();
 
   const groupOf = (key) =>
     ADVANCED_SETTINGS_SCHEMA.find((g) => g.items.some((i) => i.key === key));
 
-  // Layout ----------------------------------------------------------
   const rowsHost = h("div", { class: "settings" });
   const HELP_HINT = "Tap (i) on a setting to see what it does.";
   const help = h("p", { class: "settings-help" }, HELP_HINT);
@@ -60,7 +49,6 @@ export async function initAdvancedTab({ panel, notifyReload }) {
   buildRows();
   chips.select(ADVANCED_SETTINGS_SCHEMA[0].group);
 
-  // Rows ------------------------------------------------------------
   function buildRows() {
     rowByKey.clear();
     for (const group of ADVANCED_SETTINGS_SCHEMA) {
@@ -102,7 +90,6 @@ export async function initAdvancedTab({ panel, notifyReload }) {
   }
   updateApplyState();
 
-  // Actions ---------------------------------------------------------
   applyBtn.addEventListener("click", async () => {
     if (Object.keys(pending).length === 0) return;
     const changedKeys = Object.keys(pending);

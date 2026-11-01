@@ -1,34 +1,10 @@
-/**
- * intro-skip.js
- *
- * Adds Intro & Outro skipping to the animepahe player using the
- * open-anime-timestamps dataset
- * (https://github.com/Ellivers/open-anime-timestamps).
- *
- * Pipeline:
- *   1. Detect the player page (PAGE.PLAYER).
- *   2. Extract animeSession + animeTitle + epNumber from the DOM.
- *   3. Resolve anidb ID via AniList -> relations.yuna.moe.
- *   4. Look up intro/outro timestamps in the cached dataset.
- *   5. Send skip ranges to the kwik player iframe.
- *
- * The iframe (iframe-player.js) handles the actual skip button rendering
- * ON TOP of the video, range polling, and seeking. The parent only
- * orchestrates the lookup and sends ranges.
- *
- * Communication with iframe-player.js uses postMessage with these types:
- *   Parent  -> Iframe : AP_IS_SET_RANGES    { ranges, autoSkip, pollMs, buttonAutoHideMs }
- *   Parent  -> Iframe : AP_IS_SEEK          { time }   (reserved for future use)
- *   Iframe  -> Parent : AP_IS_READY         (iframe wants the ranges)
- */
-
 import { PAGE, getPageType, getPageSessions } from "../../helpers/router.js";
 import {
   getTimestampsForEpisode,
   resolveIdsForAnime,
 } from "../../helpers/timestamps-db.js";
 import { injectStylesheet } from "../../helpers/styles.js";
-import { showPill } from "../../helpers/pill.js";
+import { showAction } from "../../helpers/pill.js";
 
 const MSG = {
   SET_RANGES: "AP_IS_SET_RANGES",
@@ -37,17 +13,12 @@ const MSG = {
 };
 
 export class IntroSkip {
-  /**
-   * @param {import("../../helpers/storage.js").storage} storage
-   * @param {object} settings
-   */
   constructor(storage, settings = {}) {
     this._storage = storage;
     this._settings = settings;
 
     this._idCacheTtlMs =
       (settings.introSkipIdCacheHours ?? 168) * 60 * 60 * 1_000;
-    // Sub-features, see FEATURE_SUBOPTIONS in helpers/storage.js.
     this._autoSkip = settings.introSkipAutoSkip === true;
     this._pollMs = settings.introSkipPollMs ?? 250;
     this._buttonAutoHideMs = settings.introSkipButtonAutoHideMs ?? 8000;
@@ -116,7 +87,7 @@ export class IntroSkip {
 
     const meta = this._extractPlayerMeta();
     if (!meta.animeSession || !meta.animeTitle || meta.epNumber === "?") {
-      // Title/episode might still be loading — retry shortly.
+      // Title/episode may still be loading; retry shortly.
       setTimeout(() => this._initPlayer(), 800);
       return;
     }
@@ -125,7 +96,7 @@ export class IntroSkip {
     if (rangeKey === this._currentRangeKey) return;
     this._currentRangeKey = rangeKey;
 
-    showPill("⏭ Resolving anime…");
+    showAction({ icon: "spinner", text: "Resolving anime" });
 
     let ids = null;
     try {
@@ -141,12 +112,17 @@ export class IntroSkip {
     const anidbId = ids?.anidbId ?? null;
 
     if (!anidbId) {
-      showPill("⏭ Intro/Outro: not found in database", 4000);
+      showAction({
+        icon: "dot",
+        text: "No skip data",
+        detail: "not in database",
+        autohideMs: 4000,
+      });
       this._clearRanges();
       return;
     }
 
-    showPill("⏭ Looking up timestamps…");
+    showAction({ icon: "spinner", text: "Looking up timestamps" });
 
     let timestamps;
     try {
@@ -154,11 +130,16 @@ export class IntroSkip {
         anidbId,
         meta.epNumber,
         this._settings,
-        (msg) => showPill(`⏭ ${msg}`),
+        (msg) => showAction({ icon: "spinner", text: msg }),
       );
     } catch (err) {
       console.error("[IntroSkip] Failed to load timestamps:", err);
-      showPill("⏭ Intro/Outro: DB fetch failed", 5000);
+      showAction({
+        icon: "dot",
+        text: "Skip data unavailable",
+        detail: "database fetch failed",
+        autohideMs: 5000,
+      });
       this._clearRanges();
       return;
     }
@@ -167,17 +148,24 @@ export class IntroSkip {
     const hasOutro = timestamps.outro && timestamps.outro.start != null;
 
     if (!hasIntro && !hasOutro) {
-      showPill("⏭ Intro/Outro: no data for this episode", 4000);
+      showAction({
+        icon: "dot",
+        text: "No skip data",
+        detail: "none for this episode",
+        autohideMs: 4000,
+      });
       this._clearRanges();
       return;
     }
 
-    showPill(
-      `⏭ Intro/Outro (database): ${hasIntro ? "OP ✓" : "OP —"} · ${
-        hasOutro ? "ED ✓" : "ED —"
-      }`,
-      3500,
-    );
+    showAction({
+      icon: "skip",
+      tone: "intro",
+      text: "Skip data ready",
+      detail:
+        hasIntro && hasOutro ? "Intro and outro" : hasIntro ? "Intro" : "Outro",
+      autohideMs: 3500,
+    });
 
     this._sendRangesToIframe(timestamps);
   }
@@ -205,8 +193,6 @@ export class IntroSkip {
       } catch {}
     }
 
-    // The iframe may have already sent AP_IS_READY before we got here.
-    // Re-send on a short delay to make sure the iframe has its video ready.
     setTimeout(() => {
       for (const f of this._getPlayerIframes()) {
         try {
@@ -221,7 +207,6 @@ export class IntroSkip {
     if (!data || typeof data !== "object") return;
 
     if (data.type === MSG.READY) {
-      // Iframe is asking for ranges — re-send the last payload we computed.
       if (this._lastPayload) {
         for (const f of this._getPlayerIframes()) {
           try {
@@ -229,8 +214,6 @@ export class IntroSkip {
           } catch {}
         }
       } else if (this._currentRangeKey) {
-        // We have a range key but no payload yet (still resolving).
-        // Re-trigger the pipeline.
         this._initPlayer();
       }
       return;
@@ -288,5 +271,4 @@ export class IntroSkip {
       playUrl: window.location.href,
     };
   }
-
 }

@@ -60,6 +60,25 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.18 — 2026-11-01
+
+### Fixed
+
+- **Intro / outro highlights sat above the progress bar**: on the Plyr-based player the highlight was attached to the outer progress container instead of the seek track, so segments floated off the bar. They now sit on the track itself, aligned with the playhead.
+
+### Changed
+
+- **Skip Intro / Outro button redesigned**: a dark glass button with 4px corners and a bold label that turns brand pink on hover (instead of blue), with a pressed state and a keyboard focus ring. The icon is now the standard skip mark (triangle and a single bar).
+- **New action pills for Binge Watch, Skip Wait and Intro / Outro Skip**: one shared look (36px, rounded, dark glass, a round icon chip). Binge Watch shows a pink countdown ring with a **Cancel** action instead of making the whole pill clickable. Messages are short and the emoji and text symbols are gone.
+- **Progress bar highlights redesigned**: rounded 6px segments (10px when the bar is hovered) with a gap between neighbours and a minimum width, in blue (intro), amber (outro) and violet (recap), plus a hover label with the segment's time range.
+- **Code and docs cleanup**: removed redundant code comments, keeping short ones for non-obvious logic; updated the docs and CONTRIBUTING.md to match.
+
+### Removed
+
+- `binge-watch.css`: the countdown pill now uses the shared pill styles in `main.css`.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.1.17 — 2026-10-21
 
 ### Added

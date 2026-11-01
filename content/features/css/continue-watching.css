@@ -1,15 +1,3 @@
-/* continue-watching.css — "Continue Watching" shelf above Latest Releases.
- *
- * Default look: a single row of six small 16:9 episode thumbnails (see the
- * README screenshot). The "Classic style" option in the popup adds
- * .ape-cw-classic to the section, which switches to the old look: portrait
- * poster cards with the title underneath. Every classic rule lives in the
- * last block of this file.
- *
- * Blends with the site: the JS measures the real "Latest Releases" heading
- * and card grid and feeds their font, gap, radius and left/right edges in,
- * so the variables below are only fallbacks. */
-
 #ape-cw-section {
   --ape-cw-gap: 12px;
   --ape-cw-radius: 3px;
@@ -22,7 +10,6 @@
   font-family: inherit;
 }
 
-/* ── Header ───────────────────────────────────────────────────────────── */
 .ape-cw-header {
   position: relative;
   display: flex;
@@ -82,7 +69,6 @@
 .ape-cw-btn.primary { font-weight: 600; }
 .ape-cw-btn.primary:hover { background: #ee0a6f; }
 
-/* inline confirm (replaces the browser confirm() dialog) */
 .ape-cw-confirm {
   position: absolute;
   top: calc(100% + 8px);
@@ -112,7 +98,6 @@
   margin-top: 14px;
 }
 
-/* ── Grid: six per row, fewer on narrow windows ───────────────────────── */
 .ape-cw-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -130,7 +115,6 @@
   .ape-cw-heading { font-size: 26px; }
 }
 
-/* ── Card ─────────────────────────────────────────────────────────────── */
 .ape-cw-card {
   position: relative;
   border-radius: var(--ape-cw-radius);
@@ -248,7 +232,7 @@
   opacity: 0.7;
   margin-right: 3px;
 }
-.ape-cw-caption { display: none; } /* classic style only */
+.ape-cw-caption { display: none; }
 .ape-cw-prog-bg {
   position: absolute;
   left: 0;
@@ -263,7 +247,6 @@
   box-shadow: 0 0 8px rgba(213, 1, 91, 0.8);
 }
 
-/* remove (✕) — small, always visible */
 .ape-cw-remove-btn {
   position: absolute;
   top: 8px;
@@ -295,11 +278,6 @@
   .ape-cw-card, .ape-cw-thumb, .ape-cw-play { transition: none; }
   .ape-cw-pop-out, .ape-cw-remove-anim { animation-duration: 0.01s; }
 }
-
-/* ══ Classic style (popup option "Classic style") ═════════════════════════
- * The old look: small portrait poster cards in a row, the title in a dark
- * bar underneath, a small "EP n" pill on the poster, and a plain bold
- * heading with no count pill and no icon. */
 
 #ape-cw-section.ape-cw-classic { margin-bottom: 40px; }
 .ape-cw-classic .ape-cw-header { margin-bottom: 14px; }
@@ -376,7 +354,6 @@
 .ape-cw-classic .ape-cw-prog-bar { box-shadow: none; }
 .ape-cw-classic .ape-cw-play { width: 34px; height: 34px; }
 
-/* the ✕ appears on hover / focus only (always on touch screens) */
 .ape-cw-classic .ape-cw-remove-btn {
   top: 6px;
   right: 6px;

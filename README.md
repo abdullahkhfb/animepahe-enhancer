@@ -11,7 +11,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 <p align="center">
   <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.17-blue" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.18-blue" />
 </p>
 
 ## Contents
@@ -27,12 +27,12 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 
 ## What it does
 
-- <img src="docs/assets/continue-watching.svg" width="22" height="22" align="absmiddle" alt="▶" /> **Continue Watching** — Picks up exactly where you stopped, every time, with a compact shelf of episode thumbnails (or the classic poster-card style, your choice), time-left badges, and progress bars on the home page. [Details&nbsp;→](docs/FEATURES.md#-continue-watching)
+- <img src="docs/assets/continue-watching.svg" width="22" height="22" align="absmiddle" alt="Continue Watching" /> **Continue Watching** — Picks up exactly where you stopped, every time, with a compact shelf of episode thumbnails (or the classic poster-card style, your choice), time-left badges, and progress bars on the home page. [Details&nbsp;→](docs/FEATURES.md#-continue-watching)
 - <img src="docs/assets/dub-detector.svg" width="22" height="22" align="absmiddle" alt="🎙" /> **DUB Detector** — Flags dubbed and sub-only episodes with colour-coded badges, home-card coverage meters, and an episode-list summary bar so you don't have to open an episode to find out. [Details&nbsp;→](docs/FEATURES.md#-dub-detector)
 - <img src="docs/assets/smart-search.svg" width="22" height="22" align="absmiddle" alt="🔍" /> **Smart Search** — Finds a show even if you search by an English title, a nickname, or a synonym in a different language via AniList. [Details&nbsp;→](docs/FEATURES.md#-smart-search)
-- <img src="docs/assets/intro-skip.svg" width="22" height="22" align="absmiddle" alt="⏭" /> **Intro / Outro Skip** — Skips openings and endings automatically or with a one-click Skip button, and highlights intros, outros, and recaps on the player scrubber. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
-- <img src="docs/assets/binge-watch.svg" width="22" height="22" align="absmiddle" alt="🔁" /> **Binge Watch** — Auto-loads the video embed and plays the next episode when one ends, with a click-to-cancel countdown pill. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
-- <img src="docs/assets/skip-wait.svg" width="22" height="22" align="absmiddle" alt="⏩" /> **Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second `pahe.win` countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
+- <img src="docs/assets/intro-skip.svg" width="22" height="22" align="absmiddle" alt="Intro / Outro Skip" /> **Intro / Outro Skip** — Skips openings and endings automatically or with a one-click Skip button, and highlights intros, outros, and recaps on the player scrubber. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
+- <img src="docs/assets/binge-watch.svg" width="22" height="22" align="absmiddle" alt="Binge Watch" /> **Binge Watch** — Auto-loads the video embed and plays the next episode when one ends, with a click-to-cancel countdown pill. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
+- <img src="docs/assets/skip-wait.svg" width="22" height="22" align="absmiddle" alt="Skip Wait" /> **Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second `pahe.win` countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
 
 Each feature can be turned on or off separately from the extension's popup. Settings and watch progress stay in your browser; some features make the network requests they need to work. See [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
 

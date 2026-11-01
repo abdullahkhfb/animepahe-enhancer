@@ -5,7 +5,6 @@ import { SiteCard } from "../components/links/SiteCard.js";
 
 const REPO = "https://github.com/abdullahkhfb/animepahe-enhancer";
 
-/** Builds the Quick Links tab. @param {{panel: HTMLElement}} ctx */
 export function initLinksTab({ panel }) {
   panel.append(
     SiteCard({ href: "https://animepahe.pw", desc: "Open the site" }),
@@ -34,10 +33,9 @@ export function initLinksTab({ panel }) {
     }),
   );
 
-  // Open in a real tab (and close the popup) instead of inside the popup.
   panel.querySelectorAll("a[href]").forEach((link) => {
     link.addEventListener("click", (e) => {
-      if (!chrome?.tabs?.create) return; // fall back to default <a> behavior
+      if (!chrome?.tabs?.create) return;
       e.preventDefault();
       chrome.tabs.create({ url: link.href });
       window.close();

@@ -1,13 +1,10 @@
 const MSG = {
-  // Existing Continue Watching messages.
   REQUEST_TIME: "AP_CW_REQUEST_TIME",
   RESTORE_TIME: "AP_CW_RESTORE_TIME",
   UPDATE_TIME: "AP_CW_UPDATE_TIME",
-  // Intro/Outro Skip messages (paired with content/features/js/intro-skip.js).
   IS_SET_RANGES: "AP_IS_SET_RANGES",
   IS_SEEK: "AP_IS_SEEK",
   IS_READY: "AP_IS_READY",
-  // Fired on every "ended" regardless of settings; Binge Watch decides.
   BW_ENDED: "AP_BW_ENDED",
 };
 
@@ -23,15 +20,7 @@ const SKIP_BTN_ID = "ape-is-skip-btn";
     }
   } catch {}
 
-  // kwik's player (video.js) can swap out or rebuild the <video> element
-  // while it initializes its tech/source — most noticeable right after a
-  // script-driven navigation (e.g. Binge Watch), which doesn't leave as
-  // much settle time as a normal click-through would. If we grab the
-  // first <video> we see and stop watching, we can end up wiring
-  // ensurePlayback() to a node that gets discarded a moment later, and
-  // nothing ever re-attaches to the real one — so the video silently
-  // never plays. Keep the observer alive for the page's lifetime and
-  // re-run setup whenever a *different* video element shows up.
+  // kwik can rebuild <video> while initializing; re-wire whenever a different element appears.
   let currentVideo = null;
 
   const tryAttach = () => {
@@ -52,36 +41,14 @@ function findVideo() {
   return document.querySelector("video") ?? null;
 }
 
-/**
- * A real click carries "user activation" into the page it navigates to,
- * which is what normally lets the video autoplay. A script-triggered
- * navigation (Binge Watch) has no such gesture, so play() can be silently
- * blocked — or, since kwik's player (Plyr, backed by hls.js) can defer
- * actually attaching its media source until its own play-button overlay
- * has been interacted with, "loadeddata"/"canplay" may never fire on
- * their own without that interaction. So this doesn't wait around for
- * readiness — it starts immediately and keeps retrying for a while,
- * since kwik loads jQuery/hls.js/plyr.js off a CDN which can take a few
- * seconds:
- *   1. video.play() normally
- *   2. muted, if (1) was rejected by the browser's autoplay policy
- *   3. a simulated click on the player's own play button/overlay,
- *      repeated for up to ~15s while the video stays paused
- */
 function ensurePlayback(video) {
-  const MAX_ATTEMPTS = 30; // 30 * 500ms ≈ 15s
+  const MAX_ATTEMPTS = 30;
   let attempts = 0;
   let clickInterval = null;
 
-  // Tracks whether we muted the video ourselves purely to get autoplay
-  // past the browser's policy (as opposed to the user/player muting it
-  // on purpose). Only ever unmute a video we auto-muted, and only once
-  // we have a real user gesture to back it up — see below.
+  // Only unmute a video we muted ourselves, and take one free automatic attempt
+  // before requiring a real gesture (retrying on every event loops pause/resume).
   let autoMuted = false;
-  // The automatic (non-gesture) unmute attempt below can fail and cause
-  // a brief pause/resume; if we retried it on every subsequent "playing"
-  // event that would loop forever and stutter the video. Only take that
-  // free shot once — after that, only a real user gesture gets to retry.
   let triedAutoUnmute = false;
 
   const attemptNativePlay = () => {
@@ -94,17 +61,7 @@ function ensurePlayback(video) {
     });
   };
 
-  // Unmuting is itself an autoplay action from the browser's point of
-  // view, gated by the same policy as play(): with no user gesture or
-  // engagement to back it up, the browser doesn't throw — it silently
-  // re-pauses the video instead (that's the "Unmuting failed..." console
-  // message). The video lives in its own (often cross-origin) iframe, so
-  // waiting for a click inside THIS document specifically may never
-  // happen — the gesture that started the episode usually happened on
-  // the parent page instead. So: try to unmute opportunistically at
-  // every good opportunity, but always check right after whether that
-  // left the video paused, and if so put it back to muted+playing rather
-  // than leaving the user stuck on a paused frame.
+  // Unmuting can silently re-pause the video; restore muted playback if it does.
   const tryUnmute = (isGesture) => {
     if (!autoMuted || !video.muted) return;
     if (!isGesture) {
@@ -122,17 +79,8 @@ function ensurePlayback(video) {
     }, 60);
   };
 
-  // Best odds for the one free automatic attempt: right as our muted
-  // autoplay actually starts playing — the browser/kwik has already
-  // agreed to play *something*, so this is the cheapest moment to try
-  // upgrading it to audible.
   video.addEventListener("playing", () => tryUnmute(false));
 
-  // Beyond that, retry on any real click/tap/keypress that lands inside
-  // this iframe (e.g. the user interacting with the player itself) — a
-  // genuine gesture always carries enough activation to allow it, and
-  // these are naturally spaced out by actual human interaction so they
-  // can't spiral into a pause/resume loop.
   document.addEventListener("pointerdown", () => tryUnmute(true), {
     capture: true,
   });
@@ -140,10 +88,6 @@ function ensurePlayback(video) {
     capture: true,
   });
 
-  // Try right away, and again whenever the video actually becomes
-  // playable — we can't assume either of those events will fire without
-  // the play button being clicked first, so we don't gate anything on
-  // them; they're just extra chances to succeed sooner.
   attemptNativePlay();
   video.addEventListener("loadeddata", attemptNativePlay, { once: true });
   video.addEventListener("canplay", attemptNativePlay, { once: true });
@@ -178,12 +122,8 @@ function clickPlayOverlay() {
 function setup(video, updateInterval) {
   ensurePlayback(video);
 
-  // ── Continue Watching: ask the parent for the saved time and start
-  // reporting playback progress. ────────────────────────────────────────
   window.parent.postMessage({ type: MSG.REQUEST_TIME }, "*");
 
-  // ── Intro / Outro Skip controller (created early so it's available
-  // to the message listener below). ────────────────────────────────────
   const introSkip = createIntroSkipController(video);
 
   window.addEventListener("message", (event) => {
@@ -243,10 +183,6 @@ function setup(video, updateInterval) {
     } catch {}
   });
 
-  // `timeupdate` is the standard video event for cheap playback-position
-  // tracking. It fires roughly every ~250ms during normal playback, which
-  // is the same ballpark as our poll interval — so we lean on it for the
-  // skip-range check instead of running a separate high-frequency timer.
   video.addEventListener("timeupdate", () => {
     introSkip.onTimeUpdate(video.currentTime);
   });
@@ -267,9 +203,6 @@ function setup(video, updateInterval) {
     );
   }
 
-  // Tell the parent we're ready to receive skip ranges. The parent may
-  // have already tried to send them before this iframe finished loading,
-  // so we fire IS_READY on a short delay too.
   const fireReady = () => {
     try {
       window.parent.postMessage({ type: MSG.IS_READY }, "*");
@@ -280,35 +213,23 @@ function setup(video, updateInterval) {
   setTimeout(fireReady, 2500);
 }
 
-// ────────────────────────────────────────────────────────────────────────
-// Intro / Outro Skip controller
-// ────────────────────────────────────────────────────────────────────────
-
-/**
- * Skip-range controller. Runs inside the kwik iframe so it has direct
- * access to the <video> element. Responsibilities:
- *   - Store the ranges received from the parent.
- *   - On each timeupdate, check whether currentTime is inside a range.
- *   - If autoSkip is on, seek to the end of the range automatically.
- *   - Otherwise, show a Skip button ON TOP of the video; clicking it
- *     seeks the video past the current range.
- *   - Avoid re-firing for the same range; respect manual seeks.
- */
 function createIntroSkipController(video) {
   const state = {
-    intro: null, // { start, end } or null
+    intro: null,
     outro: null,
     recap: null,
     autoSkip: false,
     pollMs: 250,
     buttonAutoHideMs: 8000,
     showHighlights: true,
-    currentRangeType: null, // 'intro' | 'outro' | null
+    currentRangeType: null,
     lastSeekTime: -1,
     pollTimer: null,
     autoHideTimer: null,
     btn: null,
-    scrubber: null, // the kwik progress-bar track element we inject into
+    scrubber: null,
+    segments: [],
+    tip: null,
     scrubberObserver: null,
   };
 
@@ -327,21 +248,15 @@ function createIntroSkipController(video) {
     hideButton();
   });
 
-  // Reparent the button whenever the player enters/exits fullscreen so it
-  // stays visible on top of the fullscreen video.
+  // Reparent into the fullscreen element so the button stays on top of the video.
   attachFullscreenWatcher(state.btn, video);
 
-  // Re-show the button if the user moves the mouse after it auto-hid.
   document.addEventListener("mousemove", () => {
     if (state.currentRangeType && !state.btn.classList.contains("visible")) {
       showButton();
     }
   });
 
-  // Highlight segments are injected DIRECTLY INTO the kwik player's
-  // scrubber element once we find it. We use a MutationObserver to
-  // catch the scrubber being created (kwik renders its controls lazily
-  // after the video loads).
   startScrubberWatcher();
 
   function setRanges(payload) {
@@ -355,9 +270,6 @@ function createIntroSkipController(video) {
     state.showHighlights = payload.showHighlights !== false;
     state.currentRangeType = null;
 
-    // Restart the poll timer with the new interval as a fallback for the
-    // timeupdate event (which can pause on some browsers when the tab is
-    // backgrounded or the user is scrubbing).
     if (state.pollTimer) {
       clearInterval(state.pollTimer);
       state.pollTimer = null;
@@ -368,8 +280,6 @@ function createIntroSkipController(video) {
           check(video.currentTime);
         }
       }, state.pollMs);
-      // Run an immediate check so the status is correct without waiting
-      // for the next timeupdate.
       check(video.currentTime);
     } else {
       hideButton();
@@ -408,9 +318,7 @@ function createIntroSkipController(video) {
   }
 
   function onSeeking(t) {
-    // Track the user's manual seeks so we don't immediately yank them back.
     state.lastSeekTime = t;
-    // Re-check the new position so the button updates promptly.
     check(t);
   }
 
@@ -420,7 +328,6 @@ function createIntroSkipController(video) {
     let end = Number(range.end);
     if (!Number.isFinite(start) || start < 0) return false;
     if (!Number.isFinite(end) || end < 0) {
-      // Start-only range — treat the active window as start..start+30s.
       end = start + 30;
     }
     return t >= start && t < end;
@@ -431,7 +338,7 @@ function createIntroSkipController(video) {
     let end = Number(range?.end);
     if (!Number.isFinite(end) || end < 0) {
       if (!Number.isFinite(start) || start < 0) return null;
-      end = start + 90; // default fallback (mirrors parent's default)
+      end = start + 90;
     }
     return end;
   }
@@ -441,7 +348,6 @@ function createIntroSkipController(video) {
     const inOutro = inRange(state.outro, t);
     const newRangeType = inIntro ? "intro" : inOutro ? "outro" : null;
 
-    // Update button visibility when the range type changes.
     if (newRangeType !== state.currentRangeType) {
       state.currentRangeType = newRangeType;
       if (newRangeType && !state.autoSkip) {
@@ -453,8 +359,7 @@ function createIntroSkipController(video) {
     }
 
     if (state.autoSkip) {
-      // Don't fight the user — if they just manual seeked, give them a
-      // brief grace period before auto-skipping again.
+      // Grace period after a manual seek so we do not skip straight back.
       if (
         state.lastSeekTime >= 0 &&
         Math.abs(t - state.lastSeekTime) < 1.0
@@ -490,19 +395,13 @@ function createIntroSkipController(video) {
     }
   }
 
-  /**
-   * Watch for the kwik scrubber element to appear in the DOM, then keep
-   * watching for it to be replaced (kwik sometimes rebuilds its controls
-   * on fullscreen toggle / source change).
-   *
-   * Once found, the scrubber is stored in `state.scrubber` and
-   * `updateHighlights()` is called to inject the colored segments.
-   */
+  // kwik rebuilds its controls on fullscreen and source changes; keep watching.
   function startScrubberWatcher() {
     const tryFind = () => {
       const scrubber = findScrubber();
       if (scrubber && scrubber !== state.scrubber) {
         state.scrubber = scrubber;
+        bindTip(scrubber);
         updateHighlights();
       }
     };
@@ -514,8 +413,6 @@ function createIntroSkipController(video) {
       subtree: true,
     });
 
-    // Also retry on fullscreen change (kwik rebuilds controls) and on
-    // metadata load.
     document.addEventListener("fullscreenchange", () =>
       setTimeout(tryFind, 100),
     );
@@ -525,19 +422,12 @@ function createIntroSkipController(video) {
     video.addEventListener("loadedmetadata", () => setTimeout(tryFind, 100));
   }
 
-  /**
-   * Find the kwik player's progress-bar track element.
-   *
-   * Kwik uses various class names across versions. We try the most common
-   * ones, then fall back to looking for any element that looks like a
-   * seek bar (has a "played" fill child + handles click/drag for seeking).
-   *
-   * Returns the TRACK element (the one whose children include the played
-   * fill and the scrubber handle), or null.
-   */
+  // kwik class names vary by version: known selectors first, then size/position heuristics.
   function findScrubber() {
-    // Direct class selectors (kwik.cx variants).
     const candidates = [
+      // Plyr: .plyr__progress wraps the seek input, so its width maps 1:1 to
+      // the timeline. The outer __container is taller and must not be used.
+      ".plyr__progress",
       ".vjs-progress-holder",
       ".vjs-progress-control",
       ".vjs-load-progress",
@@ -552,12 +442,10 @@ function createIntroSkipController(video) {
     for (const sel of candidates) {
       const els = document.querySelectorAll(sel);
       for (const el of els) {
-        // Skip our own elements.
         if (el.id?.startsWith("ape-is-")) continue;
-        // Skip tiny/hidden elements.
+        if (el.classList.contains("plyr__progress__container")) continue;
         const rect = el.getBoundingClientRect();
         if (rect.width < 50 || rect.height < 2) continue;
-        // The scrubber should be near the bottom of the player.
         if (rect.top < window.innerHeight * 0.5) continue;
         return el;
       }
@@ -565,24 +453,16 @@ function createIntroSkipController(video) {
     return null;
   }
 
-  /**
-   * Re-render the colored highlight segments INSIDE the kwik scrubber.
-   *
-   * Each segment is a child <div> with `position: absolute`,
-   * `left`/`width` as percentages of the scrubber's width (which maps
-   * 1:1 to the video duration). Because we inject into the actual
-   * scrubber element, the segments inherit its exact position, size,
-   * and stacking context — no manual positioning needed, and they
-   * follow the scrubber into fullscreen automatically.
-   */
   function updateHighlights() {
     const scrubber = state.scrubber;
     if (!scrubber) return;
 
-    // Remove any previously-injected segments.
     scrubber
-      .querySelectorAll(".ape-is-hl-segment")
+      .querySelectorAll(".ape-is-hl-segment, .ape-is-hl-tip")
       .forEach((el) => el.remove());
+    scrubber.classList.remove("ape-is-scrubber");
+    state.segments = [];
+    state.tip = null;
 
     if (
       !state.showHighlights ||
@@ -592,39 +472,64 @@ function createIntroSkipController(video) {
       return;
     }
 
-    // Make sure the scrubber can host absolutely-positioned children.
-    const computedPos = getComputedStyle(scrubber).position;
-    if (computedPos === "static") {
+    if (getComputedStyle(scrubber).position === "static") {
       scrubber.style.position = "relative";
     }
+    scrubber.classList.add("ape-is-scrubber");
 
     const duration = video.duration;
-    const segments = [];
+    const ranges = [
+      ["recap", "Recap", state.recap],
+      ["intro", "Intro", state.intro],
+      ["outro", "Outro", state.outro],
+    ];
 
-    if (state.recap) {
-      const seg = segmentStyle(state.recap, duration);
-      if (seg)
-        segments.push({ ...seg, className: "ape-is-hl-recap", label: "Recap" });
-    }
-    if (state.intro) {
-      const seg = segmentStyle(state.intro, duration);
-      if (seg)
-        segments.push({ ...seg, className: "ape-is-hl-intro", label: "Intro" });
-    }
-    if (state.outro) {
-      const seg = segmentStyle(state.outro, duration);
-      if (seg)
-        segments.push({ ...seg, className: "ape-is-hl-outro", label: "Outro" });
-    }
-
-    for (const seg of segments) {
+    for (const [type, name, range] of ranges) {
+      const seg = segmentStyle(range, duration);
+      if (!seg) continue;
       const div = document.createElement("div");
-      div.className = `ape-is-hl-segment ${seg.className}`;
+      div.className = `ape-is-hl-segment ape-is-hl-${type}`;
       div.style.left = `${seg.leftPct}%`;
       div.style.width = `${seg.widthPct}%`;
-      div.title = seg.label;
       scrubber.appendChild(div);
+      state.segments.push({
+        startPct: seg.leftPct,
+        endPct: seg.leftPct + seg.widthPct,
+        text: `${name} ${formatTime(seg.start)} to ${formatTime(seg.end)}`,
+      });
     }
+
+    const tip = document.createElement("div");
+    tip.className = "ape-is-hl-tip";
+    scrubber.appendChild(tip);
+    state.tip = tip;
+  }
+
+  // Segments ignore the pointer so seeking keeps working; hit-test them here.
+  function bindTip(scrubber) {
+    if (scrubber.dataset.apeTip) return;
+    scrubber.dataset.apeTip = "1";
+    scrubber.addEventListener("mousemove", (e) => {
+      const rect = scrubber.getBoundingClientRect();
+      const pct = ((e.clientX - rect.left) / rect.width) * 100;
+      showTip(state.segments.find((s) => pct >= s.startPct && pct <= s.endPct));
+    });
+    scrubber.addEventListener("mouseleave", () => showTip(null));
+  }
+
+  function showTip(hit) {
+    if (!state.tip) return;
+    if (hit) {
+      state.tip.textContent = hit.text;
+      state.tip.style.left = `${hit.startPct}%`;
+    }
+    state.tip.classList.toggle("is-on", !!hit);
+  }
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${String(s).padStart(2, "0")}`;
   }
 
   function segmentStyle(range, duration) {
@@ -633,11 +538,12 @@ function createIntroSkipController(video) {
     if (!Number.isFinite(start) || start < 0) return null;
     if (!Number.isFinite(end) || end < 0) end = start + 90;
     if (end <= start) return null;
-    // Clamp to video bounds so we don't draw past the right edge.
     const s = Math.max(0, Math.min(start, duration));
     const e = Math.max(s, Math.min(end, duration));
     if (e <= s) return null;
     return {
+      start: s,
+      end: e,
       leftPct: (s / duration) * 100,
       widthPct: ((e - s) / duration) * 100,
     };
@@ -647,7 +553,6 @@ function createIntroSkipController(video) {
     const btn = state.btn;
     if (!btn) return;
     btn.style.display = "flex";
-    // Force reflow so the transition plays.
     void btn.offsetWidth;
     btn.classList.add("visible");
 
@@ -657,7 +562,6 @@ function createIntroSkipController(video) {
         btn.classList.remove("visible");
         setTimeout(() => {
           if (state.currentRangeType) {
-            // Still in range — keep display:flex so mousemove can re-show.
             btn.style.display = "flex";
           } else {
             btn.style.display = "none";
@@ -687,13 +591,7 @@ function createIntroSkipController(video) {
   };
 }
 
-// ────────────────────────────────────────────────────────────────────────
-// Skip button DOM + CSS (injected into the kwik iframe)
-// ────────────────────────────────────────────────────────────────────────
-
 function injectButtonStyles() {
-  // Classic (non-module) script, so no top-level import — dynamic
-  // import() still works, same trick main.js uses for its helpers.
   import(chrome.runtime.getURL("content/helpers/styles.js")).then(
     ({ injectStylesheet }) => {
       injectStylesheet("ape-is-styles", "content/features/css/intro-skip.css");
@@ -709,10 +607,9 @@ function createButton() {
   btn.type = "button";
   btn.innerHTML = `
     <span class="ape-is-skip-icon">
-      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path d="M5 5 L14 12 L5 19 Z" />
-        <rect x="15" y="5" width="2.5" height="14" rx="0.6" />
-        <rect x="20" y="5" width="2.5" height="14" rx="0.6" />
+      <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 5l10 7-10 7z" />
+        <path d="M19 5v14" fill="none" />
       </svg>
     </span>
     <span class="ape-is-skip-label">Skip Intro</span>
@@ -721,10 +618,6 @@ function createButton() {
   return btn;
 }
 
-/**
- * Returns the element that is currently in fullscreen inside this
- * document, or null. Works across vendor prefixes.
- */
 function getFullscreenElement() {
   return (
     document.fullscreenElement ||
@@ -734,58 +627,27 @@ function getFullscreenElement() {
   );
 }
 
-/**
- * Returns the element the skip button should be parented to:
- *   - the fullscreen element if one is active (so the button stays
- *     visible on top of the fullscreen video)
- *   - document.body otherwise
- */
 function getButtonHost(video) {
   return getFullscreenElement() || document.body;
 }
 
-/**
- * Tracks fullscreen enter/exit on this iframe's document and reparents
- * the skip button so it always stays on top of the video.
- *
- * Why we need this: when the player goes fullscreen, the browser
- * promotes the fullscreen element to the "top layer" — a special
- * rendering context above ALL other content in the document. Any
- * sibling of the fullscreen element (including our button, when it's
- * parented to document.body) gets hidden behind the fullscreen layer.
- * By moving the button INTO the fullscreen element, it rides along
- * into the top layer and stays visible.
- *
- * Returns a cleanup function (unused in practice — the controller lives
- * for the lifetime of the page — but kept for symmetry).
- */
 function attachFullscreenWatcher(btn, video) {
   const onFsChange = () => {
     const host = getButtonHost(video);
     if (btn.parentNode !== host) {
       host.appendChild(btn);
     }
-    // Force a fresh style recalculation in case the :fullscreen rule
-    // didn't apply yet at the moment of reparenting.
     void btn.offsetWidth;
   };
 
   document.addEventListener("fullscreenchange", onFsChange);
   document.addEventListener("webkitfullscreenchange", onFsChange);
-  // Safari sometimes fires `mozfullscreenchange` even on modern builds;
-  // listening costs nothing and covers the edge case.
   document.addEventListener("mozfullscreenchange", onFsChange);
 
-  // Also catch the case where the player wraps the video in a container
-  // and fullscreens THAT container — the button should follow the
-  // container, not just the <video>. We watch for size/position changes
-  // on the video's parent as a fallback.
   const videoParent = video.parentElement;
   let resizeObs = null;
   if (videoParent && typeof ResizeObserver !== "undefined") {
     resizeObs = new ResizeObserver(() => {
-      // Only act if we're NOT in fullscreen — fullscreen is handled by
-      // the fullscreenchange listener above.
       if (!getFullscreenElement()) {
         const host = getButtonHost(video);
         if (btn.parentNode !== host) {
