@@ -51,3 +51,14 @@ Derived from [`content/helpers/icons.js`](../../content/helpers/icons.js), [`con
 | `scrubber-recap.svg` | <img src="scrubber-recap.svg" width="72" height="14" align="absmiddle" alt="Recap scrubber" /> | Intro / Outro Skip — `.ape-is-hl-recap` (`#a98bff`) |
 | `pill-bw-countdown.svg` | <img src="pill-bw-countdown.svg" height="26" align="absmiddle" alt="Binge Watch countdown" /> | Binge Watch — countdown pill with Cancel action (`showAction`) |
 | `pill-sw-opened.svg` | <img src="pill-sw-opened.svg" height="26" align="absmiddle" alt="Skip Wait opened kwik" /> | Skip Wait — completion pill (`showAction`) |
+| `cw-title.svg` | <img src="cw-title.svg" height="28" align="absmiddle" alt="Kill Blue" /> | Continue Watching — `.ape-cw-title` series title over the bottom gradient |
+| `toggle-autoskip.svg` | <img src="toggle-autoskip.svg" height="30" align="absmiddle" alt="Auto-skip toggle" /> | Intro / Outro Skip — popup **Auto-skip automatically** switch (off) |
+| `pill-is-ready.svg` | <img src="pill-is-ready.svg" height="26" align="absmiddle" alt="Skip data ready" /> | Intro / Outro Skip — `Skip data ready` pill (`showAction`) |
+| `pill-is-none.svg` | <img src="pill-is-none.svg" height="26" align="absmiddle" alt="No skip data" /> | Intro / Outro Skip — `No skip data` pill (`showAction`) |
+| `pill-bw-finding.svg` | <img src="pill-bw-finding.svg" height="26" align="absmiddle" alt="Finding next episode" /> | Binge Watch — `Finding next episode` pill |
+| `pill-bw-cancelled.svg` | <img src="pill-bw-cancelled.svg" height="26" align="absmiddle" alt="Binge Watch cancelled" /> | Binge Watch — `Binge Watch cancelled` pill |
+| `pill-bw-playing.svg` | <img src="pill-bw-playing.svg" height="26" align="absmiddle" alt="Playing next episode" /> | Binge Watch — `Playing next episode` pill |
+| `pill-bw-last.svg` | <img src="pill-bw-last.svg" height="26" align="absmiddle" alt="Last episode reached" /> | Binge Watch — `Last episode reached` pill |
+| `pill-sw-getting.svg` | <img src="pill-sw-getting.svg" height="26" align="absmiddle" alt="Getting link" /> | Skip Wait — `Getting link` pill with the option label |
+| `pill-sw-busy.svg` | <img src="pill-sw-busy.svg" height="26" align="absmiddle" alt="Already working on a link" /> | Skip Wait — `Already working on a link` pill |
+| `pill-sw-fallback.svg` | <img src="pill-sw-fallback.svg" height="26" align="absmiddle" alt="Opened the normal page" /> | Skip Wait — fallback pill when no kwik link is found |

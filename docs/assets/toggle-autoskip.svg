@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 232 40" width="232" height="40">
+  <rect x="0.5" y="0.5" width="231" height="39" rx="10" fill="#17161e" stroke="#2a2833"/>
+  <text x="14" y="25" fill="#f1eef6" font-family="Bricolage Grotesque, system-ui, -apple-system, sans-serif" font-size="13" font-weight="500">Auto-skip automatically</text>
+  <rect x="186" y="10" width="34" height="20" rx="10" fill="#3a3846"/>
+  <circle cx="196" cy="20" r="7" fill="#f1eef6"/>
+</svg>

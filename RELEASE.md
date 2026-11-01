@@ -62,9 +62,7 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 ## v0.3.1.18 — 2026-11-01
 
-### Fixed
-
-- **Intro / outro highlights sat above the progress bar**: on the Plyr-based player the highlight was attached to the outer progress container instead of the seek track, so segments floated off the bar. They now sit on the track itself, aligned with the playhead.
+Adds the redesigned Skip button, shared action pills and progress bar highlights.
 
 ### Changed
 
@@ -76,6 +74,8 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 ### Removed
 
 - `binge-watch.css`: the countdown pill now uses the shared pill styles in `main.css`.
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.17...v0.3.1.18)
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
