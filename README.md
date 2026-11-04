@@ -9,6 +9,18 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 </p>
 
 <p align="center">
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
+    <img alt="Firefox" src="https://img.shields.io/badge/Firefox-Get_it_now-FF7139?style=flat-square&logo=firefoxbrowser&logoColor=white" />
+  </a>
+  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
+    <img alt="Edge" src="https://img.shields.io/badge/Edge-Get_it_now-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" />
+  </a>
+  <a href="https://github.com/abdullahkhfb/animepahe-enhancer/releases">
+    <img alt="Manual install" src="https://img.shields.io/badge/Manual-Install-181717?style=flat-square&logo=github&logoColor=white" />
+  </a>
+</p>
+
+<p align="center">
   <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
   <a href="LICENSE">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
