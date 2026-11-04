@@ -51,7 +51,7 @@ Each feature can be turned on or off separately from the extension's popup. Sett
 <img src="screenshots/sc2.png" alt="Episode list showing the 6 of 9 dubbed summary bar, DUB and SUB ONLY badges, and status toast" width="100%" />
 <img src="screenshots/sc3.png" alt="Player page showing the inline DUB badge and English audio stream options" width="100%" />
 <img src="screenshots/sc4.png" alt="animepahe home page with the Continue Watching shelf of episode thumbnails, each with an episode number, progress bar and remove button, aligned above Latest Releases" width="100%" />
-<img src="screenshots/sc5.png" alt="The redesigned popup (v0.3.1.17), three tabs side by side: Features with Continue Watching expanded to show its Classic style switch and all six features listed, Advanced with a staged change and a setting description open, and Links showing the animepahe and MalSync logos" />
+<img src="screenshots/sc5.png" alt="The animepahe Enhancer popup (v0.3.1.19), showing all seven features including Browse, with Continue Watching expanded, a staged DUB Detector setting in Advanced, and the animepahe, project, and MalSync links" />
 <img src="screenshots/sc6.png" alt="Player page with the Skip Intro button and intro/outro progress bar highlights" width="100%" />
 <img src="screenshots/sc7.png" alt="Browse page filtering anime by Action and Mystery genres in grid view, with search, sorting, filters, and library controls" width="100%" />
 
