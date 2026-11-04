@@ -20,6 +20,7 @@ animepahe Enhancer makes watching anime on animepahe a bit nicer.
 - **Intro / Outro Skip** — skips openings and endings automatically, or with one click
 - **Binge Watch** — automatically plays the next episode when one ends, with a few seconds to cancel first (off by default)
 - **Skip Wait** — download links skip the 5-second pahe.win countdown page and go straight to kwik
+- **Browse** — combine genres, themes, demographics, types, status, and seasons; switch between grid and list views and save titles to your library
 
 Every feature can be switched on or off individually.
 

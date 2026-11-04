@@ -12,6 +12,7 @@
 - [Intro / Outro Skip](#intro--outro-skip)
 - [Binge Watch](#binge-watch)
 - [Skip Wait](#skip-wait)
+- [Browse](#browse)
 - [Popup Settings Panel](#popup-settings-panel)
 
 ---
@@ -139,10 +140,18 @@ Skip Wait removes the `pahe.win` countdown page from the download flow. It's **o
 
 ## <img src="assets/browse.svg" width="26" height="26" align="absmiddle" alt="Browse" /> Browse
 
+| Icon | Control | How to use it |
+| :---: | :--- | :--- |
+| <img src="assets/browse-chevron.svg" width="12" height="12" align="absmiddle" alt="Dropdown chevron" /> | **Filters** | Open **Genres**, **Themes**, **Demographic**, **Type**, **Status** or **Season**. Tap tags to include them, tap again to exclude, and once more to clear. Genres and themes can match **all** or **any** selected tags. |
+| <img src="assets/browse-search.svg" width="16" height="16" align="absmiddle" alt="Search" /> | **Title search** | Search titles; the A–Z strip is another way to narrow results. |
+| — | **Sort** | Choose **A–Z** or **Z–A**. |
+| <img src="assets/browse-grid.svg" width="18" height="18" align="absmiddle" alt="Poster grid" /> | **Poster grid** | Show results as poster cards. |
+| <img src="assets/browse-list.svg" width="18" height="18" align="absmiddle" alt="List view" /> | **List view** | Show results in the site's compact index-list style. |
+| <img src="assets/browse-library.svg" width="14" height="14" align="absmiddle" alt="Bookmark" /> | **Library** | Bookmark an anime card or row to save it to your Library; use the Library control to filter to saved titles. |
+
 1. Click **browse** in the site menu (next to **anime**).
-2. Open **Genres**, **Themes**, **Demographic**, **Type**, **Status** or **Season** and tap tags to include them; tap again to exclude, once more to clear. Genres and themes can match **all** or **any** of the selected tags.
-3. Results update when the selected lists have loaded. Use the title box and the A–Z strip to narrow further, switch between poster grid and list, and tap the bookmark on a card to save it to your **Library**.
-4. Reload the page or press Back from an anime and you land exactly where you were.
+2. Use the controls above to find titles, filter results, change the view, and save anime to your Library.
+3. Reload the page or press Back from an anime and you land exactly where you were.
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 

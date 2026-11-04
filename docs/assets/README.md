@@ -19,6 +19,16 @@ Derived from [`popup/components/icons/`](../../popup/components/icons/) and [`po
 | `advanced-settings.svg` | <img src="advanced-settings.svg" width="28" height="28" align="absmiddle" alt="Advanced Settings" /> | Advanced Settings tab | `#C9C4D6` / `#23222d` |
 | `shield.svg` | <img src="shield.svg" width="28" height="28" align="absmiddle" alt="Cloudflare & Rate-Limit Protection" /> | `challenge.js` + `throttler.js` | `#5BB8FF` / `#1a2430` |
 
+## Browse Controls
+
+| Asset | Preview | Control |
+| :--- | :---: | :--- |
+| `browse-search.svg` | <img src="browse-search.svg" width="16" height="16" align="absmiddle" alt="Search" /> | Browse title search |
+| `browse-chevron.svg` | <img src="browse-chevron.svg" width="12" height="12" align="absmiddle" alt="Dropdown" /> | Browse filter dropdown |
+| `browse-grid.svg` | <img src="browse-grid.svg" width="18" height="18" align="absmiddle" alt="Grid view" /> | Browse poster grid |
+| `browse-list.svg` | <img src="browse-list.svg" width="18" height="18" align="absmiddle" alt="List view" /> | Browse list view |
+| `browse-library.svg` | <img src="browse-library.svg" width="14" height="14" align="absmiddle" alt="Library" /> | Browse Library bookmark |
+
 ## On-Page UI Icons & Badges
 
 Derived from [`content/helpers/icons.js`](../../content/helpers/icons.js), [`content/helpers/pill.js`](../../content/helpers/pill.js), [`content/iframe-player.js`](../../content/iframe-player.js), and [`content/features/css/`](../../content/features/css/):
