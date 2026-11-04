@@ -60,6 +60,26 @@ This file should stay under **3,000 lines**. In practice, if you're following th
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## v0.3.1.19 — 2026-11-04
+
+Adds Browse: a native-feeling menu tab for combining animepahe's filters.
+
+### Added
+
+- **Browse**: a **browse** tab in the site menu (`/anime#browse`) that combines genres, themes, demographics, types, status and seasons. Filtering uses animepahe's real list pages (the same method as the AnimePahe Improvements userscript) with all/any matching and exclusion, instead of guessing from titles.
+- **Persistence**: the tab, filters, sort, view, scroll position and "Show more" depth survive reloads and Back navigation; opening a bare `#browse` restores your last search. Switching between **anime** and **browse** needs no reload, and a `document_start` script stops the original index flashing.
+- **Request-light posters**: one lookup per title, only for cards on screen, cached for 14 days (none on a second visit). Filter lists are fetched only when selected and cached (new **Browse → List cache duration** setting, 72h by default).
+- **Library**: save anime from the grid or list and filter to them.
+
+### Changed
+
+- **Popup fits without scrolling** in every tab and with any feature row expanded (it previously overflowed when Intro / Outro Skip was open). Rows, header and tabs are slightly tighter to make room for the seventh feature.
+- `throttler.fetch` accepts `{ plain: true }` for list pages (no AJAX/no-cache headers, so the HTTP cache applies); `whenSiteReady` accepts `settleMs`.
+
+[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.18...v0.3.1.19)
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## v0.3.1.18 — 2026-11-01
 
 Adds the redesigned Skip button, shared action pills and progress bar highlights.

@@ -4,6 +4,7 @@ export { SmartSearchIcon } from "./SmartSearchIcon.js";
 export { IntroSkipIcon } from "./IntroSkipIcon.js";
 export { BingeWatchIcon } from "./BingeWatchIcon.js";
 export { SkipWaitIcon } from "./SkipWaitIcon.js";
+export { BrowseIcon } from "./BrowseIcon.js";
 export { SourceCodeIcon } from "./SourceCodeIcon.js";
 export { ReportIssueIcon } from "./ReportIssueIcon.js";
 export { ExternalLinkIcon } from "./ExternalLinkIcon.js";

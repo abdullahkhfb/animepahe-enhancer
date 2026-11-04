@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "animepahe Enhancer",
   "short_name": "AP Enhancer",
-  "version": "0.3.1.18",
-  "description": "Video progress tracking, DUB detection, Smart Search via AniList, and Intro/Outro Skipping for animepahe.",
+  "version": "0.3.1.19",
+  "description": "Video progress tracking, DUB detection, Smart Search via AniList, Intro/Outro Skipping and multi-filter Browse for animepahe.",
   "browser_specific_settings": {
     "gecko": {
       "id": "animepahe-enhancer@abdullahkhfb.github.io",
@@ -33,6 +33,15 @@
     "https://raw.githubusercontent.com/Ellivers/open-anime-timestamps/*"
   ],
   "content_scripts": [
+    {
+      "matches": [
+        "*://*.animepahe.pw/anime*",
+        "*://*.animepahe.org/anime*",
+        "*://*.animepahe.com/anime*"
+      ],
+      "js": ["content/browse-boot.js"],
+      "run_at": "document_start"
+    },
     {
       "matches": [
         "*://*.animepahe.pw/*",

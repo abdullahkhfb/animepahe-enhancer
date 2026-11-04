@@ -1,10 +1,10 @@
-.app { padding-bottom: 4px; }
+.app { padding-bottom: 2px; }
 
 .header {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 20px 8px;
+  padding: 8px 20px 6px;
 }
 .header__mark { display: flex; flex-shrink: 0; }
 .header__titles {
@@ -36,7 +36,7 @@
   padding: 3px 9px;
 }
 
-.timeline { position: relative; padding: 0 20px 10px; }
+.timeline { position: relative; padding: 0 20px 8px; }
 .timeline__bar { display: flex; gap: 3px; height: 6px; }
 .timeline__seg {
   flex-basis: 0;
@@ -46,7 +46,7 @@
 }
 .timeline__seg.is-on { background: var(--c); }
 .timeline__readout {
-  margin-top: 8px;
+  margin-top: 6px;
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.08em;
@@ -57,14 +57,14 @@
 .tabs {
   display: flex;
   gap: 2px;
-  margin: 0 20px 6px;
+  margin: 0 20px 4px;
   padding: 3px;
   background: var(--surface);
   border-radius: 12px;
 }
 .tabs__btn {
   flex: 1;
-  height: 32px;
+  height: 30px;
   border-radius: 9px;
   font-size: 13px;
   font-weight: 600;
@@ -76,7 +76,7 @@
   color: var(--text);
 }
 
-.panel { padding: 4px 12px 0; }
+.panel { padding: 2px 12px 0; }
 .panel-intro {
   margin: 2px 8px 12px;
   font-size: 12px;

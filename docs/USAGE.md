@@ -137,13 +137,22 @@ Skip Wait removes the `pahe.win` countdown page from the download flow. It's **o
 
 <p align="right"><a href="#top">↑ Back to top</a></p>
 
+## <img src="assets/browse.svg" width="26" height="26" align="absmiddle" alt="Browse" /> Browse
+
+1. Click **browse** in the site menu (next to **anime**).
+2. Open **Genres**, **Themes**, **Demographic**, **Type**, **Status** or **Season** and tap tags to include them; tap again to exclude, once more to clear. Genres and themes can match **all** or **any** of the selected tags.
+3. Results update when the selected lists have loaded. Use the title box and the A–Z strip to narrow further, switch between poster grid and list, and tap the bookmark on a card to save it to your **Library**.
+4. Reload the page or press Back from an anime and you land exactly where you were.
+
+<p align="right"><a href="#top">↑ Back to top</a></p>
+
 ## Popup Settings Panel
 
-Click the extension icon in the browser toolbar to open the settings popup (`400px` wide, sized to fit its content with no inner scrollbar). It is organized into three tabs below the header and status timeline strip:
+Click the extension icon in the browser toolbar to open the settings popup (`400px` wide, sized so every tab, including any expanded feature row, fits without an inner scrollbar). It is organized into three tabs below the header and status timeline strip:
 
-**Features tab** — one row per feature, each with its own custom SVG icon and accent colour. The timeline strip under the header lights one proportional segment per enabled feature (for example, `5 OF 6 ACTIVE` by default). Click any feature row to expand it (accordion-style, one row open at a time) and:
+**Features tab** — one row per feature, each with its own custom SVG icon and accent colour. The timeline strip under the header lights one proportional segment per enabled feature (for example, `6 OF 7 ACTIVE` by default). Click any feature row to expand it (accordion-style, one row open at a time) and:
 
-- View a live stat chip (`N items` for Continue Watching, `N cached` for DUB Detector and Smart Search, or `Database cached` / `N IDs cached` / `Not cached` for Intro / Outro Skip)
+- View a live stat chip (`N items` for Continue Watching, `N cached` for DUB Detector and Smart Search, `N lists · N posters` for Browse, or `Database cached` / `N IDs cached` / `Not cached` for Intro / Outro Skip)
 - Clear that feature's saved list or cache with one click (`Clear list` / `Clear cache`)
 - Toggle feature sub-options right on the card:
     - **Continue Watching**: `Classic style` (default **Off**; turn it On for the old poster-card look — the shelf updates instantly, no reload needed)

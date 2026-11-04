@@ -1,6 +1,6 @@
 const NS = "http://www.w3.org/2000/svg";
 
-function svg(size, shapes, { fill = "none", stroke = "currentColor", sw = 2.6 } = {}) {
+export function svg(size, shapes, { fill = "none", stroke = "currentColor", sw = 2.6 } = {}) {
   const el = document.createElementNS(NS, "svg");
   el.setAttribute("viewBox", "0 0 24 24");
   el.setAttribute("width", String(size));

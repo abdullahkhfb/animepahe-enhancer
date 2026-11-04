@@ -3,6 +3,7 @@ import {
   clearTimestampsCache,
   getTimestampsCacheInfo,
 } from "../../content/helpers/timestamps-db.js";
+import { getBrowseCacheInfo, clearBrowseCache } from "../../content/helpers/browse-data.js";
 import { h } from "../components/dom.js";
 import { FEATURES } from "../components/features/feature-config.js";
 import { FeatureRow } from "../components/features/FeatureRow.js";
@@ -34,6 +35,13 @@ const STATS = {
   ss: {
     read: () => countPrefixed([SS_CACHE_PREFIX]),
     clear: () => removePrefixed([SS_CACHE_PREFIX]),
+  },
+  br: {
+    async read() {
+      const { lists, posters } = await getBrowseCacheInfo();
+      return { text: `${plural(lists, "list")} · ${plural(posters, "poster")}`, canClear: lists + posters > 0 };
+    },
+    clear: () => clearBrowseCache(),
   },
   is: {
     async read() {

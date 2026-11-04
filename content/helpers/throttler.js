@@ -32,6 +32,7 @@ export class RequestThrottler {
         reject,
         retries: 0,
         maxRetries: opts.maxRetries ?? this._maxRetries,
+        plain: !!opts.plain,
       };
       if (opts.priority) this._queue.unshift(task);
       else this._queue.push(task);
@@ -79,7 +80,7 @@ export class RequestThrottler {
 
   async _execute(task) {
     try {
-      const result = await this._attempt(task.url, task.wantJson);
+      const result = await this._attempt(task.url, task.wantJson, task.plain);
       task.resolve(result);
     } catch (err) {
       if (err.isCfChallenge) {
@@ -106,15 +107,20 @@ export class RequestThrottler {
     }
   }
 
-  async _attempt(url, wantJson) {
+  // `plain` requests behave like a normal page navigation's subresource fetch:
+  // no AJAX marker and no cache-busting headers, so the browser's HTTP cache
+  // can answer repeat requests (used for rarely-changing list pages).
+  async _attempt(url, wantJson, plain = false) {
     const res = await fetch(url, {
       credentials: "include",
-      headers: {
-        Accept: wantJson ? "application/json" : "text/html,*/*;q=0.9",
-        "X-Requested-With": "XMLHttpRequest",
-        "Cache-Control": "no-cache",
-        Pragma: "no-cache",
-      },
+      headers: plain
+        ? { Accept: wantJson ? "application/json" : "text/html,*/*;q=0.9" }
+        : {
+            Accept: wantJson ? "application/json" : "text/html,*/*;q=0.9",
+            "X-Requested-With": "XMLHttpRequest",
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
     });
 
     if (res.status === 429 || res.status === 503 || res.status === 403) {

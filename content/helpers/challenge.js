@@ -23,7 +23,7 @@ export function isChallengePage() {
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function whenSiteReady({ challengeTimeoutMs = 5 * 60_000 } = {}) {
+export async function whenSiteReady({ challengeTimeoutMs = 5 * 60_000, settleMs = 800 } = {}) {
   const t0 = Date.now();
   while (isChallengePage()) {
     if (Date.now() - t0 > challengeTimeoutMs) return false;
@@ -32,7 +32,7 @@ export async function whenSiteReady({ challengeTimeoutMs = 5 * 60_000 } = {}) {
   if (document.readyState !== "complete") {
     await new Promise((r) => window.addEventListener("load", r, { once: true }));
   }
-  await sleep(800);
+  if (settleMs > 0) await sleep(settleMs);
   // The challenge can also appear a moment after load.
   return !isChallengePage();
 }

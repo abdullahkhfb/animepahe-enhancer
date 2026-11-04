@@ -14,7 +14,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
     <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
   </a>
   <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
-    <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.18-blue" />
+    <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.19-blue" />
   </a>
 </p>
 
@@ -37,6 +37,7 @@ A free browser extension that makes watching anime on animepahe a bit nicer. It 
 - <img src="docs/assets/intro-skip.svg" width="22" height="22" align="absmiddle" alt="Intro / Outro Skip" /> **Intro / Outro Skip** — Skips openings and endings automatically or with a one-click Skip button, and highlights intros, outros, and recaps on the player scrubber. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
 - <img src="docs/assets/binge-watch.svg" width="22" height="22" align="absmiddle" alt="Binge Watch" /> **Binge Watch** — Auto-loads the video embed and plays the next episode when one ends, with a click-to-cancel countdown pill. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
 - <img src="docs/assets/skip-wait.svg" width="22" height="22" align="absmiddle" alt="Skip Wait" /> **Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second `pahe.win` countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
+- <img src="docs/assets/browse.svg" width="22" height="22" align="absmiddle" alt="Browse" /> **Browse** — A native-feeling **browse** tab in the site menu that lets you combine genres, themes, demographics, types, status and seasons in one search, using animepahe's own lists. Remembers your filters and scroll position across reloads. [Details&nbsp;→](docs/FEATURES.md#-browse)
 
 Each feature can be turned on or off separately from the extension's popup. Settings and watch progress stay in your browser; some features make the network requests they need to work. See [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
 

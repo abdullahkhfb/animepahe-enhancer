@@ -5,6 +5,7 @@ import {
   IntroSkipIcon,
   BingeWatchIcon,
   SkipWaitIcon,
+  BrowseIcon,
 } from "../icons/index.js";
 
 export const FEATURES = [
@@ -73,5 +74,17 @@ export const FEATURES = [
     weight: 2,
     Icon: SkipWaitIcon,
     note: "Download-menu links go straight to kwik, no 5-second wait. Ctrl/Shift-click a link to use the normal page instead.",
+  },
+  {
+    id: "br",
+    settingKey: "browseEnabled",
+    name: "Browse",
+    desc: "Filter by genre, theme & season",
+    color: "#7CE35B",
+    tint: "rgba(124, 227, 91, 0.14)",
+    weight: 2,
+    Icon: BrowseIcon,
+    clearLabel: "Clear cache",
+    note: "Adds a \u201cbrowse\u201d tab to the menu. Combine genres, themes, seasons and more, and keep a Library of saved anime.",
   },
 ];

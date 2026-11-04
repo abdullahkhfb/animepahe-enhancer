@@ -38,6 +38,7 @@ export const FEATURE_SUBOPTIONS = {
     },
   ],
   bw: [],
+  br: [],
 };
 
 const FEATURE_SUBOPTIONS_DEFAULTS = Object.fromEntries(
@@ -267,6 +268,20 @@ export const ADVANCED_SETTINGS_SCHEMA = [
     ],
   },
   {
+    group: "Browse",
+    items: [
+      {
+        key: "browseCacheTtlHours",
+        label: "List cache duration (hours)",
+        desc: "How long the genre, theme, season and other filter lists stay cached before Browse downloads them again. These lists rarely change, so a longer time means fewer requests.",
+        min: 1,
+        max: 720,
+        step: 1,
+        default: 72,
+      },
+    ],
+  },
+  {
     group: "Binge Watch",
     items: [
       {
@@ -295,6 +310,7 @@ export const DEFAULT_SETTINGS = {
   introSkipEnabled: true,
   bingeWatchEnabled: false,
   skipWaitEnabled: true,
+  browseEnabled: true,
   ...FEATURE_SUBOPTIONS_DEFAULTS,
   ...ADVANCED_DEFAULTS,
 };
