@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 194 36" width="194" height="36">
   <rect x="0.5" y="0.5" width="193" height="35" rx="17.5" fill="#0e0e10" fill-opacity="0.94" stroke="#ffffff" stroke-opacity="0.1"/>
-  <circle cx="18" cy="18" r="11" fill="rgba(61,214,163,0.16)"/>
-  <g transform="translate(12 12) scale(0.5)" fill="none" stroke="#3dd6a3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11M4 11h7M4 16h5"/><path d="M14.5 12.5l5.5 3.75-5.5 3.75z"/></g>
+  <circle cx="18" cy="18" r="11" fill="rgba(213,1,91,0.22)"/>
+  <g transform="translate(12 12) scale(0.5)" fill="none" stroke="#ff5c9d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h11M4 11h7M4 16h5"/><path d="M14.5 12.5l5.5 3.75-5.5 3.75z"/></g>
   <text x="39" y="22" fill="#f1f1f1" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="500">Playing next episode</text>
 </svg>

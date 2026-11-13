@@ -1,48 +1,59 @@
-<a name="top"></a>
+# Permissions and supported domains
 
-# Permissions & Supported Domains
-
-> Why the extension asks for what it asks for. For the full data-handling policy, see [PRIVACY.md](../PRIVACY.md).
+> Why the extension asks for what it asks for. For the full data-handling
+> policy, see the [privacy policy](/PRIVACY.md).
 
 ## Permissions
 
 The extension requests the minimum permissions necessary:
+*   **`storage`**: Save settings, Continue Watching progress, and various caches
+    to `chrome.storage.local` and IndexedDB
+*   **Host permissions for `*.animepahe.{pw,org,com}`**: Inject the main content
+    script into animepahe pages
+*   **Host permissions for `*.kwik.cx`**: Inject the iframe player script into
+    the embedded Kwik video player
+*   **Host permissions for `*.pahe.win`**: Skip Wait only: lets the background
+    script read the Kwik link out of a `pahe.win` download-link page you clicked
+*   **Host permissions for `graphql.anilist.co`**: Fetch alternative anime
+    titles for Smart Search and resolve IDs for Intro/Outro Skip (no account
+    data exchanged)
+*   **Host permissions for `relations.yuna.moe`**: Resolve AniList/MAL IDs to
+    AniDB IDs for the Intro/Outro Skip timestamp database lookup
+*   **Host permissions for `raw.githubusercontent.com`**: Download the
+    open-anime-timestamps database (~27 MB, cached in IndexedDB with conditional
+    GET refresh)
 
-| Permission                                         | Reason                                                                                                            |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `storage`                                          | Save settings, Continue Watching progress, and various caches to `chrome.storage.local` and IndexedDB             |
-| Host permissions for `*.animepahe.{pw,org,com}`    | Inject the main content script into animepahe pages                                                               |
-| Host permissions for `*.kwik.cx`                   | Inject the iframe player script into the embedded Kwik video player                                               |
-| Host permissions for `*.pahe.win`                  | Skip Wait only: lets the background script read the Kwik link out of a `pahe.win` download-link page you clicked  |
-| Host permissions for `graphql.anilist.co`          | Fetch alternative anime titles for Smart Search and resolve IDs for Intro/Outro Skip (no account data exchanged) |
-| Host permissions for `relations.yuna.moe`          | Resolve AniList/MAL IDs to AniDB IDs for the Intro/Outro Skip timestamp database lookup                            |
-| Host permissions for `raw.githubusercontent.com`   | Download the open-anime-timestamps database (~27 MB, cached in IndexedDB with conditional GET refresh)             |
+**Firefox:** the `pahe.win` host permission is declared in `host_permissions`
+(not optional), so it is shown in the install prompt and granted by default. If
+you revoke it under `about:addons` → Permissions, Skip Wait can't read the
+`pahe.win` page and falls back to opening the original `pahe.win` link;
+re-enable it there to restore Skip Wait.
 
-**Firefox:** the `pahe.win` host permission is declared in `host_permissions` (not optional), so it is shown in the install prompt and granted by default. If you revoke it under `about:addons` → Permissions, Skip Wait can't read the `pahe.win` page and falls back to opening the original `pahe.win` link; re-enable it there to restore Skip Wait.
+The extension does not include account details or browsing history in requests
+to AniList, relations.yuna.moe, or GitHub. Those services may still receive
+standard connection metadata, such as your IP address, as part of any network
+request. Requests to animepahe and pahe.win use the browser's normal site
+credentials where required. See the [privacy policy](/PRIVACY.md) for the full
+privacy policy.
 
-The extension does not include account details or browsing history in requests to AniList, relations.yuna.moe, or GitHub. Those services may still receive standard connection metadata, such as your IP address, as part of any network request. Requests to animepahe and pahe.win use the browser's normal site credentials where required. See [PRIVACY.md](../PRIVACY.md) for the full privacy policy.
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
-
----
-
-## Supported Domains
+## Supported domains
 
 **animepahe (main content script):**
 
-- `animepahe.pw`
-- `animepahe.org`
-- `animepahe.com`
+*   `animepahe.pw`
+*   `animepahe.org`
+*   `animepahe.com`
 
 **Kwik video player (iframe script):**
 
-- `kwik.cx`
+*   `kwik.cx`
 
 **External services (API calls only, no content script injection):**
 
-- `pahe.win` — Download-link pages fetched by the background script for Skip Wait (one request per Download-menu click)
-- `graphql.anilist.co` — AniList GraphQL API (Smart Search + Intro Skip ID resolution)
-- `relations.yuna.moe` — AniDB ID resolution (Intro Skip)
-- `raw.githubusercontent.com` (Ellivers/open-anime-timestamps) — Timestamp database download (Intro Skip)
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+*   `pahe.win` — Download-link pages fetched by the background script for Skip
+    Wait (one request per Download-menu click)
+*   `graphql.anilist.co` — AniList GraphQL API (Smart Search + Intro Skip ID
+    resolution)
+*   `relations.yuna.moe` — AniDB ID resolution (Intro Skip)
+*   `raw.githubusercontent.com` (Ellivers/open-anime-timestamps) — Timestamp
+    database download (Intro Skip)

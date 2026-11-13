@@ -1,0 +1,49 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Both manifests share one version
+        run: |
+          firefox=$(jq -r .version manifest.json)
+          chromium=$(jq -r .version manifest.chromium.json)
+          if [ "$firefox" != "$chromium" ]; then
+            echo "manifest.json ($firefox) and manifest.chromium.json ($chromium) differ" >&2
+            exit 1
+          fi
+
+      - name: JavaScript parses
+        run: |
+          find . -name '*.js' -not -path './node_modules/*' -print0 |
+            xargs -0 -n1 node --check
+
+      - name: Stylesheets follow the style guide
+        run: |
+          if grep -rnE '!important' --include='*.css' popup content; then
+            echo 'CSS must not use !important' >&2
+            exit 1
+          fi
+          if grep -rnE '^[^;/*]*#[A-Za-z_-][A-Za-z0-9_-]*[^;]*[{,]$' --include='*.css' popup content; then
+            echo 'CSS must not use ID selectors' >&2
+            exit 1
+          fi
+
+      - name: Tables of contents are up to date
+        run: python3 scripts/update-toc.py --check

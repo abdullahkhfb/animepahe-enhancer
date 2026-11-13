@@ -74,7 +74,6 @@ export class BingeWatch {
     if (!nextEpSession) {
       showAction({
         icon: "binge",
-        tone: "binge",
         text: "Last episode reached",
         autohideMs: 4000,
       });
@@ -91,7 +90,6 @@ export class BingeWatch {
     if (this._countdownMs <= 0) {
       showAction({
         icon: "binge",
-        tone: "binge",
         text: "Playing next episode",
         autohideMs: 2000,
       });
@@ -104,7 +102,6 @@ export class BingeWatch {
 
     const render = () =>
       showAction({
-        tone: "binge",
         countdown: { secondsLeft, total },
         text: `Next episode in ${secondsLeft}s`,
         action: { label: "Cancel", onClick: cancel },
@@ -117,7 +114,6 @@ export class BingeWatch {
       clearTimeout(this._navigateTimer);
       showAction({
         icon: "close",
-        tone: "binge",
         text: "Binge Watch cancelled",
         autohideMs: 2500,
       });

@@ -5,19 +5,19 @@ export function Header({ version }) {
   return h(
     "header",
     { class: "header" },
-    h("span", { class: "header__mark" }, ApMark({ size: 34 })),
+    h("span", { class: "header-mark" }, ApMark({ size: 36 })),
     h(
       "div",
-      { class: "header__titles" },
-      h("div", { class: "header__name" }, "Enhancer"),
+      { class: "header-titles" },
+      h("div", { class: "header-name" }, "Enhancer"),
       h(
         "div",
-        { class: "header__sub" },
-        h("span", { class: "header__sub-light" }, "anime"),
-        h("span", { class: "header__sub-bold" }, "pahe"),
+        { class: "header-sub" },
+        h("span", { class: "header-sub-light" }, "anime"),
+        h("span", { class: "header-sub-bold" }, "pahe"),
         " companion",
       ),
     ),
-    h("span", { class: "header__version" }, `v${version}`),
+    h("span", { class: "header-version" }, `v${version}`),
   );
 }

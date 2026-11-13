@@ -1,162 +1,186 @@
 @keyframes ape-dub-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.ape-dub-badge,
-.ape-dub-badge-home,
-.ape-dub-spin {
-  position: absolute !important;
-  top: 8px !important;
-  right: 8px !important;
-  left: auto !important;
-  bottom: auto !important;
-  z-index: 9999 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  height: 22px !important;
-  margin: 0 !important;
-  padding: 0 8px !important;
-  box-sizing: border-box !important;
-  border-radius: 4px !important;
-  font: 700 11px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif !important;
-  letter-spacing: 0.06em !important;
-  text-indent: 0 !important;
-  white-space: nowrap !important;
-  pointer-events: none !important;
+:root .ape-dub-badge,
+:root .ape-dub-badge-home,
+:root .ape-dub-spin {
+  align-items: center;
+  border-radius: 4px;
+  bottom: auto;
+  box-sizing: border-box;
+  display: inline-flex;
+  font: 700 11px/1 Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  gap: 5px;
+  height: 22px;
+  left: auto;
+  letter-spacing: 0.06em;
+  margin: 0;
+  padding: 0 8px;
+  pointer-events: none;
+  position: absolute;
+  right: 8px;
+  text-indent: 0;
+  top: 8px;
+  white-space: nowrap;
+  z-index: 9999;
 }
 
-.ape-dub-badge > *,
-.ape-dub-spin > * {
-  position: static !important;
-  inset: auto !important;
-  float: none !important;
-  margin: 0 !important;
+:root .ape-dub-badge > *,
+:root .ape-dub-spin > * {
+  float: none;
+  inset: auto;
+  margin: 0;
+  position: static;
 }
 
-.ape-dub-badge {
-  background: #d5015b !important;
-  color: #fff !important;
-  box-shadow: 0 2px 10px rgba(213, 1, 91, 0.45) !important;
-}
-.ape-dub-badge svg {
-  width: 11px !important;
-  height: 11px !important;
-  display: block !important;
-  flex: none !important;
+:root .ape-dub-badge {
+  background: #d5015b;
+  box-shadow: 0 2px 10px rgba(213, 1, 91, 0.45);
+  color: #fff;
 }
 
-.ape-dub-meter {
-  display: block !important;
-  width: 26px !important;
-  height: 3px !important;
-  border-radius: 2px !important;
-  background: rgba(255, 255, 255, 0.38) !important;
-  overflow: hidden !important;
-}
-.ape-dub-meter b {
-  display: block !important;
-  height: 100% !important;
-  background: #fff !important;
+:root .ape-dub-badge svg {
+  display: block;
+  flex: none;
+  height: 11px;
+  width: 11px;
 }
 
-.ape-dub-badge.ape-sub-badge-ep,
-.ape-dub-badge-home.ape-sub-badge-home {
-  background: rgba(0, 0, 0, 0.62) !important;
-  color: #ffb066 !important;
-  border: 1px solid rgba(255, 176, 102, 0.4) !important;
-  padding: 0 7px !important;
-  box-shadow: none !important;
-  -webkit-backdrop-filter: blur(6px) !important;
-  backdrop-filter: blur(6px) !important;
-}
-.ape-dub-badge.ape-sub-badge-ep::before,
-.ape-dub-badge-home.ape-sub-badge-home::before {
-  content: "" !important;
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  background: #ff8a1f !important;
-  flex: none !important;
+:root .ape-dub-meter {
+  background: rgba(255, 255, 255, 0.38);
+  border-radius: 2px;
+  display: block;
+  height: 3px;
+  overflow: hidden;
+  width: 26px;
 }
 
-.ape-dub-spin {
-  background: rgba(0, 0, 0, 0.62) !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  padding: 0 7px !important;
-  -webkit-backdrop-filter: blur(6px) !important;
-  backdrop-filter: blur(6px) !important;
+:root .ape-dub-meter b {
+  background: #fff;
+  display: block;
+  height: 100%;
 }
-.ape-dub-ring {
-  display: block !important;
-  width: 9px !important;
-  height: 9px !important;
-  box-sizing: border-box !important;
-  border-radius: 50% !important;
-  border: 2px solid rgba(255, 255, 255, 0.28) !important;
-  border-top-color: #fff !important;
-  animation: ape-dub-spin 0.8s linear infinite !important;
+
+:root .ape-dub-badge.ape-sub-badge-ep,
+:root .ape-dub-badge-home.ape-sub-badge-home {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: none;
+  color: #b4b4bf;
+  padding: 0 7px;
+}
+
+:root .ape-dub-badge.ape-sub-badge-ep::before,
+:root .ape-dub-badge-home.ape-sub-badge-home::before {
+  background: #6b6e78;
+  border-radius: 50%;
+  content: '';
+  flex: none;
+  height: 6px;
+  width: 6px;
+}
+
+:root .ape-dub-spin {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  padding: 0 7px;
+}
+
+:root .ape-dub-ring {
+  animation: ape-dub-spin 0.8s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+  border-top-color: #fff;
+  box-sizing: border-box;
+  display: block;
+  height: 9px;
+  width: 9px;
 }
 
 .ape-dub-inline,
 .ape-sub-inline {
-  display: inline-flex;
   align-items: center;
+  background: #d5015b;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(213, 1, 91, 0.35);
+  box-sizing: border-box;
+  color: #fff;
+  display: inline-flex;
+  font: 700 11px/1 Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
   gap: 5px;
   height: 22px;
-  box-sizing: border-box;
-  padding: 0 8px;
-  margin-left: 10px;
-  border-radius: 4px;
-  vertical-align: middle;
-  font: 700 11px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   letter-spacing: 0.06em;
-  background: #d5015b;
-  color: #fff;
-  box-shadow: 0 2px 10px rgba(213, 1, 91, 0.35);
+  margin-left: 10px;
+  padding: 0 8px;
+  vertical-align: middle;
 }
-.ape-dub-inline svg { width: 11px; height: 11px; flex: none; }
+
+.ape-dub-inline svg {
+  flex: none;
+  height: 11px;
+  width: 11px;
+}
+
 .ape-sub-inline {
   background: rgba(255, 255, 255, 0.06);
-  color: #ffb066;
-  border: 1px solid rgba(255, 176, 102, 0.4);
-  padding: 0 7px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: none;
+  color: #b4b4bf;
+  padding: 0 7px;
 }
+
 .ape-sub-inline::before {
-  content: "";
-  width: 6px;
-  height: 6px;
+  background: #6b6e78;
   border-radius: 50%;
-  background: #ff8a1f;
+  content: '';
+  height: 6px;
+  width: 6px;
 }
 
 .ape-dub-summary {
-  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  margin-left: 16px;
-  vertical-align: middle;
-  font: 500 13px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  letter-spacing: 0;
-  text-transform: none;
   color: #e8e8e8;
+  display: inline-flex;
+  font: 500 13px/1 Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  gap: 9px;
+  letter-spacing: 0;
+  margin-left: 16px;
+  text-transform: none;
+  vertical-align: middle;
   white-space: nowrap;
 }
-.ape-dub-summary svg { color: #ff5c9d; flex: none; }
+
+.ape-dub-summary svg {
+  color: #ff5c9d;
+  flex: none;
+}
+
 .ape-dub-seg {
   display: inline-flex;
   gap: 2px;
   width: 72px;
 }
+
 .ape-dub-seg i {
+  background: #3a3a3e;
   flex: 1;
   height: 4px;
-  background: #3a3a3e;
 }
-.ape-dub-seg i.on { background: #d5015b; }
+
+.ape-dub-seg i.on {
+  background: #d5015b;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .ape-dub-ring { animation: none !important; }
+  :root .ape-dub-ring {
+    animation: none;
+  }
 }

@@ -69,7 +69,7 @@ export function showStatus({ state = "progress", text, percent = null, autohideM
   if (!reusable) {
     resetPill(pill);
     pill.textContent = "";
-    pill.classList.add("ape-pill--rich");
+    pill.classList.add("ape-pill-rich");
     pill.dataset.state = state;
 
     const icon = document.createElement("span");
@@ -107,7 +107,6 @@ export function showStatus({ state = "progress", text, percent = null, autohideM
  * Action pill: leading icon chip, label, optional muted detail and action.
  * @param {object} o
  * @param {"skip"|"binge"|"wait"|"check"|"close"|"spinner"|"dot"} [o.icon]
- * @param {"intro"|"binge"|"wait"|"brand"} [o.tone] accent of the icon chip
  * @param {string} o.text
  * @param {string} [o.detail]
  * @param {{secondsLeft: number, total: number}} [o.countdown] replaces the icon with a ring
@@ -115,7 +114,6 @@ export function showStatus({ state = "progress", text, percent = null, autohideM
  */
 export function showAction({
   icon,
-  tone = "brand",
   text,
   detail = "",
   countdown = null,
@@ -127,7 +125,7 @@ export function showAction({
   if (!live) clearTimeout(hideTimer);
   resetPill(pill);
   pill.textContent = "";
-  pill.classList.add("ape-pill--action");
+  pill.classList.add("ape-pill-action");
 
   let lead;
   if (countdown) {
@@ -145,7 +143,7 @@ export function showAction({
     lead.className = "ape-pill-dot";
   } else {
     lead = document.createElement("span");
-    lead.className = `ape-pill-chip ape-tone-${tone}`;
+    lead.className = "ape-pill-chip";
     lead.appendChild(GLYPHS[icon](12));
   }
 

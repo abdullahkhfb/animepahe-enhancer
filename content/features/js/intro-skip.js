@@ -160,7 +160,6 @@ export class IntroSkip {
 
     showAction({
       icon: "skip",
-      tone: "intro",
       text: "Skip data ready",
       detail:
         hasIntro && hasOutro ? "Intro and outro" : hasIntro ? "Intro" : "Outro",

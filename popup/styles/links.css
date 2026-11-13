@@ -1,87 +1,97 @@
+/* Group label */
+
 .group-label {
-  padding: 18px 10px 8px;
-  font-family: var(--mono);
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--muted);
+  font: 10.5px var(--mono);
+  letter-spacing: 0.1em;
+  padding: 18px 10px 8px;
+  text-transform: uppercase;
 }
 
+/* Site card */
+
 .site-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   gap: 14px;
   padding: 20px 18px 14px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
+  transition: border-color 0.15s,background 0.15s;
 }
+
 .site-card:hover {
-  background: #1b1a23;
+  background: var(--hover);
   border-color: var(--line-3);
 }
-.site-card__logo {
+
+.site-card-logo {
   display: flex;
 }
-.site-card__foot {
-  display: flex;
+
+.site-card-foot {
   align-items: center;
-  justify-content: space-between;
   color: var(--muted);
+  display: flex;
+  justify-content: space-between;
 }
-.site-card__desc {
+
+.site-card-desc {
   font-size: 12px;
 }
 
+/* Link row */
+
 .link-row {
-  display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 56px;
-  padding: 0 12px;
   border: 1px solid transparent;
   border-radius: 14px;
   color: var(--muted);
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  display: flex;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 12px;
+  transition: background 0.15s,border-color 0.15s;
 }
+
 .link-row:hover {
-  background: #1b1a23;
+  background: var(--hover);
   border-color: var(--line-3);
 }
-.link-row--accent {
+
+.link-row-accent {
   border-color: var(--line);
 }
 
-.link-row__tile {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  flex-shrink: 0;
-  display: flex;
+.link-row-tile {
   align-items: center;
-  justify-content: center;
   background: var(--surface-2);
+  border-radius: 11px;
   color: var(--text);
-  overflow: hidden;
-}
-.link-row__text {
-  flex: 1;
-  min-width: 0;
   display: flex;
+  flex-shrink: 0;
+  height: 36px;
+  justify-content: center;
+  overflow: hidden;
+  width: 36px;
+}
+
+.link-row-text {
+  display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 1px;
+  min-width: 0;
 }
-.link-row__name {
+
+.link-row-name {
+  color: var(--text);
   font-size: 14px;
   font-weight: 600;
-  color: var(--text);
 }
-.link-row__desc {
-  font-size: 12px;
+
+.link-row-desc {
   color: var(--muted);
+  font-size: 12px;
 }

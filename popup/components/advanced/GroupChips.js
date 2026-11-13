@@ -6,7 +6,7 @@ export function GroupChips({ groups, onSelect }) {
     "div",
     { class: "chips", role: "group", "aria-label": "Setting groups" },
     groups.map((g) => {
-      const dot = h("span", { class: "chip__dot", hidden: true, title: "Unapplied changes" });
+      const dot = h("span", { class: "chip-dot", hidden: true, title: "Unapplied changes" });
       const btn = h("button", { type: "button", class: "chip", title: g.full ?? g.title, "aria-pressed": "false", onClick: () => select(g.id) }, g.title, dot);
       chips.set(g.id, { btn, dot });
       return btn;

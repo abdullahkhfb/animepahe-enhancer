@@ -5,12 +5,12 @@ export function Toggle({ label, checked = false, small = false, onChange }) {
     "button",
     {
       type: "button",
-      class: `toggle${small ? " toggle--sm" : ""}`,
+      class: `toggle${small ? " toggle-sm" : ""}`,
       role: "switch",
       "aria-checked": String(checked),
       "aria-label": label,
     },
-    h("span", { class: "toggle__track" }, h("span", { class: "toggle__thumb" })),
+    h("span", { class: "toggle-track" }, h("span", { class: "toggle-thumb" })),
   );
   el.addEventListener("click", () => {
     const next = el.getAttribute("aria-checked") !== "true";

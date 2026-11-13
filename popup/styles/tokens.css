@@ -1,34 +1,75 @@
-@font-face { font-family: "Bricolage Grotesque"; font-weight: 400; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-weight: 500; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-500-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-weight: 600; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Bricolage Grotesque"; font-weight: 700; font-display: swap; src: url("../fonts/bricolage-grotesque-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "DM Mono"; font-weight: 400; font-display: swap; src: url("../fonts/dm-mono-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "DM Mono"; font-weight: 500; font-display: swap; src: url("../fonts/dm-mono-latin-500-normal.woff2") format("woff2"); }
+/* Fonts */
+
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-weight: 400;
+  src: url(../fonts/inter-latin-400-normal.woff2) format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-weight: 500;
+  src: url(../fonts/inter-latin-500-normal.woff2) format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-weight: 600;
+  src: url(../fonts/inter-latin-600-normal.woff2) format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-weight: 700;
+  src: url(../fonts/inter-latin-700-normal.woff2) format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'DM Mono';
+  font-weight: 400;
+  src: url(../fonts/dm-mono-latin-400-normal.woff2) format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'DM Mono';
+  font-weight: 500;
+  src: url(../fonts/dm-mono-latin-500-normal.woff2) format('woff2');
+}
+
+/* Tokens: animepahe black base, one brand-pink accent */
 
 :root {
-  --bg: #0f0e14;
-  --surface: #17161e;
-  --surface-2: #1f1e28;
-  --raised: #23222d;
-  --raised-2: #2a2833;
-
-  --line: #2a2833;
-  --line-2: #2f2d3a;
-  --line-3: #3a3846;
-
-  --text: #f1eef6;
-  --text-2: #c9c4d6;
-  --text-3: #b5b0c4;
-  --muted: #9a95aa;
-  --dim: #6e6a7c;
-
+  --bg: #000;
+  --surface: #0e0e10;
+  --surface-2: #151518;
+  --raised: #151518;
+  --raised-2: #202024;
+  --hover: #202024;
+  --line: #202024;
+  --line-2: #2e3136;
+  --line-3: #3b3f46;
+  --text: #f1f1f1;
+  --text-2: #d9d9e0;
+  --text-3: #b4b4bf;
+  --muted: #9a9aa8;
+  --dim: #6b6e78;
   --brand: #d5015b;
+  --brand-hover: #ee0a6f;
   --brand-2: #ff4d94;
+  --accent-tint: rgba(213,1,91,0.2);
+  --accent-line: rgba(213,1,91,0.5);
   --wordmark-light: #f1f1f1;
-
-  --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'DM Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
 }
+
+/* Base */
 
 *,
 *::before,
@@ -43,15 +84,14 @@ html {
   color: var(--text);
   font-family: var(--font);
   font-size: 13px;
-}
-
-[hidden] {
-  display: none !important;
+  line-height: 1.4;
+  overflow: hidden;
 }
 
 body {
-  width: 400px;
   background: var(--bg);
+  padding: 8px 0;
+  width: 400px;
 }
 
 a {
@@ -60,11 +100,11 @@ a {
 }
 
 button {
-  font: inherit;
-  color: inherit;
   background: none;
   border: 0;
+  color: inherit;
   cursor: pointer;
+  font: inherit;
 }
 
 button:focus-visible,
@@ -77,4 +117,10 @@ input:focus-visible {
 svg {
   display: block;
   flex-shrink: 0;
+}
+
+/* Hidden: two classes of specificity beats any single-class display rule, so no important is needed */
+
+:root [hidden] {
+  display: none;
 }

@@ -5,16 +5,15 @@ export function Timeline(features) {
   const readout = h("span", {});
   const bar = h(
     "div",
-    { class: "timeline__bar", "aria-hidden": "true" },
+    { class: "timeline-bar", "aria-hidden": "true" },
     features.map((f) => {
-      const seg = h("div", { class: "timeline__seg" });
+      const seg = h("div", { class: "timeline-seg" });
       seg.style.flexGrow = f.weight;
-      seg.style.setProperty("--c", f.color);
       segs.set(f.id, seg);
       return seg;
     }),
   );
-  const el = h("div", { class: "timeline" }, bar, h("div", { class: "timeline__readout" }, readout));
+  const el = h("div", { class: "timeline" }, bar, h("div", { class: "timeline-readout" }, readout));
 
   el.update = (states) => {
     let n = 0;

@@ -4,155 +4,171 @@
   --ape-recap: #a98bff;
 }
 
-#ape-is-skip-btn {
-  position: fixed;
-  bottom: 64px;
-  right: 18px;
-  z-index: 2147483647;
-  display: none;
+.ape-is-skip-btn {
   align-items: center;
-  gap: 9px;
-  height: 36px;
-  box-sizing: border-box;
-  padding: 0 16px 0 11px;
-  background: rgba(14, 14, 16, 0.92);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 4px;
-  font: 700 13px/1 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  transition:
-    transform 0.18s ease,
+  background: rgba(14, 14, 16, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 4px;
+  bottom: 64px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: none;
+  font: 700 13px/1 Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  gap: 9px;
+  height: 36px;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  padding: 0 16px 0 11px;
+  position: fixed;
+  right: 18px;
+  transform: translateY(10px);
+  transition: transform 0.18s ease,
     background 0.18s ease,
     border-color 0.18s ease,
     box-shadow 0.18s ease,
     opacity 0.25s ease;
-  opacity: 0;
-  transform: translateY(10px);
-  user-select: none;
   -webkit-user-select: none;
+  user-select: none;
+  z-index: 2147483647;
 }
-#ape-is-skip-btn.visible {
+
+.ape-is-skip-btn.visible {
   opacity: 1;
   transform: translateY(0);
 }
-#ape-is-skip-btn:hover {
+
+.ape-is-skip-btn:hover {
   background: #d5015b;
   border-color: rgba(255, 255, 255, 0.5);
   box-shadow: 0 4px 18px rgba(213, 1, 91, 0.45);
   transform: translateY(-1px);
 }
-#ape-is-skip-btn:active {
+
+.ape-is-skip-btn:active {
   background: #b00149;
   transform: scale(0.97);
 }
-#ape-is-skip-btn:focus-visible {
+
+.ape-is-skip-btn:focus-visible {
   outline: 2px solid #ff5c9d;
   outline-offset: 2px;
 }
-#ape-is-skip-btn .ape-is-skip-icon {
-  width: 14px;
-  height: 14px;
+
+.ape-is-skip-btn .ape-is-skip-icon {
   display: inline-flex;
   flex-shrink: 0;
+  height: 14px;
+  width: 14px;
 }
-#ape-is-skip-btn .ape-is-skip-icon svg {
-  width: 100%;
+
+.ape-is-skip-btn .ape-is-skip-icon svg {
   height: 100%;
+  width: 100%;
 }
-#ape-is-skip-btn .ape-is-skip-label {
+
+.ape-is-skip-btn .ape-is-skip-label {
   white-space: nowrap;
 }
 
 /* Inside the fullscreen element: pin to the video's corner. */
-:fullscreen #ape-is-skip-btn,
-:-webkit-full-screen #ape-is-skip-btn {
+
+:fullscreen .ape-is-skip-btn,
+:-webkit-full-screen .ape-is-skip-btn {
   position: absolute;
 }
 
 /* Scrubber: 6px track, 10px on hover; segments inset with a 2px gap ring. */
-.ape-is-scrubber:not(.plyr__progress) {
-  height: 6px !important;
-  border-radius: 3px !important;
-  overflow: visible !important;
+
+:root .ape-is-scrubber:not(.plyr__progress) {
+  border-radius: 3px;
+  height: 6px;
+  overflow: visible;
   transition: height 0.15s ease;
 }
-.ape-is-scrubber:not(.plyr__progress):hover {
-  height: 10px !important;
+
+:root .ape-is-scrubber:not(.plyr__progress):hover {
+  height: 10px;
 }
 
 /* Plyr: sit on the real track (centred on the seek input), above it. */
+
 .plyr__progress.ape-is-scrubber {
   overflow: visible;
 }
-.plyr__progress.ape-is-scrubber > .ape-is-hl-segment {
-  height: var(--plyr-range-track-height, 5px) !important;
-  min-width: 4px !important;
-  border-radius: 2px !important;
-  box-shadow: none !important;
+
+:root .plyr__progress.ape-is-scrubber > .ape-is-hl-segment {
+  border-radius: 2px;
+  box-shadow: none;
+  height: var(--plyr-range-track-height, 5px);
+  min-width: 4px;
   opacity: 0.85;
-  z-index: 3 !important;
+  z-index: 3;
 }
+
 .plyr__progress.ape-is-scrubber > .ape-is-hl-tip {
   z-index: 4;
 }
 
-.ape-is-hl-segment {
-  position: absolute !important;
-  top: 50% !important;
-  height: 6px !important;
-  min-width: 6px !important;
-  border-radius: 3px !important;
-  transform: translateY(-50%) !important;
-  box-shadow: 0 0 0 2px #0b0b0d !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-  transition:
-    height 0.15s ease,
+:root .ape-is-hl-segment {
+  border-radius: 3px;
+  box-shadow: 0 0 0 2px #0b0b0d;
+  height: 6px;
+  min-width: 6px;
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: height 0.15s ease,
     border-radius 0.15s ease;
+  z-index: 1;
 }
-.ape-is-scrubber:not(.plyr__progress):hover .ape-is-hl-segment {
-  height: 10px !important;
-  border-radius: 5px !important;
+
+:root .ape-is-scrubber:not(.plyr__progress):hover .ape-is-hl-segment {
+  border-radius: 5px;
+  height: 10px;
 }
-.ape-is-hl-intro {
-  background: var(--ape-intro) !important;
+
+:root .ape-is-hl-intro {
+  background: var(--ape-intro);
 }
-.ape-is-hl-outro {
-  background: var(--ape-outro) !important;
+
+:root .ape-is-hl-outro {
+  background: var(--ape-outro);
 }
-.ape-is-hl-recap {
-  background: var(--ape-recap) !important;
+
+:root .ape-is-hl-recap {
+  background: var(--ape-recap);
 }
 
 .ape-is-hl-tip {
-  position: absolute;
-  bottom: 100%;
-  margin-bottom: 10px;
-  height: 20px;
-  box-sizing: border-box;
-  padding: 0 8px;
-  border-radius: 10px;
   background: rgba(14, 14, 16, 0.94);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  bottom: 100%;
+  box-sizing: border-box;
   color: #f1f1f1;
-  font: 600 11px/18px Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  white-space: nowrap;
-  pointer-events: none;
+  font: 600 11px/18px Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  height: 20px;
+  margin-bottom: 10px;
   opacity: 0;
+  padding: 0 8px;
+  pointer-events: none;
+  position: absolute;
   transition: opacity 0.15s ease;
+  white-space: nowrap;
   z-index: 2;
 }
+
 .ape-is-hl-tip.is-on {
   opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #ape-is-skip-btn,
+  .ape-is-skip-btn,
   .ape-is-scrubber,
   .ape-is-hl-segment,
   .ape-is-hl-tip {

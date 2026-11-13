@@ -303,6 +303,7 @@ export class ContinueWatching {
   _buildSection(list) {
     const section = document.createElement("section");
     section.id = SECTION_ID;
+    section.classList.add("ape-cw-section");
     section.classList.toggle("ape-cw-classic", this._classic);
     section.setAttribute("aria-label", "Continue Watching");
 

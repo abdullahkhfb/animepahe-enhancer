@@ -1,41 +1,78 @@
-<a name="top"></a>
+# Microsoft Edge — current status
 
-# Microsoft Edge — Current Status
+## Contents
+
+*   [Short version](#short-version)
+*   [What happened before this](#what-happened-before-this)
+*   [Installing manually instead](#installing-manually-instead)
+*   [Prefer a different browser?](#prefer-a-different-browser)
 
 ## Short version
 
-**The Edge Add-ons listing is live again**, and it is now on the latest version. Edge's review/release process has been relatively fast compared with the earlier block, so store updates are landing without much delay.
+**The Edge Add-ons listing is live again**, and it is now on the latest version.
+Edge's review/release process has been relatively fast compared with the earlier
+block, so store updates are landing without much delay.
 
-**Get it here:** [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) · Store ID `0RDCKD4MDFZC` · CRX ID `omdenhapffjpbafkliiedijooomljbgd`
+**Get it here:** [Edge Add-ons][edge-add-ons] · Store ID `0RDCKD4MDFZC` · CRX ID
+`omdenhapffjpbafkliiedijooomljbgd`
+
+[edge-add-ons]: https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd
 
 ## What happened before this
 
-For a while, this page explained why Edge had no working listing at all. Short recap, kept here for context:
+For a while, this page explained why Edge had no working listing at all. Short
+recap, kept here for context:
 
-- The original listing (v0.0.2) passed review fine, but the **update** submitted after it was flagged by Microsoft's certification review under policy **2.7 Adult Content**, with the reviewer's note: "The extension contains content that is pornographic or sexually explicit."
-- The extension's own code doesn't include, generate, or display any adult content — it only adds UI features (progress tracking, dub badges, search, skip buttons) on top of whatever animepahe.pw itself shows a visitor. We asked Microsoft to clarify whether the flag was about a specific asset or the source site in general, and on 2026-07-24 they confirmed it was the latter: a site-level objection, not a request for changes to the submission.
-- That determination led to the old v0.0.2 listing being unpublished as well, leaving **no live Edge listing in any version** for a period.
+*   The original listing (v0.0.2) passed review fine, but the **update**
+    submitted after it was flagged by Microsoft's certification review under
+    policy **2.7 Adult Content**, with the reviewer's note: "The extension
+    contains content that is pornographic or sexually explicit."
+*   The extension's own code doesn't include, generate, or display any adult
+    content — it only adds UI features (progress tracking, dub badges, search,
+    skip buttons) on top of whatever animepahe.pw itself shows a visitor. We
+    asked Microsoft to clarify whether the flag was about a specific asset or
+    the source site in general, and on 2026-07-24 they confirmed it was the
+    latter: a site-level objection, not a request for changes to the submission.
+*   That determination led to the old v0.0.2 listing being unpublished as well,
+    leaving **no live Edge listing in any version** for a period.
 
-That blanket determination has since been superseded — the current listing is live proof the review outcome changed. We don't have a public explanation from Microsoft for the reversal, but the practical result is the extension is installable from the Edge store again as of this update.
+That blanket determination has since been superseded — the current listing is
+live proof the review outcome changed. We don't have a public explanation from
+Microsoft for the reversal, but the practical result is the extension is
+installable from the Edge store again as of this update.
 
-**Note for Chrome:** we still haven't submitted to the Chrome Web Store, and don't yet know whether Google's review would raise the same kind of objection. **Firefox (AMO)** has remained live and approved throughout.
+**Note for Chrome:** we still haven't submitted to the Chrome Web Store, and
+don't yet know whether Google's review would raise the same kind of objection.
+**Firefox (AMO)** has remained live and approved throughout.
 
-If you've dealt with a similar review reversal on Edge or Chrome, [open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) — we're interested in how consistent this is.
+If you've dealt with a similar review reversal on Edge or Chrome,
+[open an issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues) —
+we're interested in how consistent this is.
 
 ## Installing manually instead
 
-If you'd rather not wait on Edge's store update pipeline, or want a specific version, manual install still works:
+If you'd rather not wait on Edge's store update pipeline, or want a specific
+version, manual install still works:
 
-1. Download the latest `Animepahe-Enhancer-Chromium.zip` (no `Animepahe-Enhancer-Firefox.zip`, which is the Firefox build) from the [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) page.
-2. Unzip it somewhere you won't accidentally delete it (Edge needs to keep reading from that folder).
-3. Go to `edge://extensions` in your address bar.
-4. Turn on **Developer mode** (toggle, usually bottom-left or top-right of the page).
-5. Click **Load unpacked** and select the unzipped folder.
+1.  Download the latest `Animepahe-Enhancer-Chromium.zip` (no
+    `Animepahe-Enhancer-Firefox.zip`, which is the Firefox build) from the
+    [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)
+    page.
+1.  Unzip it somewhere you won't accidentally delete it (Edge needs to keep
+    reading from that folder).
+1.  Go to `edge://extensions` in your address bar.
+1.  Turn on **Developer mode** (toggle, usually bottom-left or top-right of the
+    page).
+1.  Click **Load unpacked** and select the unzipped folder.
 
-The extension will now behave identically to a store install — it just needs to be reloaded manually if you move or delete the folder, and Edge may occasionally show a "Developer mode extensions" warning banner, which is expected and harmless.
+The extension will now behave identically to a store install — it just needs to
+be reloaded manually if you move or delete the folder, and Edge may occasionally
+show a "Developer mode extensions" warning banner, which is expected and
+harmless.
 
 ## Prefer a different browser?
 
-The [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/) listing is fully live and up to date. See the [main README](../README.md#install) for all current install options.
+The [Firefox Add-on][firefox-add-on] listing is fully live and up to date. See
+the [main README](/README.md#install) for all current install options.
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[firefox-add-on]: https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/

@@ -30,9 +30,9 @@ export async function initAdvancedTab({ panel, notifyReload }) {
     help.classList.toggle("is-active", !!item);
     for (const [k, r] of rowByKey) r.setInfoActive(k === helpKey);
   }
-  const status = h("span", { class: "apply__status" });
-  const applyBtn = h("button", { type: "button", class: "btn btn--primary", disabled: true }, "Apply");
-  const resetAllBtn = h("button", { type: "button", class: "btn btn--outline", title: "Reset every advanced setting to its default" }, "Reset all");
+  const status = h("span", { class: "apply-status" });
+  const applyBtn = h("button", { type: "button", class: "btn btn-primary", disabled: true }, "Apply");
+  const resetAllBtn = h("button", { type: "button", class: "btn btn-outline", title: "Reset every advanced setting to its default" }, "Reset all");
 
   const chips = GroupChips({
     groups: ADVANCED_SETTINGS_SCHEMA.map((g) => ({ id: g.group, title: CHIP_LABELS[g.group] ?? g.group, full: g.group })),

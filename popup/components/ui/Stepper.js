@@ -3,7 +3,7 @@ import { h } from "../dom.js";
 export function Stepper({ id, label, value, min, max, step, onChange }) {
   const input = h("input", {
     id,
-    class: "stepper__input",
+    class: "stepper-input",
     type: "number",
     min,
     max,
@@ -23,9 +23,9 @@ export function Stepper({ id, label, value, min, max, step, onChange }) {
   const el = h(
     "div",
     { class: "stepper" },
-    h("button", { type: "button", class: "stepper__btn", "aria-label": `Decrease ${label}`, onClick: () => commit(Number(input.value) - step) }, "−"),
+    h("button", { type: "button", class: "stepper-btn", "aria-label": `Decrease ${label}`, onClick: () => commit(Number(input.value) - step) }, "−"),
     input,
-    h("button", { type: "button", class: "stepper__btn", "aria-label": `Increase ${label}`, onClick: () => commit(Number(input.value) + step) }, "+"),
+    h("button", { type: "button", class: "stepper-btn", "aria-label": `Increase ${label}`, onClick: () => commit(Number(input.value) + step) }, "+"),
   );
   input.addEventListener("change", () => commit(input.value));
   el.setValue = (v) => {

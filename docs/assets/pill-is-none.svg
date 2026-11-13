@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 253 36" width="253" height="36">
   <rect x="0.5" y="0.5" width="252" height="35" rx="17.5" fill="#0e0e10" fill-opacity="0.94" stroke="#ffffff" stroke-opacity="0.1"/>
-  <circle cx="18" cy="18" r="4" fill="#ff8a1f"/>
+  <circle cx="18" cy="18" r="4" fill="#6b6e78"/>
   <text x="39" y="22" fill="#f1f1f1" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="500">No skip data</text>
   <text x="132" y="22" fill="#a3a3a3" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13" font-weight="500">not in database</text>
 </svg>

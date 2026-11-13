@@ -1,5 +1,5 @@
 import { h } from "../dom.js";
 
 export function Button({ label, onClick, variant = "outline", title }) {
-  return h("button", { type: "button", class: `btn btn--${variant}`, title, onClick }, label);
+  return h("button", { type: "button", class: `btn btn-${variant}`, title, onClick }, label);
 }

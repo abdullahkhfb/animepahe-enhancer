@@ -26,6 +26,24 @@ jobs:
         with:
           browser: chromium
 
+      - name: Verify the zip is Chromium-only
+        env:
+          ZIP: ${{ steps.zip.outputs.zip-path }}
+        run: |
+          set -euo pipefail
+          bad=$(unzip -Z1 "$ZIP" | grep -Ei '\.(zip|xpi|crx)$|manifest\.chromium\.json|firefox' || true)
+          if [ -n "$bad" ]; then
+            echo "Unexpected files in the Chromium zip:" >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+          manifest=$(unzip -p "$ZIP" manifest.json)
+          if echo "$manifest" | jq -e '.background.scripts' > /dev/null; then
+            echo "manifest.json uses background.scripts; Chromium needs service_worker" >&2
+            exit 1
+          fi
+          echo "$manifest" | jq -e '.background.service_worker' > /dev/null
+
       - name: Upload to Microsoft Edge Add-ons
         uses: wdzeng/edge-addon@v2
         with:

@@ -1,53 +1,66 @@
 # Contributing to animepahe Enhancer
 
-Thank you for your interest in improving animepahe Enhancer! This document explains how to contribute effectively — whether you're fixing a bug, proposing a feature, or improving documentation.
+Thank you for your interest in improving animepahe Enhancer! This document
+explains how to contribute effectively — whether you're fixing a bug, proposing
+a feature, or improving documentation.
 
----
+## Contents
 
-## Table of Contents
+*   [Ways to contribute](#ways-to-contribute)
+*   [Ground rules](#ground-rules)
+*   [Development setup](#development-setup)
+*   [Project structure](#project-structure)
+*   [Making changes](#making-changes)
+*   [Code style](#code-style)
+*   [Submitting a pull request](#submitting-a-pull-request)
+*   [Issue guidelines](#issue-guidelines)
+*   [Release process](#release-process)
+*   [Questions](#questions)
 
-- [Ways to Contribute](#ways-to-contribute)
-- [Ground Rules](#ground-rules)
-- [Development Setup](#development-setup)
-- [Project Structure](#project-structure)
-- [Making Changes](#making-changes)
-  - [Bug Fixes](#bug-fixes)
-  - [New Features](#new-features)
-  - [New Advanced Settings](#new-advanced-settings)
-  - [Documentation](#documentation)
-- [Code Style](#code-style)
-- [Submitting a Pull Request](#submitting-a-pull-request)
-- [Issue Guidelines](#issue-guidelines)
-- [Release Process](#release-process)
-- [Questions](#questions)
+## Ways to contribute
 
----
+*   **Report a bug** — open a [GitHub issue][github-issue] with clear
+    reproduction steps.
+*   **Request a feature** — open an issue describing the problem you want to
+    solve and why it fits the project.
+*   **Fix a bug** — pick up an open issue labelled `bug` and open a pull
+    request.
+*   **Build a feature** — discuss first in an issue, then implement it.
+*   **Improve the docs** — fix typos, clarify explanations, or add missing
+    information in `README.md`, `docs/`, `PRIVACY.md`, `SECURITY.md`, or code
+    comments.
+*   **Report a security vulnerability** — see the [security policy](SECURITY.md)
+    for the private disclosure process. Do **not** open a public issue.
 
-## Ways to Contribute
+[github-issue]: https://github.com/abdullahkhfb/animepahe-enhancer/issues/new
 
-- **Report a bug** — open a [GitHub issue](https://github.com/abdullahkhfb/animepahe-enhancer/issues/new) with clear reproduction steps.
-- **Request a feature** — open an issue describing the problem you want to solve and why it fits the project.
-- **Fix a bug** — pick up an open issue labelled `bug` and open a pull request.
-- **Build a feature** — discuss first in an issue, then implement it.
-- **Improve the docs** — fix typos, clarify explanations, or add missing information in `README.md`, `docs/`, `PRIVACY.md`, `SECURITY.md`, or code comments.
-- **Report a security vulnerability** — see [`SECURITY.md`](SECURITY.md) for the private disclosure process. Do **not** open a public issue.
+## Ground rules
 
----
+*   **Discuss before you build.** For anything beyond a trivial bug fix, open an
+    issue first. This avoids duplicated effort and ensures the change aligns
+    with the project's direction.
+*   **One concern per PR.** Keep pull requests focused. A PR that fixes a bug
+    and adds an unrelated feature is harder to review and slows everything down.
+*   **No build step required.** The extension is plain ES2020+ JavaScript with
+    no bundler, no TypeScript, and no external npm dependencies. Keep it that
+    way.
+*   **Minimal permissions.** Any change that would require adding a new entry to
+    `permissions` or `host_permissions` in either manifest needs strong
+    justification and will be scrutinised carefully.
+*   **Local-first data.** Keep new data flows limited to what a feature needs.
+    Existing network requests include animepahe requests for DUB detection,
+    Smart Search, Continue Watching fallback thumbnail lookup, and Binge Watch;
+    `pahe.win` link resolution for Skip Wait; and AniList, `relations.yuna.moe`,
+    and the `open-anime-timestamps` dataset for Smart Search and Intro/Outro
+    Skip. New network targets or data sent require explicit discussion and a
+    `PRIVACY.md` update.
+*   **Be respectful.** This project adheres to its
+    [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Ground Rules
+## Development setup
 
-- **Discuss before you build.** For anything beyond a trivial bug fix, open an issue first. This avoids duplicated effort and ensures the change aligns with the project's direction.
-- **One concern per PR.** Keep pull requests focused. A PR that fixes a bug and adds an unrelated feature is harder to review and slows everything down.
-- **No build step required.** The extension is plain ES2020+ JavaScript with no bundler, no TypeScript, and no external npm dependencies. Keep it that way.
-- **Minimal permissions.** Any change that would require adding a new entry to `permissions` or `host_permissions` in either manifest needs strong justification and will be scrutinised carefully.
-- **Local-first data.** Keep new data flows limited to what a feature needs. Existing network requests include animepahe requests for DUB detection, Smart Search, Continue Watching fallback thumbnail lookup, and Binge Watch; `pahe.win` link resolution for Skip Wait; and AniList, `relations.yuna.moe`, and the `open-anime-timestamps` dataset for Smart Search and Intro/Outro Skip. New network targets or data sent require explicit discussion and a `PRIVACY.md` update.
-- **Be respectful.** This project adheres to its [Code of Conduct](CODE_OF_CONDUCT.md).
-
----
-
-## Development Setup
-
-No build tools, no package manager, no Node.js — the repository _is_ the extension.
+No build tools, no package manager, no Node.js — the repository _is_ the
+extension.
 
 ```bash
 git clone https://github.com/abdullahkhfb/animepahe-enhancer.git
@@ -56,32 +69,38 @@ cd animepahe-enhancer
 
 ### Load in Firefox
 
-1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on…**
-3. Select `manifest.json` inside the cloned directory.
+1.  Open `about:debugging#/runtime/this-firefox`
+2.  Click **Load Temporary Add-on…**
+3.  Select `manifest.json` inside the cloned directory.
 
-The extension stays active until Firefox is restarted. For persistent development, use a [Firefox developer profile](https://extensionworkshop.com/documentation/develop/debugging/).
+The extension stays active until Firefox is restarted. For persistent
+development, use a [Firefox developer profile][firefox-developer-profile].
+
+[firefox-developer-profile]: https://extensionworkshop.com/documentation/develop/debugging/
 
 ### Load in Chrome / Edge / other Chromium browsers
 
-1. Open `chrome://extensions` (or `edge://extensions`)
-2. Enable **Developer mode** (toggle in the top-right corner)
-3. Chrome and Edge require the Chromium manifest in place of Firefox's `manifest.json`. Follow the manifest-copy and restore steps in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally), then click **Load unpacked** and select the cloned directory.
+1.  Open `chrome://extensions` (or `edge://extensions`)
+2.  Enable **Developer mode** (toggle in the top-right corner)
+3.  Chrome and Edge require the Chromium manifest in place of Firefox's
+    `manifest.json`. Follow the manifest-copy and restore steps in
+    [development guide](/docs/DEVELOPMENT.md#loading-the-extension-locally),
+    then click **Load unpacked** and select the cloned directory.
 
 ### Reloading after changes
 
 After editing any file:
 
-- **Firefox:** click the reload icon next to the extension on `about:debugging`.
-- **Chrome/Edge:** click the refresh icon on the extension card at `chrome://extensions`.
+*   **Firefox:** click the reload icon next to the extension on
+    `about:debugging`.
+*   **Chrome/Edge:** click the refresh icon on the extension card at
+    `chrome://extensions`.
 
 Then reload any open animepahe tab.
 
----
+## Project structure
 
-## Project Structure
-
-```
+```text
 animepahe-enhancer/
 ├── manifest.json                 # Firefox Manifest V3 manifest
 ├── manifest.chromium.json        # Chrome / Edge Manifest V3 manifest
@@ -134,40 +153,43 @@ animepahe-enhancer/
 │   ├── scripts/                  # Wires components to storage (one module per tab)
 │   │   ├── common.js, features.js, advanced.js, links.js
 │   ├── styles/                   # tokens, components, layout + one file per tab
-│   └── fonts/                    # Bundled Bricolage Grotesque + DM Mono (OFL); licence .txt files are excluded from builds
+│   └── fonts/                    # Bundled Inter + DM Mono (OFL); licence .txt files are excluded from builds
 │
 ├── icons/
 │   ├── icon16.png, icon48.png, icon128.png   # the "ap" mark
 │   ├── animepahe-wordmark.svg    # Real animepahe site logo
 │   └── malsync.svg               # Real MalSync logo
 │
-├── docs/                         # Detailed documentation, Markdown SVG assets (docs/assets/), and store widgets
+├── docs/                         # Detailed documentation, Markdown SVG assets (docs/assets/)
+├── scripts/                      # update-toc.py: keeps each doc\'s Contents list in sync
 │
 └── .github/
     ├── actions/
     │   └── build-zip/
     │       └── action.yml        # Shared: builds the store-ready Firefox and Chromium zips
     └── workflows/
+        ├── check.yml             # PR checks: manifest versions, JS parses, CSS rules
         ├── deploy-firefox.yml    # Auto-deploys to Firefox on release publish
         └── deploy-edge.yml       # Manual-only deploy to Edge
 ```
 
----
+## Making changes
 
-## Making Changes
+### Bug fixes
 
-### Bug Fixes
+1.  Confirm the bug is reproducible on the latest version.
+2.  Check that no existing open issue or PR already covers it.
+3.  Open an issue (or comment on the existing one) so work is tracked.
+4.  Fork the repository, create a branch named `fix/<short-description>`, make
+    your change, and open a PR.
 
-1. Confirm the bug is reproducible on the latest version.
-2. Check that no existing open issue or PR already covers it.
-3. Open an issue (or comment on the existing one) so work is tracked.
-4. Fork the repository, create a branch named `fix/<short-description>`, make your change, and open a PR.
+### New features
 
-### New Features
+Every feature is registered in the feature loader and has a settings key; a
+stylesheet and popup row are added when needed:
 
-Every feature is registered in the feature loader and has a settings key; a stylesheet and popup row are added when needed:
-
-**1. Create `content/features/js/my-feature.js`** (and, if it needs styling, `content/features/css/my-feature.css`)
+**1. Create `content/features/js/my-feature.js`** (and, if it needs styling,
+`content/features/css/my-feature.css`)
 
 ```js
 export class MyFeature {
@@ -208,7 +230,8 @@ const FEATURES = [
 ];
 ```
 
-**4. Confirm both manifests expose the module** (if it needs to be importable by the content script)
+**4. Confirm both manifests expose the module** (if it needs to be importable by
+the content script)
 
 ```json
 "web_accessible_resources": [
@@ -219,13 +242,21 @@ const FEATURES = [
 ]
 ```
 
-The existing resource globs already cover feature modules and stylesheets; update them only if the new file is outside those paths. To give the feature a row in the popup, add an icon component in `popup/components/icons/` and an entry in `popup/components/features/feature-config.js` — see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#adding-a-new-feature).
+The existing resource globs already cover feature modules and stylesheets;
+update them only if the new file is outside those paths. To give the feature a
+row in the popup, add an icon component in `popup/components/icons/` and an
+entry in `popup/components/features/feature-config.js` — see
+[architecture guide](/docs/ARCHITECTURE.md#adding-a-new-feature).
 
-### New Advanced Settings
+### New advanced settings
 
-If your change adds a tunable value (a timing, limit, batch size, etc.) rather than a new on/off feature, it almost certainly belongs in the **Advanced Settings** panel instead of a bespoke popup control. That panel is generated entirely from one schema — you don't touch `popup.html`, `popup.js`, or any CSS.
+If your change adds a tunable value (a timing, limit, batch size, etc.) rather
+than a new on/off feature, it almost certainly belongs in the **Advanced
+Settings** panel instead of a bespoke popup control. That panel is generated
+entirely from one schema — you don't touch `popup.html`, `popup.js`, or any CSS.
 
-**1. Add an entry to `ADVANCED_SETTINGS_SCHEMA` in `content/helpers/storage.js`**, under an existing `group` or a new one:
+**1. Add an entry to `ADVANCED_SETTINGS_SCHEMA` in
+`content/helpers/storage.js`**, under an existing `group` or a new one:
 
 ```js
 {
@@ -245,142 +276,212 @@ If your change adds a tunable value (a timing, limit, batch size, etc.) rather t
 this._myValue = settings.myNewTunable ?? 10;
 ```
 
-That's it. The popup will automatically render a labeled stepper, an info button for your description, and its own **Default N** reset button for the new setting, and fold it into **Reset all** — no other popup files need to change.
+That's it. The popup will automatically render a labeled stepper, an info button
+for your description, and its own **Default N** reset button for the new
+setting, and fold it into **Reset all** — no other popup files need to change.
 
 A few conventions to follow:
 
-- Pick a sensible `min`/`max` range — the input is hard-clamped to it on every change.
-- `default` must match whatever the code already falls back to today, so existing users see no behavior change until they touch the new control.
-- Keep `desc` to one plain-language sentence — it's read by people who don't necessarily know the implementation.
-- If the value is shared by more than one feature (e.g. cache duration is read by both the DUB Detector and Smart Search), say so in `desc` rather than adding a second, duplicate setting.
+*   Pick a sensible `min`/`max` range — the input is hard-clamped to it on every
+    change.
+*   `default` must match whatever the code already falls back to today, so
+    existing users see no behavior change until they touch the new control.
+*   Keep `desc` to one plain-language sentence — it's read by people who don't
+    necessarily know the implementation.
+*   If the value is shared by more than one feature (e.g. cache duration is read
+    by both the DUB Detector and Smart Search), say so in `desc` rather than
+    adding a second, duplicate setting.
 
 ### Documentation
 
-- Update the documentation page that covers the affected feature or workflow; update `PRIVACY.md` or `SECURITY.md` as well when data flows or security-relevant behavior changes.
-- Keep code comments rare and short. Add one only where the reason behind the code is not obvious from reading it (workarounds, race conditions, rate-limit or Cloudflare handling, browser quirks), and say _why_, not _what_. Do not restate the code, add file-header banners or section dividers, or leave commented-out code.
-- Diagrams in `docs/ARCHITECTURE.md` and `docs/FEATURES.md` use [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
+*   Update the documentation page that covers the affected feature or workflow;
+    update `PRIVACY.md` or `SECURITY.md` as well when data flows or
+    security-relevant behavior changes.
+*   Keep code comments rare and short. Add one only where the reason behind the
+    code is not obvious from reading it (workarounds, race conditions,
+    rate-limit or Cloudflare handling, browser quirks), and say _why_, not
+    _what_. Do not restate the code, add file-header banners or section
+    dividers, or leave commented-out code.
+*   Diagrams in `docs/ARCHITECTURE.md` and `docs/FEATURES.md` use
+    [Mermaid](https://mermaid.js.org/) syntax and render natively on GitHub.
 
----
+## Code style
 
-## Code Style
+CI only checks that both manifests share a version, that every `.js` file
+parses, and that stylesheets avoid `!important` and ID selectors
+([`check.yml`](/.github/workflows/check.yml)). Beyond that, follow the
+conventions already in the codebase:
 
-There is no linter or formatter enforced by CI. Follow the conventions already in the codebase:
+*   **Syntax**: ES2020+ — `async/await`, dynamic `import()`, optional
+    chaining, nullish coalescing
 
-| Concern              | Convention                                                                                                            |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| **Syntax**           | ES2020+ — `async/await`, dynamic `import()`, optional chaining, nullish coalescing                                    |
-| **Modules**          | Native ES modules (`export`/`import`). No CommonJS. No bundler.                                                       |
-| **Naming**           | `camelCase` for variables and functions; `PascalCase` for classes; `SCREAMING_SNAKE_CASE` for module-level constants  |
-| **Indentation**      | 2 spaces                                                                                                              |
-| **Strings**          | Double quotes for HTML attribute strings; single or template literals for JavaScript                                  |
-| **DOM manipulation** | Prefer `createElement`/`appendChild` over `innerHTML` for any content that includes user-supplied, animepahe-sourced, or AniList-sourced data |
-| **Error handling**   | Follow existing feature-specific error handling and logging patterns; use `[animepahe-enhancer]` for shared entry-point messages |
-| **Comments**         | Only for non-obvious logic: one or two lines explaining _why_. No JSDoc blocks, banners or comments that restate the code |
-| **UI text & icons**  | No emoji or text symbols in on-page UI. Use the inline SVG helpers in `content/helpers/icons.js` and show messages with `showAction()` from `pill.js` |
-| **Visual design**    | Match the site: brand pink `#d5015b`, dark glass `rgba(14, 14, 16, 0.94)`, Inter, 4px corners for badges and buttons, fully rounded pills for status messages |
-| **Storage keys**     | Use established key prefixes (`ape_`, `d2_`, `h2_`) and document new keys in `storage.js` or the relevant helper |
+*   **Modules**: Native ES modules (`export`/`import`). No CommonJS. No
+    bundler.
 
----
+*   **Naming**: `camelCase` for variables and functions; `PascalCase` for
+    classes; `SCREAMING_SNAKE_CASE` for module-level constants
 
-## Submitting a Pull Request
+*   **Indentation**: 2 spaces
 
-1. **Fork** the repository and create a branch:
+*   **Strings**: Double quotes for HTML attribute strings; single or
+    template literals for JavaScript
 
-   ```bash
-   git checkout -b fix/dub-badge-overlap
-   # or
-   git checkout -b feat/skip-intro-button
-   ```
+*   **DOM manipulation**: Prefer `createElement`/`appendChild` over
+    `innerHTML` for any content that includes user-supplied, animepahe-sourced,
+    or AniList-sourced data
 
-2. **Make your changes.** Test them manually by loading the extension and visiting the relevant animepahe pages.
+*   **Error handling**: Follow existing feature-specific error handling and
+    logging patterns; use `[animepahe-enhancer]` for shared entry-point messages
 
-3. **Write a clear commit message:**
+*   **Comments**: Only for non-obvious logic: one or two lines explaining
+    _why_. No JSDoc blocks, banners or comments that restate the code
 
-   ```
-   fix(dub-detector): prevent badge overlap on narrow episode cards
+*   **HTML and CSS**: [Google HTML/CSS style guide][google-html-css]:
+    lowercase, 2 spaces, single quotes in CSS, no `!important`, no ID selectors,
+    alphabetized declarations, one declaration per line
 
-   Badges were clipping into the episode number when cards were narrower
-   than 120 px. Fixed by reducing badge font size and padding at that width.
+*   **Class names**: Hyphen-separated (`feature-icon`, not `feature__icon`);
+    content-script CSS is prefixed `ape-`
 
-   Closes #42
-   ```
+*   **Markdown**: [Google Markdown style guide][google-markdown]: 80
+    columns, ATX headings in sentence case, `*   ` bullets with 4-space nesting,
+    fenced code with a language, reference links for long URLs
 
-4. **Open a pull request** against the `main` branch. Fill in the PR template:
-   - **What does this change?** — a concise summary.
-   - **Why?** — the problem it solves or the improvement it makes.
-   - **How was it tested?** — browsers tested, animepahe pages visited, edge cases checked.
-   - **Screenshots or recordings** — strongly encouraged for UI changes.
+*   **Documentation**: Change the docs in the same pull request as the code,
+    delete docs that are no longer true, and run `python3 scripts/update-toc.py`
+    after changing a heading
+*   **Popup size**: Keep every popup state under 600px tall (the Chrome and
+    Firefox limit) so it never scrolls. Check each tab, each feature expanded,
+    and each Advanced group with every setting changed.
 
-5. **Respond to review feedback.** PRs that go unaddressed for 30 days without activity may be closed.
+*   **UI text & icons**: No emoji or text symbols in on-page UI. Use the
+    inline SVG helpers in `content/helpers/icons.js` and show messages with
+    `showAction()` from `pill.js`
+
+*   **Visual design**: Match the site: brand pink `#d5015b`, dark glass
+    `rgba(14, 14, 16, 0.94)`, Inter, one pink accent on black (no per-feature
+    colours), 4px corners for badges and buttons, fully rounded pills for status
+    messages
+
+*   **Storage keys**: Use established key prefixes (`ape_`, `d2_`, `h2_`)
+    and document new keys in `storage.js` or the relevant helper
+
+## Submitting a pull request
+
+1.  **Fork** the repository and create a branch:
+
+    ```bash
+    git checkout -b fix/dub-badge-overlap
+    # or
+    git checkout -b feat/skip-intro-button
+    ```
+
+1.  **Make your changes.** Test them manually by loading the extension and
+    visiting the relevant animepahe pages.
+
+1.  **Write a clear commit message:**
+
+    ```text
+    fix(dub-detector): prevent badge overlap on narrow episode cards
+
+    Badges were clipping into the episode number when cards were narrower
+    than 120 px. Fixed by reducing badge font size and padding at that width.
+
+    Closes #42
+    ```
+
+1.  **Open a pull request** against the `main` branch. Fill in the PR template:
+    *   **What does this change?** — a concise summary.
+    *   **Why?** — the problem it solves or the improvement it makes.
+    *   **How was it tested?** — browsers tested, animepahe pages visited, edge
+        cases checked.
+    *   **Screenshots or recordings** — strongly encouraged for UI changes.
+
+1.  **Respond to review feedback.** PRs that go unaddressed for 30 days without
+    activity may be closed.
 
 ### Checklist before opening a PR
 
-- [ ] Tested manually in at least one browser (Firefox or Chrome/Edge)
-- [ ] No new `permissions` or `host_permissions` added without justification
-- [ ] No `innerHTML` used with untrusted/third-party data (animepahe DOM, AniList responses)
-- [ ] `DEFAULT_SETTINGS` updated if a new toggle was added
-- [ ] `ADVANCED_SETTINGS_SCHEMA` updated (with a matching `default`) if a new tunable was added, instead of hand-rolling popup UI
-- [ ] `manifest.json` and `manifest.chromium.json` `version` fields **not** bumped (maintainer handles versioning)
-- [ ] `README.md` and `docs/` updated if user-facing behaviour changed
-- [ ] `PRIVACY.md` updated if new network targets or data flows were introduced
-- [ ] `SECURITY.md` updated if new attack surface was introduced
+*   [ ] Tested manually in at least one browser (Firefox or Chrome/Edge)
+*   [ ] No new `permissions` or `host_permissions` added without justification
+*   [ ] No `innerHTML` used with untrusted/third-party data (animepahe DOM,
+    AniList responses)
+*   [ ] `DEFAULT_SETTINGS` updated if a new toggle was added
+*   [ ] `ADVANCED_SETTINGS_SCHEMA` updated (with a matching `default`) if a new
+    tunable was added, instead of hand-rolling popup UI
+*   [ ] `manifest.json` and `manifest.chromium.json` `version` fields **not**
+    bumped (maintainer handles versioning)
+*   [ ] `README.md` and `docs/` updated if user-facing behaviour changed
+*   [ ] `PRIVACY.md` updated if new network targets or data flows were
+    introduced
+*   [ ] `SECURITY.md` updated if new attack surface was introduced
 
----
-
-## Issue Guidelines
+## Issue guidelines
 
 Good issues save everyone time. Please include:
 
 **For bug reports:**
 
-- Extension version (visible in the popup header or `manifest.json`)
-- Browser name and version
-- Operating system
-- The animepahe URL or page type where the issue occurs
-- Steps to reproduce
-- What you expected to happen vs. what actually happened
-- Browser console errors (open DevTools → Console while on the affected page)
+*   Extension version (visible in the popup header or `manifest.json`)
+*   Browser name and version
+*   Operating system
+*   The animepahe URL or page type where the issue occurs
+*   Steps to reproduce
+*   What you expected to happen vs. what actually happened
+*   Browser console errors (open DevTools → Console while on the affected page)
 
 **For feature requests:**
 
-- The problem you are trying to solve
-- Your proposed solution (optional but helpful)
-- Any alternative approaches you considered
+*   The problem you are trying to solve
+*   Your proposed solution (optional but helpful)
+*   Any alternative approaches you considered
 
 **For questions about usage:**
 
-- Use the ❓ Question template — it prompts for what you're stuck on and which part of the extension it relates to
+*   Use the ❓ Question template — it prompts for what you're stuck on and which
+    part of the extension it relates to
 
-The issue tracker offers three templates (🐛 Bug report, 💡 Feature request, ❓ Question) plus a **blank issue**, for anything — a doc fix, a process suggestion, a security-adjacent question that isn't a vulnerability report, or anything else that doesn't fit the three templates above.
+The issue tracker offers three templates (🐛 Bug report, 💡 Feature request, ❓
+Question) plus a **blank issue**, for anything — a doc fix, a process
+suggestion, a security-adjacent question that isn't a vulnerability report, or
+anything else that doesn't fit the three templates above.
 
 Use the existing issue labels to help triage:
 
-| Label              | Meaning                                            |
-| ------------------ | -------------------------------------------------- |
-| `bug`              | Confirmed misbehaviour                             |
-| `enhancement`      | New feature or improvement                         |
-| `documentation`    | Docs-only change                                   |
+| Label              | Meaning                                                     |
+| ------------------ | ----------------------------------------------------------- |
+| `bug`              | Confirmed misbehaviour                                      |
+| `enhancement`      | New feature or improvement                                  |
+| `documentation`    | Docs-only change                                            |
 | `question`         | General question about usage (via the ❓ Question template) |
-| `good first issue` | Suitable for a first contribution                  |
-| `help wanted`      | Maintainer is open to a community PR               |
+| `good first issue` | Suitable for a first contribution                           |
+| `help wanted`      | Maintainer is open to a community PR                        |
 
----
+## Release process
 
-## Release Process
-
-Releases are handled by the maintainer. Contributors do **not** bump the version or create releases.
+Releases are handled by the maintainer. Contributors do **not** bump the version
+or create releases.
 
 When a release is ready:
 
-1. The `version` field in **both** `manifest.json` and `manifest.chromium.json` is bumped following [Semantic Versioning](https://semver.org/).
-2. A GitHub Release is published with a tag matching `v<version>`.
-3. [`deploy-firefox.yml`](.github/workflows/deploy-firefox.yml) triggers automatically: packages the extension into `Animepahe-Enhancer-Firefox.zip` and `Animepahe-Enhancer-Chromium.zip`, submits the Firefox build to the AMO review queue, and attaches both zips to the GitHub Release.
-4. Edge is **not** automatic — it's a separate, deliberate step run manually from the Actions tab (see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#releasing-a-new-version) for why).
-
----
+1.  The `version` field in **both** `manifest.json` and `manifest.chromium.json`
+    is bumped following [Semantic Versioning](https://semver.org/).
+2.  A GitHub Release is published with a tag matching `v<version>`.
+3.  [`deploy-firefox.yml`](.github/workflows/deploy-firefox.yml) triggers
+    automatically: packages the extension into `Animepahe-Enhancer-Firefox.zip`
+    and `Animepahe-Enhancer-Chromium.zip`, submits the Firefox build to the AMO
+    review queue, and attaches both zips to the GitHub Release.
+4.  Edge is **not** automatic — it's a separate, deliberate step run manually
+    from the Actions tab (see
+    [development guide](/docs/DEVELOPMENT.md#releasing-a-new-version) for why).
 
 ## Questions
 
-For general questions about usage, open an issue using the ❓ Question template (it applies the `question` label for you). If it doesn't fit a bug report, feature request, or question, a blank issue is fine too.
+For general questions about usage, open an issue using the ❓ Question template
+(it applies the `question` label for you). If it doesn't fit a bug report,
+feature request, or question, a blank issue is fine too.
 
-For security concerns, follow the process in [`SECURITY.md`](SECURITY.md).
+For security concerns, follow the process in the [security policy](SECURITY.md).
+
+[google-html-css]: https://google.github.io/styleguide/htmlcssguide.html
+[google-markdown]: https://google.github.io/styleguide/docguide/style.html

@@ -604,6 +604,7 @@ function createButton() {
   if (btn) return btn;
   btn = document.createElement("button");
   btn.id = SKIP_BTN_ID;
+  btn.classList.add("ape-is-skip-btn");
   btn.type = "button";
   btn.innerHTML = `
     <span class="ape-is-skip-icon">

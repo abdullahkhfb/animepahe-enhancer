@@ -6,7 +6,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for the suggestion! See [CONTRIBUTING.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/CONTRIBUTING.md#issue-guidelines) for what makes a good feature request.
+        Thanks for the suggestion! See
+        [CONTRIBUTING.md](https://github.com/abdullahkhfb/animepahe-enhancer/blob/main/CONTRIBUTING.md#issue-guidelines)
+        for what makes a good feature request.
 
   - type: checkboxes
     id: checks
@@ -52,6 +54,8 @@ body:
         - Smart Search
         - Intro / Outro Skip
         - Binge Watch
+        - Skip Wait
+        - Browse
         - Popup / settings UI
         - Something else / not sure
     validations:

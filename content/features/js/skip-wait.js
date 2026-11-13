@@ -68,7 +68,7 @@ export class SkipWait {
       });
 
       if (res?.ok) {
-        showAction({ icon: "check", tone: "brand", text: "Opened kwik", autohideMs: 2500 });
+        showAction({ icon: "check", text: "Opened kwik", autohideMs: 2500 });
       } else if (res?.fellBack) {
         showAction({
           icon: "dot",

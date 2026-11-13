@@ -10,13 +10,13 @@ export function FeatureRow({ feature, enabled, subopts = [], onToggle, onClear, 
   const bodyId = `feature-body-${feature.id}`;
   const expandBtn = h(
     "button",
-    { type: "button", class: "feature__expand", "aria-expanded": String(open), "aria-controls": bodyId },
-    h("span", { class: "feature__icon" }, Icon({ size: 20 })),
+    { type: "button", class: "feature-expand", "aria-expanded": String(open), "aria-controls": bodyId },
+    h("span", { class: "feature-icon" }, Icon({ size: 20 })),
     h(
       "span",
-      { class: "feature__text" },
-      h("span", { class: "feature__name" }, feature.name),
-      h("span", { class: "feature__desc" }, feature.desc),
+      { class: "feature-text" },
+      h("span", { class: "feature-name" }, feature.name),
+      h("span", { class: "feature-desc" }, feature.desc),
     ),
   );
 
@@ -36,7 +36,7 @@ export function FeatureRow({ feature, enabled, subopts = [], onToggle, onClear, 
         onClick: () => animateButton(clearBtn, onClear),
       })
     : null;
-  const statRow = onClear ? h("div", { class: "feature__stat" }, chip, clearBtn) : null;
+  const statRow = onClear ? h("div", { class: "feature-stat" }, chip, clearBtn) : null;
 
   const subRows = subopts.map((opt) =>
     h(
@@ -44,25 +44,23 @@ export function FeatureRow({ feature, enabled, subopts = [], onToggle, onClear, 
       { class: "subopt" },
       h(
         "div",
-        { class: "subopt__text" },
-        h("span", { class: "subopt__label" }, opt.label),
-        h("span", { class: "subopt__note" }, opt.note),
+        { class: "subopt-text" },
+        h("span", { class: "subopt-label" }, opt.label),
+        h("span", { class: "subopt-note" }, opt.note),
       ),
       Toggle({ label: opt.label, checked: opt.checked, small: true, onChange: opt.onChange }),
     ),
   );
-  const note = feature.note ? h("p", { class: "feature__note" }, feature.note) : null;
+  const note = feature.note ? h("p", { class: "feature-note" }, feature.note) : null;
 
-  const body = h("div", { class: "feature__body", id: bodyId, hidden: !open }, statRow, subRows, note);
+  const body = h("div", { class: "feature-body", id: bodyId, hidden: !open }, statRow, subRows, note);
 
   const el = h(
     "div",
     { class: `feature${enabled ? " is-on" : ""}${open ? " is-open" : ""}` },
-    h("div", { class: "feature__head" }, expandBtn, toggle),
+    h("div", { class: "feature-head" }, expandBtn, toggle),
     body,
   );
-  el.style.setProperty("--c", feature.color);
-  el.style.setProperty("--tint", feature.tint);
 
   function setOpen(next) {
     body.hidden = !next;

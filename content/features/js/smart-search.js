@@ -1,3 +1,4 @@
+import { injectStylesheet } from "../../helpers/styles.js";
 import { readCache, writeCache } from "../../helpers/cache.js";
 import { throttler } from "../../helpers/throttler.js";
 
@@ -170,12 +171,10 @@ function buildRow(item, originalQuery) {
     posterEl = document.createElement("img");
     posterEl.src = item.poster;
     posterEl.alt = item.title ?? "";
-    posterEl.style.cssText =
-      "width:40px !important; height:40px !important; border-radius:50% !important; object-fit:cover !important; flex-shrink:0 !important; display:block !important; margin:0 !important; padding:0 !important;";
+    posterEl.className = "ape-ss-poster";
   } else {
     posterEl = document.createElement("div");
-    posterEl.style.cssText =
-      "width:40px; height:40px; border-radius:50%; background:#1a1a30; flex-shrink:0;";
+    posterEl.className = "ape-ss-poster ape-ss-poster-empty";
   }
 
   const meta = [
@@ -190,31 +189,25 @@ function buildRow(item, originalQuery) {
   const row = document.createElement("li");
   row.dataset.apeSSExtra = "1";
   row.dataset.apeSession = item.session ?? "";
-  row.style.cssText =
-    "border-left: 3px solid #d92558 !important; list-style: none !important; margin: 0 !important; padding: 0 !important;";
+  row.className = "ape-ss-row";
 
   const link = document.createElement("a");
   link.href = `/anime/${item.session ?? ""}`;
-  link.style.cssText =
-    "display:flex !important; align-items:center !important; gap:12px !important; padding:8px 12px !important; text-decoration:none !important; color:inherit !important; cursor:pointer !important; background:transparent !important;";
+  link.className = "ape-ss-link";
 
   const textWrap = document.createElement("div");
-  textWrap.style.cssText =
-    "display:flex; flex-direction:column; justify-content:center; overflow:hidden; line-height:1.3;";
+  textWrap.className = "ape-ss-text";
 
   const titleEl = document.createElement("strong");
-  titleEl.style.cssText =
-    "color:#ffffff !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:13px !important; display:block; font-weight:bold !important;";
+  titleEl.className = "ape-ss-title";
   titleEl.textContent = item.title ?? "";
 
   const metaEl = document.createElement("small");
-  metaEl.style.cssText =
-    "color:#a0a0a0 !important; font-size:11px !important; display:block; margin-top:2px;";
+  metaEl.className = "ape-ss-meta";
   metaEl.textContent = meta;
 
   const matchEl = document.createElement("span");
-  matchEl.style.cssText =
-    "display:block; font-size:10px !important; color:#d97090 !important; font-style:italic !important; margin-top:2px; font-weight:600 !important;";
+  matchEl.className = "ape-ss-match";
   matchEl.textContent = `also matching "${originalQuery}"`;
 
   textWrap.append(titleEl, metaEl, matchEl);
@@ -225,6 +218,7 @@ function buildRow(item, originalQuery) {
 }
 
 function injectRows(data, originalQuery) {
+  injectStylesheet("ape-ss-styles", "content/features/css/smart-search.css");
   const list = getDropdown();
   if (!list) return;
 
@@ -235,17 +229,15 @@ function injectRows(data, originalQuery) {
   if (data.dym) {
     const dymRow = document.createElement("li");
     dymRow.className = "ape-ss-dym";
-    dymRow.style.cssText =
-      "padding: 8px 12px; font-size: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); list-style: none;";
+    
 
     const dymLabel = document.createElement("span");
-    dymLabel.style.cssText = "color: #888;";
+    dymLabel.className = "ape-ss-dym-label";
     dymLabel.textContent = "Did you mean:";
 
     const dymLink = document.createElement("a");
     dymLink.href = "#";
-    dymLink.style.cssText =
-      "color: #d92558; font-weight: bold; text-decoration: none;";
+    dymLink.className = "ape-ss-dym-link";
     dymLink.textContent = data.dym;
 
     dymRow.append(dymLabel, " ", dymLink, "?");

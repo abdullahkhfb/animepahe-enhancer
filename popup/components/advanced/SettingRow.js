@@ -2,10 +2,10 @@ import { h } from "../dom.js";
 import { Stepper } from "../ui/Stepper.js";
 
 export function SettingRow({ item, value, onChange, onInfo }) {
-  const dot = h("span", { class: "setting__dot", title: "Unapplied change", hidden: true });
+  const dot = h("span", { class: "setting-dot", title: "Unapplied change", hidden: true });
   const resetBtn = h("button", {
     type: "button",
-    class: "setting__reset",
+    class: "setting-reset",
     "aria-label": `Reset ${item.label} to default ${item.default}`,
     hidden: value === item.default,
     onClick: () => {
@@ -31,7 +31,7 @@ export function SettingRow({ item, value, onChange, onInfo }) {
 
   const infoBtn = h("button", {
     type: "button",
-    class: "setting__info",
+    class: "setting-info",
     title: item.desc,
     "aria-label": `About ${item.label}`,
     "aria-pressed": "false",
@@ -43,9 +43,9 @@ export function SettingRow({ item, value, onChange, onInfo }) {
     { class: "setting", dataset: { key: item.key } },
     h(
       "div",
-      { class: "setting__text" },
-      h("div", { class: "setting__top" },
-        h("label", { class: "setting__label", for: `adv-${item.key}` }, item.label, dot),
+      { class: "setting-text" },
+      h("div", { class: "setting-top" },
+        h("label", { class: "setting-label", for: `adv-${item.key}` }, item.label, dot),
         infoBtn,
         resetBtn,
       ),

@@ -4,7 +4,7 @@ export function Tabs({ tabs, onSelect }) {
   const buttons = tabs.map((t) =>
     h("button", {
       type: "button",
-      class: "tabs__btn",
+      class: "tabs-btn",
       role: "tab",
       id: `tab-${t.id}`,
       "aria-controls": `panel-${t.id}`,

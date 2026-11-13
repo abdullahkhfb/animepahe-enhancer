@@ -1,7 +1,7 @@
 name: Build extension zip
 description: >
   Builds the store-ready extension zip. Single source of truth for what
-  gets excluded (docs, screenshots, dev-only files) — used by every
+  gets excluded (docs, scripts, screenshots, dev-only files) — used by every
   per-browser deploy workflow so the exclusion list never has to be kept
   in sync across multiple files.
 
@@ -35,7 +35,7 @@ runs:
       env:
         BROWSER: ${{ inputs.browser }}
       run: |
-        EXCLUDES=(-x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "screenshots/*" "manifest.chromium.json" "*.zip" "*.xpi" "*.crx" "popup/fonts/*.txt")
+        EXCLUDES=(-x "*.git*" ".github/*" "*.md" ".gitignore" "LICENSE" "docs/*" "scripts/*" "screenshots/*" "manifest.chromium.json" "*.zip" "*.xpi" "*.crx" "popup/fonts/*.txt")
 
         if [ "$BROWSER" = "chromium" ]; then
           ZIP=Animepahe-Enhancer-Chromium.zip

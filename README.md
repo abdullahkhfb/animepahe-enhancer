@@ -1,148 +1,131 @@
-<a name="top"></a>
-
 # animepahe Enhancer
 
-A free browser extension that makes watching anime on animepahe a bit nicer. It remembers where you left off, tells you which episodes are dubbed, helps you find shows even if you only know a nickname for them, and can skip openings/endings for you.
+A free browser extension that makes watching anime on animepahe a bit nicer. It
+remembers where you left off, tells you which episodes are dubbed, helps you
+find shows even if you only know a nickname for them, and can skip
+openings/endings for you.
 
-<p align="center">
-  <img src="icons/icon128.png" alt="animepahe Enhancer logo" width="96" />
-</p>
+![animepahe Enhancer banner](docs/assets/banner.png)
 
-<p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
-    <img alt="Firefox" src="https://img.shields.io/badge/Firefox-Get_it_now-FF7139?style=flat-square&logo=firefoxbrowser&logoColor=white" />
-  </a>
-  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
-    <img alt="Edge" src="https://img.shields.io/badge/Edge-Get_it_now-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" />
-  </a>
-  <a href="https://github.com/abdullahkhfb/animepahe-enhancer/releases">
-    <img alt="Manual install" src="https://img.shields.io/badge/Manual-Install-181717?style=flat-square&logo=github&logoColor=white" />
-  </a>
-</p>
+[![Firefox][badge-firefox]][firefox-add-ons] [![Edge][badge-edge]][edge-add-ons]
+[![Manual install][badge-manual]][github-releases]
+![Manifest V3][badge-manifest] [![License: MIT][badge-license]](LICENSE)
+[![Version 0.3.1.20][badge-version]][release-tag]
 
-<p align="center">
-  <img alt="Manifest Version" src="https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white" />
-  <a href="LICENSE">
-    <img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-  </a>
-  <a href="https://github.com/abdullahkhfb/animepahe-enhancer/releases/tag/v0.3.1.19">
-    <img alt="Version" src="https://img.shields.io/badge/version-0.3.1.19-blue" />
-  </a>
-</p>
+[badge-firefox]: https://img.shields.io/badge/Firefox-Get_it_now-FF7139?style=flat-square&logo=firefoxbrowser&logoColor=white
+[badge-edge]: https://img.shields.io/badge/Edge-Get_it_now-0078D7?style=flat-square&logo=microsoftedge&logoColor=white
+[badge-manual]: https://img.shields.io/badge/Manual-Install-181717?style=flat-square&logo=github&logoColor=white
+[badge-manifest]: https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white
+[badge-license]: https://img.shields.io/badge/License-MIT-green
+[badge-version]: https://img.shields.io/badge/version-0.3.1.20-blue
+[release-tag]: https://github.com/abdullahkhfb/animepahe-enhancer/releases/tag/v0.3.1.20
+[firefox-add-ons]: https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/
+[edge-add-ons]: https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd
+[github-releases]: https://github.com/abdullahkhfb/animepahe-enhancer/releases
 
 ## Contents
 
-- [What it does](#what-it-does)
-- [Screenshots](#screenshots)
-- [Install](#install)
-- [Want more control?](#want-more-control)
-- [Learn more](#learn-more)
-- [Contributing, privacy & security](#contributing-privacy--security)
-
----
+*   [What it does](#what-it-does)
+*   [Screenshots](#screenshots)
+*   [Install](#install)
+*   [Want more control?](#want-more-control)
+*   [Contributing, privacy, and security](#contributing-privacy-and-security)
+*   [See also](#see-also)
 
 ## What it does
 
-- <img src="docs/assets/continue-watching.svg" width="22" height="22" align="absmiddle" alt="Continue Watching" /> **Continue Watching** — Picks up exactly where you stopped, every time, with a compact shelf of episode thumbnails (or the classic poster-card style, your choice), time-left badges, and progress bars on the home page. [Details&nbsp;→](docs/FEATURES.md#-continue-watching)
-- <img src="docs/assets/dub-detector.svg" width="22" height="22" align="absmiddle" alt="🎙" /> **DUB Detector** — Flags dubbed and sub-only episodes with colour-coded badges, home-card coverage meters, and an episode-list summary bar so you don't have to open an episode to find out. [Details&nbsp;→](docs/FEATURES.md#-dub-detector)
-- <img src="docs/assets/smart-search.svg" width="22" height="22" align="absmiddle" alt="🔍" /> **Smart Search** — Finds a show even if you search by an English title, a nickname, or a synonym in a different language via AniList. [Details&nbsp;→](docs/FEATURES.md#-smart-search)
-- <img src="docs/assets/intro-skip.svg" width="22" height="22" align="absmiddle" alt="Intro / Outro Skip" /> **Intro / Outro Skip** — Skips openings and endings automatically or with a one-click Skip button, and highlights intros, outros, and recaps on the player scrubber. [Details&nbsp;→](docs/FEATURES.md#-intro--outro-skip)
-- <img src="docs/assets/binge-watch.svg" width="22" height="22" align="absmiddle" alt="Binge Watch" /> **Binge Watch** — Auto-loads the video embed and plays the next episode when one ends, with a click-to-cancel countdown pill. Off by default. [Details&nbsp;→](docs/FEATURES.md#-binge-watch)
-- <img src="docs/assets/skip-wait.svg" width="22" height="22" align="absmiddle" alt="Skip Wait" /> **Skip Wait** — Download-menu links open the kwik page directly, skipping the 5-second `pahe.win` countdown page. [Details&nbsp;→](docs/FEATURES.md#-skip-wait)
-- <img src="docs/assets/browse.svg" width="22" height="22" align="absmiddle" alt="Browse" /> **Browse** — A native-feeling **browse** tab in the site menu that lets you combine genres, themes, demographics, types, status and seasons in one search, using animepahe's own lists. Remembers your filters and scroll position across reloads. [Details&nbsp;→](docs/FEATURES.md#-browse)
+*   **Continue Watching** — Picks up exactly where you stopped, every time, with
+    a compact shelf of episode thumbnails (or the classic poster-card style,
+    your choice), time-left badges, and progress bars on the home page.
+    [Details](/docs/FEATURES.md#continue-watching)
 
-Each feature can be turned on or off separately from the extension's popup. Settings and watch progress stay in your browser; some features make the network requests they need to work. See [PRIVACY.md](PRIVACY.md) for exactly what leaves your device and why.
+*   **DUB Detector** — Flags dubbed and sub-only episodes with badges, home-card
+    coverage meters, and an episode-list summary bar so you don't have to open
+    an episode to find out. [Details](/docs/FEATURES.md#dub-detector)
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+*   **Smart Search** — Finds a show even if you search by an English title, a
+    nickname, or a synonym in a different language via AniList.
+    [Details](/docs/FEATURES.md#smart-search)
 
----
+*   **Intro / Outro Skip** — Skips openings and endings automatically or with a
+    one-click Skip button, and highlights intros, outros, and recaps on the
+    player scrubber. [Details](/docs/FEATURES.md#intro--outro-skip)
+
+*   **Binge Watch** — Auto-loads the video embed and plays the next episode when
+    one ends, with a click-to-cancel countdown pill. Off by default.
+    [Details](/docs/FEATURES.md#binge-watch)
+
+*   **Skip Wait** — Download-menu links open the kwik page directly, skipping
+    the 5-second `pahe.win` countdown page.
+    [Details](/docs/FEATURES.md#skip-wait)
+
+*   **Browse** — A native-feeling **browse** tab in the site menu that lets you
+    combine genres, themes, demographics, types, status and seasons in one
+    search, using animepahe's own lists. Remembers your filters and scroll
+    position across reloads. [Details](/docs/FEATURES.md#browse) Each feature
+    can be turned on or off separately from the extension's popup. Settings and
+    watch progress stay in your browser; some features make the network requests
+    they need to work. See the [privacy policy](PRIVACY.md) for exactly what
+    leaves your device and why.
 
 ## Screenshots
 
-<img src="screenshots/sc1.png" alt="animepahe home page showing Latest Releases with DUB coverage meters and SUB ONLY badges" width="100%" />
-<img src="screenshots/sc2.png" alt="Episode list showing the 6 of 9 dubbed summary bar, DUB and SUB ONLY badges, and status toast" width="100%" />
-<img src="screenshots/sc3.png" alt="Player page showing the inline DUB badge and English audio stream options" width="100%" />
-<img src="screenshots/sc4.png" alt="animepahe home page with the Continue Watching shelf of episode thumbnails, each with an episode number, progress bar and remove button, aligned above Latest Releases" width="100%" />
-<img src="screenshots/sc5.png" alt="The animepahe Enhancer popup (v0.3.1.19), showing all seven features including Browse, with Continue Watching expanded, a staged DUB Detector setting in Advanced, and the animepahe, project, and MalSync links" />
-<img src="screenshots/sc6.png" alt="Player page with the Skip Intro button and intro/outro progress bar highlights" width="100%" />
-<img src="screenshots/sc7.png" alt="Browse page filtering anime by Action and Mystery genres in grid view, with search, sorting, filters, and library controls" width="100%" />
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
-
----
+![animepahe home page showing Latest Releases with DUB coverage meters and SUB ONLY badges](screenshots/sc1.png)
+![Episode list showing the 6 of 9 dubbed summary bar, DUB and SUB ONLY badges, and status toast](screenshots/sc2.png)
+![Player page showing the inline DUB badge and English audio stream options](screenshots/sc3.png)
+![animepahe home page with the Continue Watching shelf of episode thumbnails, each with an episode number, progress bar and remove button, aligned above Latest Releases](screenshots/sc4.png)
+![The animepahe Enhancer popup (v0.3.1.20) in its Features, Advanced, and Links tabs: seven features with Continue Watching expanded, a staged DUB Detector setting, and the animepahe, project, and MalSync links](screenshots/sc5.png)
+![Player page with the Skip Intro button and intro/outro progress bar highlights](screenshots/sc6.png)
+![Browse page filtering anime by Action and Mystery genres in grid view, with search, sorting, filters, and library controls](screenshots/sc7.png)
 
 ## Install
 
-<!-- Widget source: docs/widgets/firefox.md — edit there, then copy the block below -->
+Firefox and Edge are one click away; other Chromium browsers need a manual
+install. Installs are free, take about 10 seconds, and need no account.
 
-<p align="center">
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/">
-    <img alt="Get animepahe Enhancer for Firefox" src="https://img.shields.io/badge/Firefox-Get_it_now-FF7139?style=for-the-badge&logo=firefoxbrowser&logoColor=white" />
-  </a>
-  <br />
-  <sub>Free · takes about 10 seconds · no account needed</sub>
-</p>
-
-<!-- Widget source: docs/widgets/chrome.md — edit there, then copy the block below -->
-
-<p align="center">
-  <img alt="Chrome Web Store — release date TBA" src="https://img.shields.io/badge/Chrome Web Store-Release date%3A TBA-lightgrey?style=for-the-badge&logo=googlechrome&logoColor=white" />
-</p>
-
-<!-- Widget source: docs/widgets/edge.md — edit there, then copy the block below -->
-
-<p align="center">
-  <a href="https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd">
-    <img alt="Get animepahe Enhancer for Microsoft Edge" src="https://img.shields.io/badge/Edge_Add--ons-Get_it_now-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" />
-  </a>
-  <br />
-  <sub>Free · takes about 10 seconds · no account needed</sub>
-</p>
-
-| Browser                    | Where to get it                                                                                    | Notes                                                                                         |
-| -------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| **Firefox**                | [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/)              | Ready to install right now                                                                    |
-| **Chrome**                 | Chrome Web Store                                                                                   | **Release date: TBA** — not submitted yet; Chrome Web Store review has not been tested        |
-| **Edge**                   | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd) | Ready to install right now                                                                    |
-| Any other Chromium browser | [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)                     | Manual install — see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#loading-the-extension-locally) |
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
-
----
+| Browser                    | Where to get it                    | Notes                                                                                    |
+| -------------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------- |
+| **Firefox**                | [Firefox Add-ons][firefox-add-ons] | Ready to install right now                                                               |
+| **Chrome**                 | Chrome Web Store                   | **Release date: TBA** — not submitted yet; Chrome Web Store review has not been tested   |
+| **Edge**                   | [Edge Add-ons][edge-add-ons]       | Ready to install right now                                                               |
+| Any other Chromium browser | [GitHub Releases][github-releases] | Manual install — see the [development guide](/docs/DEVELOPMENT.md#loading-the-extension-locally) |
 
 ## Want more control?
 
-If you like tinkering, the popup has an **Advanced** tab where you can adjust things like cache duration, scan speed, and skip timing — all with plain-language descriptions, so you don't need to touch any code. Everything has a sensible default, so this is entirely optional. [See what's tunable →](docs/FEATURES.md#-advanced-settings)
+If you like tinkering, the popup has an **Advanced** tab where you can adjust
+things like cache duration, scan speed, and skip timing — all with
+plain-language descriptions, so you don't need to touch any code. Everything has
+a sensible default, so this is entirely optional.
+[See what's tunable →](/docs/FEATURES.md#advanced-settings)
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+## Contributing, privacy, and security
 
----
+*   **Want to help?** Bug reports, ideas, and pull requests are all welcome —
+    see the [contributing guide](CONTRIBUTING.md) for how to get started.
+*   **Curious what data is involved?** See the [privacy policy](PRIVACY.md) —
+    the short version is: your data stays on your device, and the few features
+    that do talk to the internet are documented there.
+*   **Found a security issue?** Please don't open a public issue — see
+    [security policy](SECURITY.md) for how to report it privately.
+*   **Community standards:** this project follows the
+    [Code of Conduct](CODE_OF_CONDUCT.md).
+*   **License:** [MIT](LICENSE) ©
+    [abdullahkhfb](https://github.com/abdullahkhfb)
 
-## Learn more
+## See also
 
-This README keeps things short on purpose. For anything more in-depth:
-
-| Guide                                          | What's in it                                                                     |
-| ---------------------------------------------- | -------------------------------------------------------------------------------- |
-| [docs/FEATURES.md](docs/FEATURES.md)           | The full technical and visual detail behind every feature                        |
-| [docs/USAGE.md](docs/USAGE.md)                 | Step-by-step instructions for using each feature and the popup                   |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)   | How the code is organized, and how to add a new feature or setting               |
-| [docs/PERMISSIONS.md](docs/PERMISSIONS.md)     | Exactly what the extension can access, and why                                   |
-| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)     | Running the extension locally and how releases are published                     |
-| [docs/EDGE.md](docs/EDGE.md)                   | The current situation with the Microsoft Edge listing, and how to install anyway |
-| [RELEASE.md](RELEASE.md)                       | Release notes, mirrored from GitHub Releases                                     |
-| [docs/STORE_LISTING.md](docs/STORE_LISTING.md) | The description text used on the extension store listings                        |
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
-
----
-
-## Contributing, privacy & security
-
-- **Want to help?** Bug reports, ideas, and pull requests are all welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for how to get started.
-- **Curious what data is involved?** See [PRIVACY.md](PRIVACY.md) — the short version is: your data stays on your device, and the few features that do talk to the internet are documented there.
-- **Found a security issue?** Please don't open a public issue — see [SECURITY.md](SECURITY.md) for how to report it privately.
-- **Community standards:** this project follows the [Code of Conduct](CODE_OF_CONDUCT.md).
-- **License:** [MIT](LICENSE) © [abdullahkhfb](https://github.com/abdullahkhfb)
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+*   [Feature reference](/docs/FEATURES.md): the full technical and visual detail
+    behind every feature.
+*   [Usage guide](/docs/USAGE.md): step-by-step instructions for each feature
+    and the popup.
+*   [Architecture guide](/docs/ARCHITECTURE.md): how the code is organized, and
+    how to add a feature or setting.
+*   [Permissions guide](/docs/PERMISSIONS.md): what the extension can access,
+    and why.
+*   [Development guide](/docs/DEVELOPMENT.md): running the extension locally and
+    how releases are published.
+*   [Edge listing guide](/docs/EDGE.md): the state of the Microsoft Edge
+    listing, and how to install anyway.
+*   [Release notes](/RELEASE.md): every version, mirrored from GitHub Releases.
+*   [Store listing text](/docs/STORE_LISTING.md): the description used on the
+    store listings.

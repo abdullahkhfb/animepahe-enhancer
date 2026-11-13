@@ -1,74 +1,88 @@
-# Documentation Assets
+# Documentation assets
 
-This folder holds the SVG icons and UI badge graphics embedded in [`docs/FEATURES.md`](../FEATURES.md), [`docs/USAGE.md`](../USAGE.md), and [`README.md`](../../README.md).
+This folder holds the SVG icons and UI badge graphics embedded in
+[feature reference](/docs/FEATURES.md), [usage guide](/docs/USAGE.md), and
+[README](/README.md).
 
-Because [`build-zip`](../../.github/actions/build-zip/action.yml) excludes the entire `docs/` directory (`"docs/*"`), none of these documentation assets are ever bundled into the Firefox or Chromium extension `.zip` packages.
+Because [`build-zip`](/.github/actions/build-zip/action.yml) excludes the entire
+`docs/` directory (`"docs/*"`), none of these documentation assets are ever
+bundled into the Firefox or Chromium extension `.zip` packages.
 
-## Feature Tile Icons
+## Contents
 
-Derived from [`popup/components/icons/`](../../popup/components/icons/) and [`popup/components/features/feature-config.js`](../../popup/components/features/feature-config.js):
+*   [Feature tile icons](#feature-tile-icons)
+*   [Browse controls](#browse-controls)
+*   [On-page UI icons and badges](#on-page-ui-icons-and-badges)
 
-| Asset | Preview | Source Component | Accent / Tint |
-| :--- | :---: | :--- | :--- |
-| `continue-watching.svg` | <img src="continue-watching.svg" width="28" height="28" align="absmiddle" alt="Continue Watching" /> | `ContinueWatchingIcon.js` | `#FF4D94` / `rgba(255, 77, 148, 0.14)` |
-| `dub-detector.svg` | <img src="dub-detector.svg" width="28" height="28" align="absmiddle" alt="DUB Detector" /> | `DubDetectorIcon.js` | `#FFB02E` / `rgba(255, 176, 46, 0.14)` |
-| `smart-search.svg` | <img src="smart-search.svg" width="28" height="28" align="absmiddle" alt="Smart Search" /> | `SmartSearchIcon.js` | `#5BB8FF` / `rgba(91, 184, 255, 0.14)` |
-| `intro-skip.svg` | <img src="intro-skip.svg" width="28" height="28" align="absmiddle" alt="Intro / Outro Skip" /> | `IntroSkipIcon.js` | `#A98BFF` / `rgba(169, 139, 255, 0.14)` |
-| `binge-watch.svg` | <img src="binge-watch.svg" width="28" height="28" align="absmiddle" alt="Binge Watch" /> | `BingeWatchIcon.js` | `#3DD6A3` / `rgba(61, 214, 163, 0.14)` |
-| `skip-wait.svg` | <img src="skip-wait.svg" width="28" height="28" align="absmiddle" alt="Skip Wait" /> | `SkipWaitIcon.js` | `#FF7A59` / `rgba(255, 122, 89, 0.14)` |
-| `advanced-settings.svg` | <img src="advanced-settings.svg" width="28" height="28" align="absmiddle" alt="Advanced Settings" /> | Advanced Settings tab | `#C9C4D6` / `#23222d` |
-| `shield.svg` | <img src="shield.svg" width="28" height="28" align="absmiddle" alt="Cloudflare & Rate-Limit Protection" /> | `challenge.js` + `throttler.js` | `#5BB8FF` / `#1a2430` |
+## Feature tile icons
 
-## Browse Controls
+Derived from [`popup/components/icons/`](/popup/components/icons) and
+[`popup/components/features/feature-config.js`](/popup/components/features/feature-config.js):
 
-| Asset | Preview | Control |
-| :--- | :---: | :--- |
-| `browse-search.svg` | <img src="browse-search.svg" width="16" height="16" align="absmiddle" alt="Search" /> | Browse title search |
-| `browse-chevron.svg` | <img src="browse-chevron.svg" width="12" height="12" align="absmiddle" alt="Dropdown" /> | Browse filter dropdown |
-| `browse-grid.svg` | <img src="browse-grid.svg" width="18" height="18" align="absmiddle" alt="Grid view" /> | Browse poster grid |
-| `browse-list.svg` | <img src="browse-list.svg" width="18" height="18" align="absmiddle" alt="List view" /> | Browse list view |
-| `browse-library.svg` | <img src="browse-library.svg" width="14" height="14" align="absmiddle" alt="Library" /> | Browse Library bookmark |
+| Asset                   | Preview                                           | Source Component                | Accent on tile         |
+| :---------------------- | :-----------------------------------------------: | :------------------------------ | :--------------------- |
+| `continue-watching.svg` | ![Continue Watching](continue-watching.svg)       | `ContinueWatchingIcon.js`       | `#ff4d94` on `#2b0012` |
+| `dub-detector.svg`      | ![DUB Detector](dub-detector.svg)                 | `DubDetectorIcon.js`            | `#ff4d94` on `#2b0012` |
+| `smart-search.svg`      | ![Smart Search](smart-search.svg)                 | `SmartSearchIcon.js`            | `#ff4d94` on `#2b0012` |
+| `intro-skip.svg`        | ![Intro / Outro Skip](intro-skip.svg)             | `IntroSkipIcon.js`              | `#ff4d94` on `#2b0012` |
+| `binge-watch.svg`       | ![Binge Watch](binge-watch.svg)                   | `BingeWatchIcon.js`             | `#ff4d94` on `#2b0012` |
+| `skip-wait.svg`         | ![Skip Wait](skip-wait.svg)                       | `SkipWaitIcon.js`               | `#ff4d94` on `#2b0012` |
+| `advanced-settings.svg` | ![Advanced Settings](advanced-settings.svg)       | Advanced Settings tab           | `#b4b4bf` on `#151518` |
+| `shield.svg`            | ![Cloudflare & Rate-Limit Protection](shield.svg) | `challenge.js` + `throttler.js` | `#ff4d94` on `#2b0012` |
 
-## On-Page UI Icons & Badges
+## Browse controls
 
-Derived from [`content/helpers/icons.js`](../../content/helpers/icons.js), [`content/helpers/pill.js`](../../content/helpers/pill.js), [`content/iframe-player.js`](../../content/iframe-player.js), and [`content/features/css/`](../../content/features/css/):
+| Asset                | Preview                         | Control                 |
+| :------------------- | :-----------------------------: | :---------------------- |
+| `browse-search.svg`  | ![Search](browse-search.svg)    | Browse title search     |
+| `browse-chevron.svg` | ![Dropdown](browse-chevron.svg) | Browse filter dropdown  |
+| `browse-grid.svg`    | ![Grid view](browse-grid.svg)   | Browse poster grid      |
+| `browse-list.svg`    | ![List view](browse-list.svg)   | Browse list view        |
+| `browse-library.svg` | ![Library](browse-library.svg)  | Browse Library bookmark |
 
-| Asset | Preview | Feature / Helper |
-| :--- | :---: | :--- |
-| `cw-count.svg` | <img src="cw-count.svg" height="20" align="absmiddle" alt="6" /> | Continue Watching — `.ape-cw-count` header pill |
-| `cw-btn-more.svg` | <img src="cw-btn-more.svg" height="22" align="absmiddle" alt="Show more" /> | Continue Watching — `#ape-cw-toggle` button |
-| `cw-btn-clear.svg` | <img src="cw-btn-clear.svg" height="22" align="absmiddle" alt="Clear all" /> | Continue Watching — `#ape-cw-clear` button |
-| `play.svg` | <img src="play.svg" width="24" height="24" align="absmiddle" alt="Play" /> | Continue Watching — `playIcon` in `.ape-cw-play` |
-| `close.svg` | <img src="close.svg" width="22" height="22" align="absmiddle" alt="Remove" /> | Continue Watching — `closeIcon` in `.ape-cw-remove-btn` |
-| `cw-time-left.svg` | <img src="cw-time-left.svg" height="20" align="absmiddle" alt="14 min left" /> | Continue Watching — `.ape-cw-left` time-remaining badge |
-| `cw-ep-badge.svg` | <img src="cw-ep-badge.svg" height="22" align="absmiddle" alt="EP 6" /> | Continue Watching — `.ape-cw-ep` badge |
-| `cw-prog-bar.svg` | <img src="cw-prog-bar.svg" width="110" height="10" align="absmiddle" alt="Progress bar" /> | Continue Watching — `.ape-cw-prog-bar` |
-| `mic.svg` | <img src="mic.svg" width="16" height="16" align="absmiddle" alt="Mic" /> | DUB Detector — `micIcon` in `content/helpers/icons.js` |
-| `badge-dub.svg` | <img src="badge-dub.svg" height="22" align="absmiddle" alt="DUB" /> | DUB Detector — `.ape-dub-badge-ep` / `.ape-dub-inline` |
-| `badge-sub-only.svg` | <img src="badge-sub-only.svg" height="22" align="absmiddle" alt="SUB ONLY" /> | DUB Detector — `.ape-sub-badge-ep` / `.ape-sub-badge-home` / `.ape-sub-inline` |
-| `badge-dub-home.svg` | <img src="badge-dub-home.svg" height="22" align="absmiddle" alt="6/10" /> | DUB Detector — `.ape-dub-badge-home` with `.ape-dub-meter` |
-| `badge-scanning.svg` | <img src="badge-scanning.svg" height="22" align="absmiddle" alt="SCANNING" /> | DUB Detector — `.ape-dub-spin` home card spinner |
-| `badge-dub-summary.svg` | <img src="badge-dub-summary.svg" height="24" align="absmiddle" alt="6 of 9 dubbed" /> | DUB Detector — `.ape-dub-summary` with `.ape-dub-seg` |
-| `progress-ring.svg` | <img src="progress-ring.svg" width="18" height="18" align="absmiddle" alt="Progress ring" /> | Status Toast — `.ape-pill-ring` (`showStatus` progress state) |
-| `check.svg` | <img src="check.svg" width="18" height="18" align="absmiddle" alt="Check" /> | Status Toast — `.ape-pill-ok` (`checkIcon` in `showStatus` success state) |
-| `amber-dot.svg` | <img src="amber-dot.svg" width="14" height="14" align="absmiddle" alt="Amber dot" /> | Status Toast — `.ape-pill-dot` (`showStatus` empty/paused state) |
-| `ss-dym-badge.svg` | <img src="ss-dym-badge.svg" height="24" align="absmiddle" alt="Did you mean" /> | Smart Search — `.ape-ss-dym` banner |
-| `ss-extra-row.svg` | <img src="ss-extra-row.svg" height="36" align="absmiddle" alt="Extra search row" /> | Smart Search — `li[data-ape-ss-extra="1"]` row |
-| `skip-btn-icon.svg` | <img src="skip-btn-icon.svg" width="18" height="18" align="absmiddle" alt="Skip icon" /> | Intro / Outro Skip — `.ape-is-skip-icon` |
-| `badge-skip-intro.svg` | <img src="badge-skip-intro.svg" height="26" align="absmiddle" alt="Skip Intro" /> | Intro / Outro Skip — `#ape-is-skip-btn` |
-| `scrubber-intro.svg` | <img src="scrubber-intro.svg" width="72" height="14" align="absmiddle" alt="Intro scrubber" /> | Intro / Outro Skip — `.ape-is-hl-intro` (`#4f9dff`) |
-| `scrubber-outro.svg` | <img src="scrubber-outro.svg" width="72" height="14" align="absmiddle" alt="Outro scrubber" /> | Intro / Outro Skip — `.ape-is-hl-outro` (`#ff8a1f`) |
-| `scrubber-recap.svg` | <img src="scrubber-recap.svg" width="72" height="14" align="absmiddle" alt="Recap scrubber" /> | Intro / Outro Skip — `.ape-is-hl-recap` (`#a98bff`) |
-| `pill-bw-countdown.svg` | <img src="pill-bw-countdown.svg" height="26" align="absmiddle" alt="Binge Watch countdown" /> | Binge Watch — countdown pill with Cancel action (`showAction`) |
-| `pill-sw-opened.svg` | <img src="pill-sw-opened.svg" height="26" align="absmiddle" alt="Skip Wait opened kwik" /> | Skip Wait — completion pill (`showAction`) |
-| `cw-title.svg` | <img src="cw-title.svg" height="28" align="absmiddle" alt="Kill Blue" /> | Continue Watching — `.ape-cw-title` series title over the bottom gradient |
-| `toggle-autoskip.svg` | <img src="toggle-autoskip.svg" height="30" align="absmiddle" alt="Auto-skip toggle" /> | Intro / Outro Skip — popup **Auto-skip automatically** switch (off) |
-| `pill-is-ready.svg` | <img src="pill-is-ready.svg" height="26" align="absmiddle" alt="Skip data ready" /> | Intro / Outro Skip — `Skip data ready` pill (`showAction`) |
-| `pill-is-none.svg` | <img src="pill-is-none.svg" height="26" align="absmiddle" alt="No skip data" /> | Intro / Outro Skip — `No skip data` pill (`showAction`) |
-| `pill-bw-finding.svg` | <img src="pill-bw-finding.svg" height="26" align="absmiddle" alt="Finding next episode" /> | Binge Watch — `Finding next episode` pill |
-| `pill-bw-cancelled.svg` | <img src="pill-bw-cancelled.svg" height="26" align="absmiddle" alt="Binge Watch cancelled" /> | Binge Watch — `Binge Watch cancelled` pill |
-| `pill-bw-playing.svg` | <img src="pill-bw-playing.svg" height="26" align="absmiddle" alt="Playing next episode" /> | Binge Watch — `Playing next episode` pill |
-| `pill-bw-last.svg` | <img src="pill-bw-last.svg" height="26" align="absmiddle" alt="Last episode reached" /> | Binge Watch — `Last episode reached` pill |
-| `pill-sw-getting.svg` | <img src="pill-sw-getting.svg" height="26" align="absmiddle" alt="Getting link" /> | Skip Wait — `Getting link` pill with the option label |
-| `pill-sw-busy.svg` | <img src="pill-sw-busy.svg" height="26" align="absmiddle" alt="Already working on a link" /> | Skip Wait — `Already working on a link` pill |
-| `pill-sw-fallback.svg` | <img src="pill-sw-fallback.svg" height="26" align="absmiddle" alt="Opened the normal page" /> | Skip Wait — fallback pill when no kwik link is found |
+## On-page UI icons and badges
+
+Derived from [`content/helpers/icons.js`](/content/helpers/icons.js),
+[`content/helpers/pill.js`](/content/helpers/pill.js),
+[`content/iframe-player.js`](/content/iframe-player.js), and
+[`content/features/css/`](/content/features/css):
+
+| Asset                   | Preview                                         | Feature / Helper                                                               |
+| :---------------------- | :---------------------------------------------: | :----------------------------------------------------------------------------- |
+| `cw-count.svg`          | ![6](cw-count.svg)                              | Continue Watching — `.ape-cw-count` header pill                                |
+| `cw-btn-more.svg`       | ![Show more](cw-btn-more.svg)                   | Continue Watching — `#ape-cw-toggle` button                                    |
+| `cw-btn-clear.svg`      | ![Clear all](cw-btn-clear.svg)                  | Continue Watching — `#ape-cw-clear` button                                     |
+| `play.svg`              | ![Play](play.svg)                               | Continue Watching — `playIcon` in `.ape-cw-play`                               |
+| `close.svg`             | ![Remove](close.svg)                            | Continue Watching — `closeIcon` in `.ape-cw-remove-btn`                        |
+| `cw-time-left.svg`      | ![14 min left](cw-time-left.svg)                | Continue Watching — `.ape-cw-left` time-remaining badge                        |
+| `cw-ep-badge.svg`       | ![EP 6](cw-ep-badge.svg)                        | Continue Watching — `.ape-cw-ep` badge                                         |
+| `cw-prog-bar.svg`       | ![Progress bar](cw-prog-bar.svg)                | Continue Watching — `.ape-cw-prog-bar`                                         |
+| `mic.svg`               | ![Mic](mic.svg)                                 | DUB Detector — `micIcon` in `content/helpers/icons.js`                         |
+| `badge-dub.svg`         | ![DUB](badge-dub.svg)                           | DUB Detector — `.ape-dub-badge-ep` / `.ape-dub-inline`                         |
+| `badge-sub-only.svg`    | ![SUB ONLY](badge-sub-only.svg)                 | DUB Detector — `.ape-sub-badge-ep` / `.ape-sub-badge-home` / `.ape-sub-inline` |
+| `badge-dub-home.svg`    | ![6/10](badge-dub-home.svg)                     | DUB Detector — `.ape-dub-badge-home` with `.ape-dub-meter`                     |
+| `badge-scanning.svg`    | ![SCANNING](badge-scanning.svg)                 | DUB Detector — `.ape-dub-spin` home card spinner                               |
+| `badge-dub-summary.svg` | ![6 of 9 dubbed](badge-dub-summary.svg)         | DUB Detector — `.ape-dub-summary` with `.ape-dub-seg`                          |
+| `progress-ring.svg`     | ![Progress ring](progress-ring.svg)             | Status Toast — `.ape-pill-ring` (`showStatus` progress state)                  |
+| `check.svg`             | ![Check](check.svg)                             | Status Toast — `.ape-pill-ok` (`checkIcon` in `showStatus` success state)      |
+| `neutral-dot.svg`       | ![Neutral dot](neutral-dot.svg)                 | Status Toast — `.ape-pill-dot` (`showStatus` empty/paused state)               |
+| `ss-dym-badge.svg`      | ![Did you mean](ss-dym-badge.svg)               | Smart Search — `.ape-ss-dym` banner                                            |
+| `ss-extra-row.svg`      | ![Extra search row](ss-extra-row.svg)           | Smart Search — `li[data-ape-ss-extra="1"]` row                                 |
+| `skip-btn-icon.svg`     | ![Skip icon](skip-btn-icon.svg)                 | Intro / Outro Skip — `.ape-is-skip-icon`                                       |
+| `badge-skip-intro.svg`  | ![Skip Intro](badge-skip-intro.svg)             | Intro / Outro Skip — `.ape-is-skip-btn`                                        |
+| `scrubber-intro.svg`    | ![Intro scrubber](scrubber-intro.svg)           | Intro / Outro Skip — `.ape-is-hl-intro` (`#4f9dff`)                            |
+| `scrubber-outro.svg`    | ![Outro scrubber](scrubber-outro.svg)           | Intro / Outro Skip — `.ape-is-hl-outro` (`#ff8a1f`)                            |
+| `scrubber-recap.svg`    | ![Recap scrubber](scrubber-recap.svg)           | Intro / Outro Skip — `.ape-is-hl-recap` (`#a98bff`)                            |
+| `pill-bw-countdown.svg` | ![Binge Watch countdown](pill-bw-countdown.svg) | Binge Watch — countdown pill with Cancel action (`showAction`)                 |
+| `pill-sw-opened.svg`    | ![Skip Wait opened kwik](pill-sw-opened.svg)    | Skip Wait — completion pill (`showAction`)                                     |
+| `cw-title.svg`          | ![Kill Blue](cw-title.svg)                      | Continue Watching — `.ape-cw-title` series title over the bottom gradient      |
+| `toggle-autoskip.svg`   | ![Auto-skip toggle](toggle-autoskip.svg)        | Intro / Outro Skip — popup **Auto-skip automatically** switch (off)            |
+| `pill-is-ready.svg`     | ![Skip data ready](pill-is-ready.svg)           | Intro / Outro Skip — `Skip data ready` pill (`showAction`)                     |
+| `pill-is-none.svg`      | ![No skip data](pill-is-none.svg)               | Intro / Outro Skip — `No skip data` pill (`showAction`)                        |
+| `pill-bw-finding.svg`   | ![Finding next episode](pill-bw-finding.svg)    | Binge Watch — `Finding next episode` pill                                      |
+| `pill-bw-cancelled.svg` | ![Binge Watch cancelled](pill-bw-cancelled.svg) | Binge Watch — `Binge Watch cancelled` pill                                     |
+| `pill-bw-playing.svg`   | ![Playing next episode](pill-bw-playing.svg)    | Binge Watch — `Playing next episode` pill                                      |
+| `pill-bw-last.svg`      | ![Last episode reached](pill-bw-last.svg)       | Binge Watch — `Last episode reached` pill                                      |
+| `pill-sw-getting.svg`   | ![Getting link](pill-sw-getting.svg)            | Skip Wait — `Getting link` pill with the option label                          |
+| `pill-sw-busy.svg`      | ![Already working on a link](pill-sw-busy.svg)  | Skip Wait — `Already working on a link` pill                                   |
+| `pill-sw-fallback.svg`  | ![Opened the normal page](pill-sw-fallback.svg) | Skip Wait — fallback pill when no kwik link is found                           |

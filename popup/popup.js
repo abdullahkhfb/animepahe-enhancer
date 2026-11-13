@@ -15,7 +15,7 @@ const TABS = [
 ];
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const app = document.getElementById("app");
+  const app = document.querySelector(".app");
 
   const notice = Notice("Reload page to apply");
   const timeline = Timeline(FEATURES);
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     TABS.map((t) => [
       t.id,
       h("section", {
-        class: "panel",
+        class: `panel panel-${t.id}`,
         id: `panel-${t.id}`,
         role: "tabpanel",
         "aria-labelledby": `tab-${t.id}`,

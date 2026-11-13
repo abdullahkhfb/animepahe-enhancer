@@ -163,6 +163,7 @@ export class Browse {
     const unit = anime.closest("li") || anime;
     const clone = unit.cloneNode(true);
     clone.id = "ape-br-nav";
+    clone.classList.add("ape-br-nav");
     clone.classList.remove("active");
     const link = clone.tagName === "A" ? clone : clone.querySelector("a");
     if (!link) return;
@@ -487,7 +488,7 @@ class BrowseApp {
   // ── static skeleton ────────────────────────────────────────────────────
 
   _build() {
-    const root = h("div", { id: "ape-br-root" });
+    const root = h("div", { id: "ape-br-root", class: "ape-br-root" });
     this.root = root;
 
     this.selSort = h("select", {

@@ -1,22 +1,38 @@
-<a name="top"></a>
+# Release notes
 
-# Release Notes
+This file mirrors the notes published on the
+[GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases)
+page, so the history is browsable from inside the repo too — not everyone thinks
+to check the Releases tab. It's written by hand, not generated, and it's meant
+to stay short enough to skim in one sitting.
 
-This file mirrors the notes published on the [GitHub Releases](https://github.com/abdullahkhfb/animepahe-enhancer/releases) page, so the history is browsable from inside the repo too — not everyone thinks to check the Releases tab. It's written by hand, not generated, and it's meant to stay short enough to skim in one sitting.
-
-For the mechanics of actually cutting a release (bumping the version, tagging, what the CI pipeline does), see [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md#releasing-a-new-version). This file is just the human-readable "what changed and why."
+For the mechanics of actually cutting a release (bumping the version, tagging,
+what the CI pipeline does), see
+[development guide](/docs/DEVELOPMENT.md#releasing-a-new-version). This file is
+just the human-readable "what changed and why."
 
 ## Contents
 
 - [How to write a release entry](#how-to-write-a-release-entry)
 - [Keeping this file manageable](#keeping-this-file-manageable)
 - [Unreleased](#unreleased)
-
----
+- [v0.3.1.20 — 2026-13-10](#v03120--2026-11-10)
+- [v0.3.1.19 — 2026-11-04](#v03119--2026-11-04)
+- [v0.3.1.18 — 2026-11-01](#v03118--2026-11-01)
+- [v0.3.1.17 — 2026-10-21](#v03117--2026-10-21)
+- [v0.3.1.16 — 2026-10-21](#v03116--2026-10-21)
+- [v0.3.1.5 — 2026-10-13](#v0315--2026-10-13)
+- [v0.3.1.2 — 2026-09-13](#v0312--2026-09-13)
+- [v0.3.1.1 — 2026-09-05](#v0311--2026-09-05)
+- [v0.3.1.0 — 2026-08-03](#v0310--2026-08-03)
+- [v0.3.0.0 — 2026-08-02](#v0300--2026-08-02)
+- [v0.2.0.1 — 2026-07-20](#v0201--2026-07-20)
 
 ## How to write a release entry
 
-When you publish a new GitHub Release, paste the same notes here under a new heading, newest at the top (right below `## Unreleased`, which should then be emptied out). Use this template:
+When you publish a new GitHub Release, paste the same notes here under a new
+heading, newest at the top (right below `## Unreleased`, which should then be
+emptied out). Use this template:
 
 ```markdown
 ## v0.x.x — YYYY-MM-DD
@@ -42,218 +58,403 @@ One or two sentences on what this release is mainly about, in plain language.
 [Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/vPREV...vNEW)
 ```
 
-Skip any section that's empty for that release rather than leaving it blank — an entry doesn't need all four. Keep each bullet to what a user or contributor would actually care about; internal refactors with no observable effect belong in commit messages, not here.
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+Skip any section that's empty for that release rather than leaving it blank — an
+entry doesn't need all four. Keep each bullet to what a user or contributor
+would actually care about; internal refactors with no observable effect belong
+in commit messages, not here.
 
 ## Keeping this file manageable
 
-This file should stay under **3,000 lines**. In practice, if you're following the template above, that's a lot of releases — but if it ever gets close:
+This file should stay under **3,000 lines**. In practice, if you're following
+the template above, that's a lot of releases — but if it ever gets close:
 
-1. Move everything except the most recent 5–10 versions into `RELEASE_ARCHIVE.md`.
-2. Leave a one-line pointer at the bottom of this file: `Older releases: see RELEASE_ARCHIVE.md`.
-3. The GitHub Releases page itself is unaffected either way — it keeps the full history regardless of what's mirrored here.
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+1.  Move everything except the most recent 5–10 versions into
+    `RELEASE_ARCHIVE.md`.
+2.  Leave a one-line pointer at the bottom of this file:
+    `Older releases: see RELEASE_ARCHIVE.md`.
+3.  The GitHub Releases page itself is unaffected either way — it keeps the full
+    history regardless of what's mirrored here.
 
 ## Unreleased
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+## v0.3.1.20 — 2026-13-10
+
+### Changed in v0.3.1.20
+
+- **Popup redesign**: one pink accent on the site's black replaces the
+  per-feature colours. The popup now uses Inter (replacing Bricolage
+  Grotesque), and its spacing, tabs, toggles, pills and buttons follow the
+  approved design exactly. The "Cleared!" button label can no longer wrap.
+- **On-page pills**: every action pill shares one accent chip, and the "sub
+  only" dot is neutral grey instead of orange.
+- **Smart Search rows**: their styling moved out of `smart-search.js` into
+  `content/features/css/smart-search.css`, and the pink-red accents now use
+  the site's pink.
+- **Stylesheets and docs**: all CSS follows the Google HTML/CSS style guide
+  (no `!important` or ID selectors, hyphenated class names). All Markdown
+  follows the Google Markdown style guide.
+- **No scrolling**: every popup state (any tab, any feature expanded, any
+  group with every setting changed) now fits inside the 600px that Chrome and
+  Firefox allow, so the popup never scrolls. The popup screenshots are new.
+- **Unchanged on purpose**: the player's intro, outro and recap scrubber
+  highlight colours.
+
+### Removed in v0.3.1.20
+
+- `content/features/css/binge-watch.css` (unused), `docs/widgets/` (replaced
+  by plain Markdown in the README), the per-feature `color` and `tint` fields,
+  and the bundled Bricolage Grotesque fonts.
+
+[Full changelog][full-changelog]
+
+[full-changelog]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.19...v0.3.1.20
 
 ## v0.3.1.19 — 2026-11-04
 
 Adds Browse: a native-feeling menu tab for combining animepahe's filters.
 
-### Added
+### Added in v0.3.1.19
 
-- **Browse**: a **browse** tab in the site menu (`/anime#browse`) that combines genres, themes, demographics, types, status and seasons. Filtering uses animepahe's real list pages (the same method as the AnimePahe Improvements userscript) with all/any matching and exclusion, instead of guessing from titles.
-- **Persistence**: the tab, filters, sort, view, scroll position and "Show more" depth survive reloads and Back navigation; opening a bare `#browse` restores your last search. Switching between **anime** and **browse** needs no reload, and a `document_start` script stops the original index flashing.
-- **Request-light posters**: one lookup per title, only for cards on screen, cached for 14 days (none on a second visit). Filter lists are fetched only when selected and cached (new **Browse → List cache duration** setting, 72h by default).
+- **Browse**: a **browse** tab in the site menu (`/anime#browse`) that
+  combines genres, themes, demographics, types, status and seasons. Filtering
+  uses animepahe's real list pages (the same method as the AnimePahe
+  Improvements userscript) with all/any matching and exclusion, instead of
+  guessing from titles.
+- **Persistence**: the tab, filters, sort, view, scroll position and "Show
+  more" depth survive reloads and Back navigation; opening a bare `#browse`
+  restores your last search. Switching between **anime** and **browse** needs
+  no reload, and a `document_start` script stops the original index flashing.
+- **Request-light posters**: one lookup per title, only for cards on screen,
+  cached for 14 days (none on a second visit). Filter lists are fetched only
+  when selected and cached (new **Browse → List cache duration** setting, 72h
+  by default).
 - **Library**: save anime from the grid or list and filter to them.
 
-### Changed
+### Changed in v0.3.1.19
 
-- **Popup fits without scrolling** in every tab and with any feature row expanded (it previously overflowed when Intro / Outro Skip was open). Rows, header and tabs are slightly tighter to make room for the seventh feature.
-- `throttler.fetch` accepts `{ plain: true }` for list pages (no AJAX/no-cache headers, so the HTTP cache applies); `whenSiteReady` accepts `settleMs`.
+- **Popup fits without scrolling** in every tab and with any feature row
+  expanded (it previously overflowed when Intro / Outro Skip was open). Rows,
+  header and tabs are slightly tighter to make room for the seventh feature.
+- `throttler.fetch` accepts `{ plain: true }` for list pages (no AJAX/no-cache
+  headers, so the HTTP cache applies); `whenSiteReady` accepts `settleMs`.
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.18...v0.3.1.19)
+[Full changelog][full-changelog]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.18...v0.3.1.19
 
 ## v0.3.1.18 — 2026-11-01
 
-Adds the redesigned Skip button, shared action pills and progress bar highlights.
+Adds the redesigned Skip button, shared action pills and progress bar
+highlights.
 
-### Changed
+### Changed in v0.3.1.18
 
-- **Skip Intro / Outro button redesigned**: a dark glass button with 4px corners and a bold label that turns brand pink on hover (instead of blue), with a pressed state and a keyboard focus ring. The icon is now the standard skip mark (triangle and a single bar).
-- **New action pills for Binge Watch, Skip Wait and Intro / Outro Skip**: one shared look (36px, rounded, dark glass, a round icon chip). Binge Watch shows a pink countdown ring with a **Cancel** action instead of making the whole pill clickable. Messages are short and the emoji and text symbols are gone.
-- **Progress bar highlights redesigned**: rounded 6px segments (10px when the bar is hovered) with a gap between neighbours and a minimum width, in blue (intro), amber (outro) and violet (recap), plus a hover label with the segment's time range.
-- **Code and docs cleanup**: removed redundant code comments, keeping short ones for non-obvious logic; updated the docs and CONTRIBUTING.md to match.
+- **Skip Intro / Outro button redesigned**: a dark glass button with 4px
+  corners and a bold label that turns brand pink on hover (instead of blue),
+  with a pressed state and a keyboard focus ring. The icon is now the standard
+  skip mark (triangle and a single bar).
+- **New action pills for Binge Watch, Skip Wait and Intro / Outro Skip**: one
+  shared look (36px, rounded, dark glass, a round icon chip). Binge Watch
+  shows a pink countdown ring with a **Cancel** action instead of making the
+  whole pill clickable. Messages are short and the emoji and text symbols are
+  gone.
+- **Progress bar highlights redesigned**: rounded 6px segments (10px when the
+  bar is hovered) with a gap between neighbours and a minimum width, in blue
+  (intro), amber (outro) and violet (recap), plus a hover label with the
+  segment's time range.
+- **Code and docs cleanup**: removed redundant code comments, keeping short
+  ones for non-obvious logic; updated the docs and CONTRIBUTING.md to match.
 
-### Removed
+### Removed in v0.3.1.18
 
-- `binge-watch.css`: the countdown pill now uses the shared pill styles in `main.css`.
+- `binge-watch.css`: the countdown pill now uses the shared pill styles in
+  `main.css`.
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.17...v0.3.1.18)
+[Full changelog][full-changelog-2]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog-2]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.17...v0.3.1.18
 
 ## v0.3.1.17 — 2026-10-21
 
-### Added
+### Added in v0.3.1.17
 
-- **Classic style option for Continue Watching**: the popup's Continue Watching card has a new **Classic style** switch (off by default). It brings back the old look: small poster cards with the title in a bar underneath and an `EP n` pill, with no count pill next to the heading. It applies immediately, no page reload needed. The anime poster is now saved with each entry so this style can show it (episodes watched before this update fall back to their episode still until watched again).
+- **Classic style option for Continue Watching**: the popup's Continue
+  Watching card has a new **Classic style** switch (off by default). It brings
+  back the old look: small poster cards with the title in a bar underneath and
+  an `EP n` pill, with no count pill next to the heading. It applies
+  immediately, no page reload needed. The anime poster is now saved with each
+  entry so this style can show it (episodes watched before this update fall
+  back to their episode still until watched again).
 
-### Changed
+### Changed in v0.3.1.17
 
-- **Continue Watching default size**: the shelf is back to a single row of small thumbnails, matching the README screenshot, instead of the large 3-column cards introduced in v0.3.1.16. The large cards were removed; use **Classic style** for the older poster look.
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+- **Continue Watching default size**: the shelf is back to a single row of
+  small thumbnails, matching the README screenshot, instead of the large
+  3-column cards introduced in v0.3.1.16. The large cards were removed; use
+  **Classic style** for the older poster look.
 
 ## v0.3.1.16 — 2026-10-21
 
-### Fixed
+### Fixed in v0.3.1.16
 
-- **Pages not fully loading / dub scanner working on the Cloudflare page**: the extension now stays completely idle on Cloudflare challenge pages ("Just a moment…") and waits for the real page to finish loading before any feature starts, so its requests no longer compete with the site's own. A Cloudflare challenge is no longer retried (that only added load); requests pause for 60 seconds instead. The dub scanner no longer treats a rate-limited or blocked request as "not dubbed", so it can't show wrong SUB ONLY badges; it pauses and retries after a cool-down.
-- **"Scanning dubs" stuck forever**: the status pill was shown as soon as an anime page opened, before the site had loaded any episodes, and nothing ever hid it if the list stayed empty (for example while the site is rate-limiting). It now appears only when there are episodes to scan.
-- **Continue Watching card size**: the shelf now uses the same 3-column grid as Latest Releases (2 columns below 1000 px, 1 below 560 px), so cards are the same size as the Latest Releases cards instead of a small sixth of the row. Title, episode number and buttons were scaled up to match.
-- **Continue Watching thumbnails**: cards now show the episode's own thumbnail (the still from the episode list) instead of the anime poster, matching the README screenshot. Thumbnails cost no requests in the normal case: while you browse, the extension remembers the episode stills that animepahe already shows next to each episode link (episode list, Latest Releases) and reuses them. Only if an episode was never seen in a listing does it make a single release-API request, at most one per home-page visit, never while a video plays, and a "no snapshot" answer is remembered so it isn't asked again. The anime poster is the final fallback.
-- **Continue Watching saves less often**: progress is written to storage at most every 5 seconds (immediately on a seek, an episode change, or when the tab is hidden or closed) instead of rewriting the whole list on every 2-second tick.
-- **Smart Search "429" errors**: Smart Search called animepahe's search API directly, one request per keystroke, ignoring the shared rate limiter. It now goes through the throttler (spaced requests, back-off and retry on 429, priority over background dub scans), caches results for 5 minutes, skips lookups for queries you've already typed past, and logs rate limits quietly instead of as extension errors. The default debounce is now 400 ms (was 100 ms).
-- **Continue Watching alignment**: the shelf now lines up with the Latest Releases grid. It re-aligns when the site fills in Latest Releases late, and falls back to the heading/container edge if the cards aren't rendered yet, instead of staying flush against the left edge of the page.
-- **Dub summary showing "1 of 1"**: the "N of M dubbed" summary and the "episodes dubbed" toast were computed from only the cards found in the latest scan pass. When the site re-rendered part of the list, a later pass saw a single card and overwrote the correct "10 of 10". They now count every episode on the page once, so an episode with more than one link (e.g. thumbnail and title) is no longer counted twice (which showed "11 of 11" on a 10-episode list).
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+- **Pages not fully loading / dub scanner working on the Cloudflare page**:
+  the extension now stays completely idle on Cloudflare challenge pages ("Just
+  a moment…") and waits for the real page to finish loading before any feature
+  starts, so its requests no longer compete with the site's own. A Cloudflare
+  challenge is no longer retried (that only added load); requests pause for 60
+  seconds instead. The dub scanner no longer treats a rate-limited or blocked
+  request as "not dubbed", so it can't show wrong SUB ONLY badges; it pauses
+  and retries after a cool-down.
+- **"Scanning dubs" stuck forever**: the status pill was shown as soon as an
+  anime page opened, before the site had loaded any episodes, and nothing ever
+  hid it if the list stayed empty (for example while the site is
+  rate-limiting). It now appears only when there are episodes to scan.
+- **Continue Watching card size**: the shelf now uses the same 3-column grid
+  as Latest Releases (2 columns below 1000 px, 1 below 560 px), so cards are
+  the same size as the Latest Releases cards instead of a small sixth of the
+  row. Title, episode number and buttons were scaled up to match.
+- **Continue Watching thumbnails**: cards now show the episode's own thumbnail
+  (the still from the episode list) instead of the anime poster, matching the
+  README screenshot. Thumbnails cost no requests in the normal case: while you
+  browse, the extension remembers the episode stills that animepahe already
+  shows next to each episode link (episode list, Latest Releases) and reuses
+  them. Only if an episode was never seen in a listing does it make a single
+  release-API request, at most one per home-page visit, never while a video
+  plays, and a "no snapshot" answer is remembered so it isn't asked again. The
+  anime poster is the final fallback.
+- **Continue Watching saves less often**: progress is written to storage at
+  most every 5 seconds (immediately on a seek, an episode change, or when the
+  tab is hidden or closed) instead of rewriting the whole list on every
+  2-second tick.
+- **Smart Search "429" errors**: Smart Search called animepahe's search API
+  directly, one request per keystroke, ignoring the shared rate limiter. It
+  now goes through the throttler (spaced requests, back-off and retry on 429,
+  priority over background dub scans), caches results for 5 minutes, skips
+  lookups for queries you've already typed past, and logs rate limits quietly
+  instead of as extension errors. The default debounce is now 400 ms (was 100
+  ms).
+- **Continue Watching alignment**: the shelf now lines up with the Latest
+  Releases grid. It re-aligns when the site fills in Latest Releases late, and
+  falls back to the heading/container edge if the cards aren't rendered yet,
+  instead of staying flush against the left edge of the page.
+- **Dub summary showing "1 of 1"**: the "N of M dubbed" summary and the
+  "episodes dubbed" toast were computed from only the cards found in the
+  latest scan pass. When the site re-rendered part of the list, a later pass
+  saw a single card and overwrote the correct "10 of 10". They now count every
+  episode on the page once, so an episode with more than one link (e.g.
+  thumbnail and title) is no longer counted twice (which showed "11 of 11" on
+  a 10-episode list).
 
 ## v0.3.1.5 — 2026-10-13
 
-This release rolls up the v0.3.1.4 popup redesign, new icon, Skip Wait feature, and source-tree cleanup, plus the Firefox build/permissions and Chromium bundling fixes needed for a clean release.
+This release rolls up the v0.3.1.4 popup redesign, new icon, Skip Wait feature,
+and source-tree cleanup, plus the Firefox build/permissions and Chromium
+bundling fixes needed for a clean release.
 
-### Added
+### Added in v0.3.1.5
 
-- **Skip Wait**: links in the episode page's Download menu now open the kwik page directly, skipping the 5-second `pahe.win` countdown page. A new background script reads the kwik link out of the `pahe.win` page and opens it in a new tab; if the link can't be found, the original `pahe.win` page opens instead. Ctrl / Shift / Alt / Cmd-click or middle-click keeps the original behaviour. On by default, with its own switch in the Features tab. Adds the `*://*.pahe.win/*` host permission (no new API permissions).
-- **Redesigned popup**: a status strip in the header lights one colour-coded segment per enabled feature, features are single rows with one switch each, and every tab fits its content with no inner scrolling.
-- **New "ap" icon** for the toolbar and stores — a thin "a" beside a bold "p" whose counter is a play button, drawn in the site's own colours.
-- **Real logos in Links**: the animepahe wordmark and the MalSync logo now appear on their quick links.
-- **Offline fonts**: the popup bundles Bricolage Grotesque and DM Mono (SIL OFL) instead of loading anything from the network.
+- **Skip Wait**: links in the episode page's Download menu now open the kwik
+  page directly, skipping the 5-second `pahe.win` countdown page. A new
+  background script reads the kwik link out of the `pahe.win` page and opens
+  it in a new tab; if the link can't be found, the original `pahe.win` page
+  opens instead. Ctrl / Shift / Alt / Cmd-click or middle-click keeps the
+  original behaviour. On by default, with its own switch in the Features tab.
+  Adds the `*://*.pahe.win/*` host permission (no new API permissions).
+- **Redesigned popup**: a status strip in the header lights one colour-coded
+  segment per enabled feature, features are single rows with one switch each,
+  and every tab fits its content with no inner scrolling.
+- **New "ap" icon** for the toolbar and stores — a thin "a" beside a bold "p"
+  whose counter is a play button, drawn in the site's own colours.
+- **Real logos in Links**: the animepahe wordmark and the MalSync logo now
+  appear on their quick links.
+- **Offline fonts**: the popup bundles Bricolage Grotesque and DM Mono (SIL
+  OFL) instead of loading anything from the network.
 
-### Changed
+### Changed in v0.3.1.5
 
-- Advanced settings show one group at a time (pill selector) with steppers instead of a long accordion; the unsaved-changes bar sits at the bottom of the tab.
+- Advanced settings show one group at a time (pill selector) with steppers
+  instead of a long accordion; the unsaved-changes bar sits at the bottom of
+  the tab.
 - Tab names are now **Features / Advanced / Links**.
-- The popup is built from small components (`popup/components/`), with one file per icon, instead of one large `popup.html`.
-- `content/features/` is split into `js/` and `css/` folders. No behaviour change; internal paths and `manifest.json` globs were updated to match.
-- The popup screenshot in the README now shows the current six-feature popup, including Skip Wait.
+- The popup is built from small components (`popup/components/`), with one
+  file per icon, instead of one large `popup.html`.
+- `content/features/` is split into `js/` and `css/` folders. No behaviour
+  change; internal paths and `manifest.json` globs were updated to match.
+- The popup screenshot in the README now shows the current six-feature popup,
+  including Skip Wait.
 
-### Fixed
+### Fixed in v0.3.1.5
 
-- **Chrome / Edge no longer warn** that `'background.scripts' requires manifest version of 2 or lower`. Firefox and Chromium need different `background` keys in Manifest V3, so the repo now keeps `manifest.json` (Firefox) and `manifest.chromium.json` (Chrome / Edge), and releases include a separate `Animepahe-Enhancer-Chromium.zip`.
-- **Firefox build and permissions**: aligned the shipped version metadata, README screenshots, and release notes with the current popup build, and fixed the Firefox build.
+- **Chrome / Edge no longer warn** that
+  `'background.scripts' requires manifest version of 2 or lower`. Firefox and
+  Chromium need different `background` keys in Manifest V3, so the repo now
+  keeps `manifest.json` (Firefox) and `manifest.chromium.json` (Chrome /
+  Edge), and releases include a separate `Animepahe-Enhancer-Chromium.zip`.
+- **Firefox build and permissions**: aligned the shipped version metadata,
+  README screenshots, and release notes with the current popup build, and
+  fixed the Firefox build.
 
-### Removed
+### Removed in v0.3.1.5
 
 - The old per-feature icon SVGs in `icons/` that only the previous popup used.
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.3...v0.3.1.5)
+[Full changelog][full-changelog-3]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog-3]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.3...v0.3.1.5
 
 ## v0.3.1.2 — 2026-09-13
 
 Fixes videos starting muted, and cleans up a couple of rough edges in the popup.
 
-### Fixed
+### Fixed in v0.3.1.2
 
-- **Videos could start (and stay) muted on autoplay.** `ensurePlayback()`'s mute/retry fallback only unmuted the video from inside a `.catch()` that ran after the _first_ unmuted `play()` call was rejected — but kwik's player can start the `<video>` already muted on its own, in which case that first `play()` call succeeds immediately and the fallback (and its unmute step) never runs at all, leaving the video silently muted with nothing to undo it. Reported in [#5](https://github.com/abdullahkhfb/animepahe-enhancer/issues/5).
-- **Binge Watch's icon rendered inside an oversized square frame**, with visible empty padding around the artwork instead of filling its slot like the other feature icons do.
+- **Videos could start (and stay) muted on autoplay.** `ensurePlayback()`'s
+  mute/retry fallback only unmuted the video from inside a `.catch()` that ran
+  after the _first_ unmuted `play()` call was rejected — but kwik's player can
+  start the `<video>` already muted on its own, in which case that first
+  `play()` call succeeds immediately and the fallback (and its unmute step)
+  never runs at all, leaving the video silently muted with nothing to undo it.
+  Reported in
+  [#5](https://github.com/abdullahkhfb/animepahe-enhancer/issues/5).
+- **Binge Watch's icon rendered inside an oversized square frame**, with
+  visible empty padding around the artwork instead of filling its slot like
+  the other feature icons do.
 
-### Changed
+### Changed in v0.3.1.2
 
-- **Binge Watch icon redesigned** — the "NEXT" text badge was unreadable at the icon's actual small display size; replaced with a simple checkmark badge, and dropped a drop-shadow filter that blurred edges at that size.
-- **Advanced Settings warning banner is now collapsible** (collapsed by default) instead of a fixed block of text always taking up space at the top of the tab.
+- **Binge Watch icon redesigned** — the "NEXT" text badge was unreadable at
+  the icon's actual small display size; replaced with a simple checkmark
+  badge, and dropped a drop-shadow filter that blurred edges at that size.
+- **Advanced Settings warning banner is now collapsible** (collapsed by
+  default) instead of a fixed block of text always taking up space at the top
+  of the tab.
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.1...v0.3.1.2)
+[Full changelog][full-changelog-4]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog-4]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.1...v0.3.1.2
 
 ## v0.3.1.1 — 2026-09-05
 
-DUB Detector's episode scan is now gentler on animepahe's servers, with no user-facing behavior change.
+DUB Detector's episode scan is now gentler on animepahe's servers, with no
+user-facing behavior change.
 
-### Changed
+### Changed in v0.3.1.1
 
-- **DUB Detector's scanning algorithm** now checks episodes one at a time instead of firing several requests in parallel per round. It gallops backward from the newest episode in doubling strides to bracket the dub/sub boundary, then binary-searches within that bracket — still O(log n) requests overall, just never more than one in flight at once. This mirrors the approach used by the `animepahe-dub-detector-plus` userscript and reduces the chance of tripping Cloudflare's rate limiting mid-scan.
+- **DUB Detector's scanning algorithm** now checks episodes one at a time
+  instead of firing several requests in parallel per round. It gallops
+  backward from the newest episode in doubling strides to bracket the dub/sub
+  boundary, then binary-searches within that bracket — still O(log n) requests
+  overall, just never more than one in flight at once. This mirrors the
+  approach used by the `animepahe-dub-detector-plus` userscript and reduces
+  the chance of tripping Cloudflare's rate limiting mid-scan.
 
-### Removed
+### Removed in v0.3.1.1
 
-- The **"Binary-search probes"** Advanced Setting — there's no longer a per-round probe count to tune, since scanning is sequential.
+- The **"Binary-search probes"** Advanced Setting — there's no longer a
+  per-round probe count to tune, since scanning is sequential.
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.0...v0.3.1.1)
+[Full changelog][full-changelog-5]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog-5]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.0...v0.3.1.1
 
 ## v0.3.1.0 — 2026-08-03
 
-### Changed
+### Changed in v0.3.1.0
 
-- **Binge Watch's countdown is now tunable (including "off").** The 5-second cancelable pill before auto-navigating to the next episode is now an Advanced Settings value (`Countdown before next episode`) instead of a fixed constant — set it to 0 to skip the wait entirely and jump straight to the next episode.
-- **Binge Watch now bypasses "Click to load" on every episode, not just ones it auto-navigates to.** Previously the embed placeholder was only auto-clicked right after a Binge Watch navigation; now it's clicked automatically any time you land on a player page while the feature is on — including episodes you open yourself from an episode list — so playback never sits waiting for a click.
+- **Binge Watch's countdown is now tunable (including "off").** The 5-second
+  cancelable pill before auto-navigating to the next episode is now an
+  Advanced Settings value (`Countdown before next episode`) instead of a fixed
+  constant — set it to 0 to skip the wait entirely and jump straight to the
+  next episode.
+- **Binge Watch now bypasses "Click to load" on every episode, not just ones
+  it auto-navigates to.** Previously the embed placeholder was only
+  auto-clicked right after a Binge Watch navigation; now it's clicked
+  automatically any time you land on a player page while the feature is on —
+  including episodes you open yourself from an episode list — so playback
+  never sits waiting for a click.
 
-### Fixed
+### Fixed in v0.3.1.0
 
-- Broken Edge badge in the README/docs — the shields.io badge URL had unencoded spaces in its label/message segments, which broke the image.
-
-<p align="right"><a href="#top">↑ Back to top</a></p>
+- Broken Edge badge in the README/docs — the shields.io badge URL had
+  unencoded spaces in its label/message segments, which broke the image.
 
 ## v0.3.0.0 — 2026-08-02
 
 Adds Binge Watch — automatic next-episode playback, off by default.
 
-### Added
+### Added in v0.3.0.0
 
-- **Binge Watch**: automatically opens and plays the next episode when the current one ends, no clicking required
+- **Binge Watch**: automatically opens and plays the next episode when the
+  current one ends, no clicking required
   - Listens for the video's native `ended` event inside the Kwik player
-  - Resolves the next episode via animepahe's own release API (the same endpoint DUB Detector uses to enumerate episodes)
-  - Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`) before navigating — click it any time to cancel
-  - Off by default, since it changes browser navigation on its own; getting reliable autoplay working meant working around a few quirks in animepahe/Kwik's own page — their embed only loads once its "Click to load" placeholder is clicked (which Binge Watch now triggers itself), and Kwik's player can rebuild or defer loading its video element in ways a plain `video.play()` call doesn't anticipate on its own
+  - Resolves the next episode via animepahe's own release API (the same
+    endpoint DUB Detector uses to enumerate episodes)
+  - Shows a short countdown pill (`▶ Binge Watch: next episode in 5s`)
+    before navigating — click it any time to cancel
+  - Off by default, since it changes browser navigation on its own; getting
+    reliable autoplay working meant working around a few quirks in
+    animepahe/Kwik's own page — their embed only loads once its "Click to
+    load" placeholder is clicked (which Binge Watch now triggers itself),
+    and Kwik's player can rebuild or defer loading its video element in ways
+    a plain `video.play()` call doesn't anticipate on its own
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.2.0.1...v0.3.0.0)
+[Full changelog][full-changelog-6]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog-6]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.2.0.1...v0.3.0.0
 
 ## v0.2.0.1 — 2026-07-20
 
-This release is mostly about the popup — it's now organized into tabs instead of one long page — plus a fix for a Smart Search caching bug and the removal of the AnimeSkip fallback.
+This release is mostly about the popup — it's now organized into tabs instead of
+one long page — plus a fix for a Smart Search caching bug and the removal of the
+AnimeSkip fallback.
 
-### Added
+### Added in v0.2.0.1
 
-- **Quick Links tab** in the popup, with shortcuts to the GitHub repo, the issue tracker, the animepahe site, and a recommended companion tool ([MalSync](https://malsync.moe)) for syncing progress to MyAnimeList/AniList/Kitsu
-- **`docs/` folder** with in-depth guides (Features, Usage, Architecture, Permissions, Development) split out of the README
-- **`docs/EDGE.md`** explaining the current state of the Edge Add-ons listing, with a manual-install workaround
-- **`docs/widgets/`** — reusable per-browser install-prompt snippets for README.md
+- **Quick Links tab** in the popup, with shortcuts to the GitHub repo, the
+  issue tracker, the animepahe site, and a recommended companion tool
+  ([MalSync](https://malsync.moe)) for syncing progress to
+  MyAnimeList/AniList/Kitsu
+- **`docs/` folder** with in-depth guides (Features, Usage, Architecture,
+  Permissions, Development) split out of the README
+- **`docs/EDGE.md`** explaining the current state of the Edge Add-ons listing,
+  with a manual-install workaround
+- **`docs/widgets/`** — reusable per-browser install-prompt snippets for
+  README.md
 - **`RELEASE.md`** — this file, mirroring GitHub Releases notes in-repo
-- **`docs/STORE_LISTING.md`** — a ready-to-paste store listing description, with privacy called out as its own section rather than a trailing link
+- **`docs/STORE_LISTING.md`** — a ready-to-paste store listing description,
+  with privacy called out as its own section rather than a trailing link
 
-### Changed
+### Changed in v0.2.0.1
 
-- Popup rebuilt around **three tabs** — Features, Advanced Settings, Quick Links — instead of one long scrolling page
-- Feature cards and Advanced Settings groups now **collapse by default** and expand on click, so the popup stays short
-- Advanced Settings edits are now **staged and applied together** via an "Apply Changes" button, instead of saving instantly per field
-- Popup code split into one CSS/JS file per tab (plus a shared `common.js`/`common.css`) instead of one large file each
-- `README.md` rewritten in plain language, with technical detail moved to `docs/`
-- CI release pipeline now strips **every** Markdown file (not a hardcoded list) from the store package, so new docs never accidentally ship
+- Popup rebuilt around **three tabs** — Features, Advanced Settings, Quick
+  Links — instead of one long scrolling page
+- Feature cards and Advanced Settings groups now **collapse by default** and
+  expand on click, so the popup stays short
+- Advanced Settings edits are now **staged and applied together** via an
+  "Apply Changes" button, instead of saving instantly per field
+- Popup code split into one CSS/JS file per tab (plus a shared
+  `common.js`/`common.css`) instead of one large file each
+- `README.md` rewritten in plain language, with technical detail moved to
+  `docs/`
+- CI release pipeline now strips **every** Markdown file (not a hardcoded
+  list) from the store package, so new docs never accidentally ship
 
-### Fixed
+### Fixed in v0.2.0.1
 
-- Smart Search's cache counter and "Clear Cache" button in the popup were checking the wrong storage key prefix and never actually found the cached entries — fixed so the popup accurately reflects what's cached
-- README "Details →" links would occasionally break across two lines, stranding the arrow on its own — fixed with a non-breaking space
+- Smart Search's cache counter and "Clear Cache" button in the popup were
+  checking the wrong storage key prefix and never actually found the cached
+  entries — fixed so the popup accurately reflects what's cached
+- README "Details →" links would occasionally break across two lines,
+  stranding the arrow on its own — fixed with a non-breaking space
 
-### Removed
+### Removed in v0.2.0.1
 
-- **AnimeSkip API fallback** for Intro/Outro Skip — timestamps now come from the local open-anime-timestamps database only; an episode missing from that database simply isn't skippable, with no online fallback
-- Redundant "Refresh DB" button in the popup (it did exactly what "Clear Cache" already does)
+- **AnimeSkip API fallback** for Intro/Outro Skip — timestamps now come from
+  the local open-anime-timestamps database only; an episode missing from that
+  database simply isn't skippable, with no online fallback
+- Redundant "Refresh DB" button in the popup (it did exactly what "Clear
+  Cache" already does)
 
-[Full changelog](https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.2.0.0...v0.2.0.1)
+[Full changelog][full-changelog-7]
 
-<p align="right"><a href="#top">↑ Back to top</a></p>
+[full-changelog-7]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.2.0.0...v0.2.0.1
