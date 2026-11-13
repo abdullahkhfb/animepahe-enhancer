@@ -16,7 +16,7 @@ just the human-readable "what changed and why."
 - [How to write a release entry](#how-to-write-a-release-entry)
 - [Keeping this file manageable](#keeping-this-file-manageable)
 - [Unreleased](#unreleased)
-- [v0.3.1.20 — 2026-13-10](#v03120--2026-11-10)
+- [v0.3.1.20 — 2026-11-13](#v03120--2026-11-13)
 - [v0.3.1.19 — 2026-11-04](#v03119--2026-11-04)
 - [v0.3.1.18 — 2026-11-01](#v03118--2026-11-01)
 - [v0.3.1.17 — 2026-10-21](#v03117--2026-10-21)
@@ -77,33 +77,27 @@ the template above, that's a lot of releases — but if it ever gets close:
 
 ## Unreleased
 
-## v0.3.1.20 — 2026-13-10
+## v0.3.1.20 — 2026-11-13
+
+A visual refresh: one pink accent on animepahe's black, and a popup that never
+needs scrolling.
 
 ### Changed in v0.3.1.20
 
-- **Popup redesign**: one pink accent on the site's black replaces the
-  per-feature colours. The popup now uses Inter (replacing Bricolage
-  Grotesque), and its spacing, tabs, toggles, pills and buttons follow the
-  approved design exactly. The "Cleared!" button label can no longer wrap.
+- **Popup redesign**: one pink accent replaces the per-feature colours, and
+  the popup now uses Inter instead of Bricolage Grotesque. Spacing, tabs,
+  toggles, pills and buttons follow the approved design.
+- **No scrolling**: every popup state fits inside the 600px that Chrome and
+  Firefox allow.
 - **On-page pills**: every action pill shares one accent chip, and the "sub
-  only" dot is neutral grey instead of orange.
-- **Smart Search rows**: their styling moved out of `smart-search.js` into
-  `content/features/css/smart-search.css`, and the pink-red accents now use
-  the site's pink.
-- **Stylesheets and docs**: all CSS follows the Google HTML/CSS style guide
-  (no `!important` or ID selectors, hyphenated class names). All Markdown
-  follows the Google Markdown style guide.
-- **No scrolling**: every popup state (any tab, any feature expanded, any
-  group with every setting changed) now fits inside the 600px that Chrome and
-  Firefox allow, so the popup never scrolls. The popup screenshots are new.
+  only" dot is grey instead of orange.
+- **Smart Search rows**: their accents now use the site's pink.
 - **Unchanged on purpose**: the player's intro, outro and recap scrubber
   highlight colours.
 
-### Removed in v0.3.1.20
+### Fixed in v0.3.1.20
 
-- `content/features/css/binge-watch.css` (unused), `docs/widgets/` (replaced
-  by plain Markdown in the README), the per-feature `color` and `tint` fields,
-  and the bundled Bricolage Grotesque fonts.
+- The "Cleared!" button label can no longer wrap.
 
 [Full changelog][full-changelog]
 
