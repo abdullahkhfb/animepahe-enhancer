@@ -24,6 +24,7 @@ animepahe Enhancer makes watching anime on animepahe nicer.
 - **Binge Watch** — auto-play the next episode, with a short cancel window
 - **Skip Wait** — skip the pahe.win countdown and go straight to kwik
 - **Browse** — filter by genre, theme, demographic, type, status, and season
+- **Schedule** — weekly local-time airings with countdowns and follow notifications
 
 Every feature can be toggled individually.
 
