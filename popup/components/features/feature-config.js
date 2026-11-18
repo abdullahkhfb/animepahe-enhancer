@@ -6,6 +6,7 @@ import {
   BingeWatchIcon,
   SkipWaitIcon,
   BrowseIcon,
+  ScheduleIcon,
 } from "../icons/index.js";
 
 export const FEATURES = [
@@ -52,7 +53,7 @@ export const FEATURES = [
     desc: "Plays the next episode",
     weight: 2,
     Icon: BingeWatchIcon,
-    note: "Off by default. A countdown pill appears when an episode ends. Click it to cancel.",
+    note: "Countdown pill when an episode ends. Click to cancel.",
   },
   {
     id: "sw",
@@ -61,7 +62,7 @@ export const FEATURES = [
     desc: "Skips the pahe.win countdown",
     weight: 2,
     Icon: SkipWaitIcon,
-    note: "Download-menu links go straight to kwik, no 5-second wait. Ctrl/Shift-click a link to use the normal page instead.",
+    note: "Download links go straight to kwik. Ctrl/Shift-click for the normal page.",
   },
   {
     id: "br",
@@ -71,6 +72,16 @@ export const FEATURES = [
     weight: 2,
     Icon: BrowseIcon,
     clearLabel: "Clear cache",
-    note: "Adds a \u201cbrowse\u201d tab to the menu. Combine genres, themes, seasons and more, and keep a Library of saved anime.",
+    note: "Adds a \u201cbrowse\u201d tab with combined filters and a saved Library.",
+  },
+  {
+    id: "sc",
+    settingKey: "scheduleEnabled",
+    name: "Schedule",
+    desc: "This week's airing calendar",
+    weight: 2,
+    Icon: ScheduleIcon,
+    clearLabel: "Clear cache",
+    note: "Adds a \u201cschedule\u201d tab and a bell that tells you when followed shows get a new episode.",
   },
 ];

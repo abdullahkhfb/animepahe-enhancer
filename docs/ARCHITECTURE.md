@@ -22,7 +22,7 @@
 │                                  #   Skip Wait: resolves pahe.win → kwik and opens the tab
 │
 ├── 📁 content/
-│   ├── 📄 browse-boot.js          # document_start: hides the site index on /anime#browse (no flash)
+│   ├── 📄 browse-boot.js          # document_start: hides the site index on /anime#browse and #schedule (no flash)
 │   ├── 📄 main.js                 # Entry point — waits for whenSiteReady(), loads settings,
 │   │                              #   detects page, dynamically imports and initializes features
 │   ├── 🎨 main.css                # Shared base styles (status toast and action pill)
@@ -38,12 +38,16 @@
 │   │   │   ├── 📄 intro-skip.js         # Intro/Outro Skip — timestamp lookup + range orchestration
 │   │   │   ├── 📄 binge-watch.js        # Binge Watch — auto-loads embed + auto-plays next episode
 │   │   │   ├── 📄 skip-wait.js          # Skip Wait — download links bypass the pahe.win countdown page
-│   │   │   └── 📄 browse.js             # Browse — "browse" menu tab + /anime#browse multi-filter page
+│   │   │   ├── 📄 browse.js             # Browse — "browse" menu tab + /anime#browse multi-filter page
+│   │   │   ├── 📄 schedule.js           # Schedule — "schedule" menu tab + /anime#schedule weekly airing page
+│   │   │   └── 📄 schedule-notifier.js  # Schedule notifications — menu bell, unread badge, dropdown, check loop
 │   │   └── 📁 css/
 │   │       ├── 🎨 continue-watching.css # Shelf styles; classic style scoped to .ape-cw-classic
 │   │       ├── 🎨 dub-detector.css
 │   │       ├── 🎨 intro-skip.css        # Also loaded inside the kwik iframe (see iframe-player.js)
-│   │       └── 🎨 browse.css            # Browse page; every rule scoped under .ape-br-root
+│   │       ├── 🎨 browse.css            # Browse page; every rule scoped under .ape-br-root
+│   │       ├── 🎨 schedule.css          # Schedule page; every rule scoped under .ape-sc-root
+│   │       └── 🎨 schedule-notify.css   # Notification bell and dropdown; every rule namespaced .ape-nf-*
 │   │
 │   └── 📁 helpers/                # Shared helpers imported by any feature
 │       ├── 📄 storage.js          # chrome.storage.local wrapper + KEYS + DEFAULT_SETTINGS
@@ -52,11 +56,15 @@
 │       ├── 📄 challenge.js        # isChallengePage() + whenSiteReady() — stays idle on Cloudflare
 │       │                          #   interstitials and waits for page load before starting features
 │       ├── 📄 cache.js            # Shared TTL cache read/write/GC (d2_, h2_, ape_ss_, ape_isid_)
+│       ├── 📄 persist.js          # keepMounted() — re-adds injected menu items (tabs, bell) if the site rebuilds its DOM
 │       ├── 📄 throttler.js        # RequestThrottler — concurrency, interval+jitter, priority queue,
 │       │                          #   exponential backoff on 429/403, 60s pause on CF challenges
 │       ├── 📄 browse-data.js      # Browse: filter definitions, list-page parser, cached filter lists,
 │       │                          #   budgeted poster lookups, Library, remembered view state
-│       ├── 📄 icons.js            # Shared inline-SVG factory (micIcon, checkIcon, playIcon, closeIcon, skipIcon, bingeIcon, waitIcon, countdownRing)
+│       ├── 📄 schedule-data.js    # Schedule: AniList weekly airing fetch, cache, animepahe-only title matching
+│       ├── 📄 schedule-notify.js  # Schedule notifications: follow list + feed storage (ape_sc_notify_v1),
+│       │                          #   cross-tab-safe check for new episodes via /api?m=release, session recovery
+│       ├── 📄 icons.js            # Shared inline-SVG factory (micIcon, checkIcon, playIcon, bellIcon, closeIcon, skipIcon, bingeIcon, waitIcon, countdownRing)
 │       ├── 📄 styles.js           # injectStylesheet() — one-line CSS loading, shared by every feature
 │       ├── 📄 pill.js             # showPill() (plain text), showStatus() (DUB Detector toast) and
 │       │                          #   showAction() (icon chip, label, detail, optional action; used by Intro Skip, Binge Watch, Skip Wait)
@@ -126,7 +134,7 @@
 `content/main.js` is the sole content-script entry point for animepahe pages
 registered in `manifest.json` (the only other scripts are
 `content/browse-boot.js`, a tiny `document_start` script that hides the site
-index on `/anime#browse` until Browse mounts, `content/iframe-player.js` for the
+index on `/anime#browse` and `/anime#schedule` until the page mounts, `content/iframe-player.js` for the
 Kwik iframe and `background.js`, described under
 [Skip Wait](#skip-wait--background-flow)). It uses the browser's native dynamic
 `import()` with `chrome.runtime.getURL()` to load helper and feature modules at

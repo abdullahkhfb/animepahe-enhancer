@@ -1,0 +1,576 @@
+/* schedule.css: the "Schedule" page (/anime#schedule).
+ *
+ * Mounted inside the site's own content column, so it inherits the page's
+ * width and padding. Every rule is scoped under .ape-sc-root so the site's own
+ * button, input and link styles can't leak in. */
+
+:root [data-ape-sc-hidden] {
+  display: none;
+}
+
+.ape-sc-root {
+  --sc-brand: #d5015b;
+  --sc-brand-hover: #ee0a6f;
+  --sc-btn: #2e3136;
+  --sc-btn-text: #e8e8e8;
+  --sc-chip: #111113;
+  --sc-chip-hover: #1b1b1f;
+  --sc-line: #1c1c20;
+  --sc-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --sc-muted: #9a9aa8;
+  --sc-off: #1f1f23;
+  --sc-pink: #ff4d94;
+  --sc-pink-soft: #ff5c9d;
+  --sc-surface: #0e0e10;
+  --sc-text: #f1f1f1;
+  --sc-text-2: #d9d9e0;
+  box-sizing: border-box;
+  color: var(--sc-text);
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  gap: 24px;
+  margin: 0 0 56px;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.ape-sc-root *,
+.ape-sc-root *::before,
+.ape-sc-root *::after {
+  box-sizing: border-box;
+}
+
+:root .ape-sc-root [hidden] {
+  display: none;
+}
+
+.ape-sc-root button {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: normal;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+}
+
+.ape-sc-root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ape-sc-root h1,
+.ape-sc-root h2,
+.ape-sc-root p {
+  margin: 0;
+  padding: 0;
+}
+
+.ape-sc-root button:focus-visible,
+.ape-sc-root a:focus-visible,
+.ape-sc-root input:focus-visible {
+  outline: 2px solid var(--sc-pink);
+  outline-offset: 2px;
+}
+
+.ape-sc-root .ape-sc-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ape-sc-root .ape-sc-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Title and controls */
+
+.ape-sc-root .ape-sc-top {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.ape-sc-root .ape-sc-heading {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.ape-sc-root .ape-sc-h1 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.ape-sc-root .ape-sc-chip {
+  background: rgba(213, 1, 91, 0.18);
+  border-radius: 10px;
+  color: var(--sc-pink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 9px;
+}
+
+.ape-sc-root .ape-sc-controls {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.ape-sc-root .ape-sc-tz {
+  color: var(--sc-muted);
+  font-size: 13px;
+}
+
+.ape-sc-root .ape-sc-pill {
+  background: var(--sc-btn);
+  border-radius: 3px;
+  color: var(--sc-btn-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.ape-sc-root .ape-sc-pill:hover {
+  background: #3a3e44;
+}
+
+/* Day strip */
+
+.ape-sc-root .ape-sc-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.ape-sc-root .ape-sc-tab {
+  align-items: center;
+  background: var(--sc-chip);
+  border-radius: 4px;
+  color: var(--sc-text-2);
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+  min-height: 64px;
+  min-width: 64px;
+}
+
+.ape-sc-root .ape-sc-tab:hover {
+  background: var(--sc-chip-hover);
+}
+
+.ape-sc-root .ape-sc-tab.on {
+  background: var(--sc-brand);
+  color: #fff;
+}
+
+.ape-sc-root .ape-sc-dow {
+  color: var(--sc-muted);
+  font-family: var(--sc-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ape-sc-root .ape-sc-dom {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.ape-sc-root .ape-sc-cnt {
+  align-items: center;
+  color: var(--sc-muted);
+  display: flex;
+  font-size: 11px;
+  gap: 4px;
+}
+
+.ape-sc-root .ape-sc-tab.on .ape-sc-dow,
+.ape-sc-root .ape-sc-tab.on .ape-sc-cnt {
+  color: #ffd6e6;
+}
+
+.ape-sc-root .ape-sc-dot {
+  border-radius: 50%;
+  height: 5px;
+  width: 5px;
+}
+
+.ape-sc-root .ape-sc-tab.today .ape-sc-dot {
+  background: var(--sc-pink);
+}
+
+.ape-sc-root .ape-sc-tab.on.today .ape-sc-dot {
+  background: #fff;
+}
+
+/* Filters */
+
+.ape-sc-root .ape-sc-filters {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.ape-sc-root .ape-sc-lib {
+  align-items: center;
+  color: var(--sc-text-2);
+  cursor: pointer;
+  display: flex;
+  font-size: 13px;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.ape-sc-root .ape-sc-check {
+  accent-color: var(--sc-brand);
+  height: 18px;
+  margin: 0;
+  width: 18px;
+}
+
+/* Time groups */
+
+.ape-sc-root .ape-sc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.ape-sc-root .ape-sc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ape-sc-root .ape-sc-ghead {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.ape-sc-root .ape-sc-time {
+  color: var(--sc-pink);
+  font-family: var(--sc-mono);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.ape-sc-root .ape-sc-rule {
+  background: var(--sc-line);
+  flex: 1;
+  height: 1px;
+}
+
+.ape-sc-root .ape-sc-gcount {
+  color: var(--sc-muted);
+  font-size: 12px;
+}
+
+.ape-sc-root .ape-sc-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+}
+
+/* Cards */
+
+.ape-sc-root .ape-sc-card {
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-line);
+  border-radius: 4px;
+  display: flex;
+  gap: 14px;
+  padding: 10px;
+}
+
+.ape-sc-root .ape-sc-poster {
+  align-items: center;
+  border-radius: 3px;
+  display: flex;
+  flex: none;
+  height: 96px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: 68px;
+}
+
+.ape-sc-root .ape-sc-card.aired .ape-sc-poster {
+  opacity: 0.72;
+}
+
+.ape-sc-root .ape-sc-poster.p0 {
+  background: linear-gradient(160deg, #4b3a8f, #151518 85%);
+}
+
+.ape-sc-root .ape-sc-poster.p1 {
+  background: linear-gradient(160deg, #0f6b52, #151518 85%);
+}
+
+.ape-sc-root .ape-sc-poster.p2 {
+  background: linear-gradient(160deg, #8f2a1a, #151518 85%);
+}
+
+.ape-sc-root .ape-sc-poster.p3 {
+  background: linear-gradient(160deg, #1d5c8f, #151518 85%);
+}
+
+.ape-sc-root .ape-sc-poster.p4 {
+  background: linear-gradient(160deg, #8f1d58, #151518 85%);
+}
+
+.ape-sc-root .ape-sc-poster.p5 {
+  background: linear-gradient(160deg, #7a5c0f, #151518 85%);
+}
+
+.ape-sc-root .ape-sc-ini {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.ape-sc-root .ape-sc-poster img {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.25s ease;
+  width: 100%;
+}
+
+.ape-sc-root .ape-sc-poster img.ready {
+  opacity: 1;
+}
+
+.ape-sc-root .ape-sc-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ape-sc-root .ape-sc-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ape-sc-root .ape-sc-badges:empty {
+  display: none;
+}
+
+.ape-sc-root .ape-sc-badge {
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 5px;
+}
+
+.ape-sc-root .ape-sc-badge.new {
+  background: var(--sc-brand);
+  color: #fff;
+}
+
+.ape-sc-root .ape-sc-title {
+  color: var(--sc-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.ape-sc-root a.ape-sc-title:hover {
+  color: var(--sc-pink);
+}
+
+.ape-sc-root .ape-sc-meta {
+  color: var(--sc-muted);
+  font-size: 12px;
+}
+
+.ape-sc-root .ape-sc-foot {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.ape-sc-root .ape-sc-status {
+  align-items: center;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 6px;
+}
+
+.ape-sc-root .ape-sc-status.aired {
+  color: var(--sc-muted);
+}
+
+.ape-sc-root .ape-sc-status.soon {
+  color: var(--sc-pink);
+}
+
+.ape-sc-root .ape-sc-status.later {
+  color: var(--sc-text-2);
+}
+
+.ape-sc-root .ape-sc-btns {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+}
+
+.ape-sc-root .ape-sc-save:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.ape-sc-root .ape-sc-save {
+  align-items: center;
+  background: var(--sc-off);
+  border-radius: 3px;
+  color: var(--sc-muted);
+  display: flex;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.ape-sc-root .ape-sc-save:hover {
+  background: #2a2a30;
+  color: var(--sc-text);
+}
+
+.ape-sc-root .ape-sc-save.on {
+  background: var(--sc-brand);
+  color: #fff;
+}
+
+.ape-sc-root .ape-sc-save.on:hover {
+  background: var(--sc-brand-hover);
+}
+
+/* States */
+
+.ape-sc-root .ape-sc-loading {
+  color: var(--sc-muted);
+  font-size: 14px;
+  padding: 48px 0;
+  text-align: center;
+}
+
+.ape-sc-root .ape-sc-notice {
+  align-items: center;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-line);
+  border-radius: 4px;
+  color: var(--sc-text-2);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.ape-sc-root .ape-sc-empty {
+  align-items: center;
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-line);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.ape-sc-root .ape-sc-emptyicon {
+  align-items: center;
+  background: rgba(213, 1, 91, 0.18);
+  border-radius: 50%;
+  color: var(--sc-pink-soft);
+  display: flex;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+.ape-sc-root .ape-sc-empty h2 {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ape-sc-root .ape-sc-empty p {
+  color: var(--sc-muted);
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 440px;
+}
+
+.ape-sc-root .ape-sc-btn {
+  background: var(--sc-btn);
+  border-radius: 3px;
+  color: var(--sc-btn-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  min-height: 40px;
+  padding: 0 16px;
+}
+
+.ape-sc-root .ape-sc-btn.on {
+  background: var(--sc-brand);
+  color: #fff;
+  margin-top: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+}
+
+.ape-sc-root .ape-sc-btn.on:hover {
+  background: var(--sc-brand-hover);
+}
+
+.ape-sc-root .ape-sc-source {
+  color: var(--sc-muted);
+  font-size: 12px;
+}
+
+.ape-sc-nav.ape-sc-nav-active:not(.active) > a,
+.ape-sc-nav.ape-sc-nav-active:not(.active) {
+  background-color: #bc0150;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ape-sc-root.ape-sc-root * {
+    animation: none;
+    transition: none;
+  }
+}

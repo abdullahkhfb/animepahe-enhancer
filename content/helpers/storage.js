@@ -11,7 +11,7 @@ export const FEATURE_SUBOPTIONS = {
     {
       key: "cwClassicLayout",
       label: "Classic style",
-      note: "Brings back the old look: poster cards with the title underneath.",
+      note: "Poster cards with titles underneath.",
       default: false,
     },
   ],
@@ -19,7 +19,7 @@ export const FEATURE_SUBOPTIONS = {
     {
       key: "dubHomeScanEnabled",
       label: "Scan homepage cards",
-      note: "Also checks homepage cards for dub status, not just episode lists. Off = fewer requests.",
+      note: "Also check homepage cards.",
       default: true,
     },
   ],
@@ -27,18 +27,19 @@ export const FEATURE_SUBOPTIONS = {
     {
       key: "introSkipAutoSkip",
       label: "Auto-skip automatically",
-      note: "Jumps past intros/outros instantly. Off shows a Skip button instead.",
+      note: "Skips instantly, no button.",
       default: false,
     },
     {
       key: "introSkipShowHighlights",
       label: "Highlight on progress bar",
-      note: "Colors the scrubber: blue = intro, orange = outro, purple = recap.",
+      note: "Color intro, outro and recap.",
       default: true,
     },
   ],
   bw: [],
   br: [],
+  sc: [],
 };
 
 const FEATURE_SUBOPTIONS_DEFAULTS = Object.fromEntries(
@@ -282,6 +283,29 @@ export const ADVANCED_SETTINGS_SCHEMA = [
     ],
   },
   {
+    group: "Schedule",
+    items: [
+      {
+        key: "scheduleCacheTtlMinutes",
+        label: "Schedule cache (minutes)",
+        desc: "How long this week's airing schedule stays cached before AniList is asked again. Airing times rarely change, so a longer time means fewer requests.",
+        min: 5,
+        max: 1440,
+        step: 5,
+        default: 60,
+      },
+      {
+        key: "scheduleNotifyCheckMinutes",
+        label: "Notification check (minutes)",
+        desc: "How often animepahe is asked whether the shows you follow have a new episode. One request per followed show, shared across tabs.",
+        min: 5,
+        max: 720,
+        step: 5,
+        default: 30,
+      },
+    ],
+  },
+  {
     group: "Binge Watch",
     items: [
       {
@@ -311,6 +335,7 @@ export const DEFAULT_SETTINGS = {
   bingeWatchEnabled: false,
   skipWaitEnabled: true,
   browseEnabled: true,
+  scheduleEnabled: true,
   ...FEATURE_SUBOPTIONS_DEFAULTS,
   ...ADVANCED_DEFAULTS,
 };

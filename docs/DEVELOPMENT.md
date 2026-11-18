@@ -75,7 +75,7 @@ since Edge submissions require a separate review and release step (see
     manual Chrome / Edge installs.
 1.  **Edge does not happen automatically.** When you're ready to submit to Edge
     specifically, go to the Actions tab → **Deploy — Edge (manual)** → **Run
-    workflow**, and enter the tag you want to publish (e.g. `v0.3.1.20`). This
+    workflow**, and enter the tag you want to publish (e.g. `v0.3.1.21`). This
     runs [`deploy-edge.yml`](/.github/workflows/deploy-edge.yml) against that
     exact tag.
 

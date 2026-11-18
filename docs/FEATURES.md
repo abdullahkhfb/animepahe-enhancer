@@ -15,6 +15,7 @@
 *   [Binge Watch](#binge-watch)
 *   [Skip Wait](#skip-wait)
 *   [Browse](#browse)
+*   [Schedule](#schedule)
 *   [Cloudflare and rate-limit protection](#cloudflare-and-rate-limit-protection)
 *   [Advanced settings](#advanced-settings)
 
@@ -73,6 +74,15 @@ timeline strip:
     *   Popup sub-options: _None_
     *   Storage / cache keys: `bl2_*` (filter lists), `ape_br_posters_v1`,
         `ape_br_lib_v1`, `ape_br_state_v1`
+
+*   **![Schedule](assets/schedule.svg)**
+    *   Feature: **[Schedule](#schedule)**
+    *   Default: **On**
+    *   Active pages: All pages (menu tab) + `/anime#schedule`
+    *   Popup sub-options: _None_
+    *   Storage / cache keys: `ape_sc_week_*` (weekly schedule),
+        `ape_sc_state_v1`, `ape_sc_notify_v1` (followed shows and feed); shares `ape_br_lib_v1` and `ape_br_posters_v1` with
+        Browse
 
 ## Continue Watching
 
@@ -851,6 +861,94 @@ titles.
         can filter to. Library entries are kept by title, so they survive
         animepahe session changes. "Clear cache" in the popup never deletes your
         Library.
+
+## Schedule
+
+**Schedule** adds a **schedule** tab to the site's menu with this week's airing
+episodes, grouped by day and time in your own timezone. Airing times come from
+AniList, which the extension already uses for Smart Search and Intro / Outro
+Skip. Each show is matched against the anime index animepahe already serves on
+`/anime`, so building the list costs no extra animepahe requests.
+
+*   **—**
+    *   Behavior: **Native menu tab**
+    *   Details: Cloned from the site's own "anime" menu item like the Browse
+        tab and placed after it, opening `/anime#schedule`. Switching between
+        **anime**, **browse** and **schedule**, or using Back/Forward, swaps
+        views without reloading. The `document_start` boot script that
+        prevents a flash on `/anime#browse` covers this route too.
+
+*   **![Schedule](assets/schedule.svg)**
+    *   Behavior: **Week view**
+    *   Details: A Monday-to-Sunday day strip with a release count per day;
+        today is marked and the **Today** button jumps back to it. Releases are
+        grouped by local air time. Each card shows the poster, episode number,
+        a **NEW** badge for premieres, and a countdown ("In 4h 08m") that
+        updates every 30 seconds and turns into **Aired** once the time passes.
+
+*   **—**
+    *   Behavior: **Title matching**
+    *   Details: AniList English and romaji titles are compared with the titles
+        on animepahe's index, first exactly and then ignoring punctuation and
+        case. Matched cards link to the anime page. Anything not found on
+        animepahe, such as a premiere the site has not listed yet, is left out
+        of the schedule entirely. Only Japanese TV, TV short and ONA releases are shown,
+        and adult titles are excluded.
+
+*   **![Library](assets/browse-library.svg)**
+    *   Behavior: **Filters and Library**
+    *   Details: There is no "All" option: the schedule only ever lists shows
+        that are on animepahe. **My library only** limits it further to shows
+        saved in your Library, which it shares with Browse (the bookmark on a
+        card saves to the same list). The day and Library toggle live in the
+        URL hash (`#schedule?day=thu&lib=1`); the Library toggle is also
+        remembered. When the Library filter leaves a day empty, an empty state
+        offers **Show all releases**.
+
+*   **—**
+    *   Behavior: **New-episode notifications**
+    *   Details: The bell on a schedule card follows that show. A bell in the
+        site's menu, placed after the menu and styled like its other items,
+        shows an unread count and opens a dropdown listing recent new episodes
+        with how long ago each appeared; clicking one opens the episode and
+        marks it read. The footer switches the dropdown to a **Following** list
+        with an **Unfollow** button per show, and links back to the schedule.
+        The dropdown never scrolls: it lists only as many items as fit on
+        screen, and everything it showed is marked read when it closes. Only
+        episodes that appear on animepahe after you follow count, so existing
+        episodes never notify. When a check finds something, a pill offers a
+        **View** button, unless another feature's pill is already showing. Up
+        to 40 shows can be followed. Following is remembered by title, like the
+        Library, and **Clear cache** never removes it. Notifications are part
+        of the Schedule feature with no separate switch: turn Schedule off in
+        the popup and the bell goes with it.
+
+*   **—**
+    *   Behavior: **How new episodes are found**
+    *   Details: Followed shows are checked on any animepahe page, at most once
+        per `scheduleNotifyCheckMinutes` (default 30, Advanced tab) across all
+        open tabs, and again when a hidden tab becomes visible. Each check is
+        one `/api?m=release` request per followed show, sent through the
+        throttler, and nothing is sent when you follow no shows. If animepahe
+        has rotated a show's session, it is looked up again by title with one
+        `/api?m=search` request. A rate-limit or Cloudflare response ends that
+        round and it is tried again at the next interval.
+
+*   **—**
+    *   Behavior: **Request budget**
+    *   Details: One AniList request per 50 airing episodes, 800 ms apart, for
+        the current week only, cached for `scheduleCacheTtlMinutes` (default 60,
+        Advanced tab). Posters use the same lazy, cached `/api?m=search` lookup
+        as Browse, only for matched cards on screen. A rate-limited or failed
+        load shows a **Retry** button instead of an empty page. Notifications
+        add the animepahe requests described above, only for followed shows.
+
+*   **—**
+    *   Behavior: **No DUB badge**
+    *   Details: Schedule does not show or filter by DUB. AniList does not
+        say which releases are dubbed, and checking per episode would need many
+        extra animepahe requests. Use [DUB Detector](#dub-detector) on the
+        episode list instead.
 
 ## Cloudflare and rate-limit protection
 

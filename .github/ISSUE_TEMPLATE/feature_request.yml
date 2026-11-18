@@ -56,6 +56,7 @@ body:
         - Binge Watch
         - Skip Wait
         - Browse
+        - Schedule
         - Popup / settings UI
         - Something else / not sure
     validations:

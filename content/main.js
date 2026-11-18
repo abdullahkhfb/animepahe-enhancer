@@ -19,8 +19,8 @@
 
   // Stay idle on Cloudflare challenge pages so we never compete with the site's own load.
   const { whenSiteReady } = await import(extUrl("content/helpers/challenge.js"));
-  const browseRoute = /^\/anime\/?$/i.test(location.pathname) && location.hash.startsWith("#browse");
-  if (!(await whenSiteReady({ settleMs: browseRoute ? 0 : 800 }))) return;
+  const takeoverRoute = /^\/anime\/?$/i.test(location.pathname) && /^#(browse|schedule)/.test(location.hash);
+  if (!(await whenSiteReady({ settleMs: takeoverRoute ? 0 : 800 }))) return;
 
   const pageType = getPageType();
   const settings = await storage.getSettings();
@@ -74,6 +74,11 @@
       module: "content/features/js/browse.js",
       export: "Browse",
       enabled: settings.browseEnabled,
+    },
+    {
+      module: "content/features/js/schedule.js",
+      export: "Schedule",
+      enabled: settings.scheduleEnabled,
     },
   ];
 

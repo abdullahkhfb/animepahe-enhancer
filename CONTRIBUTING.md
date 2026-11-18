@@ -51,9 +51,9 @@ a feature, or improving documentation.
     Existing network requests include animepahe requests for DUB detection,
     Smart Search, Continue Watching fallback thumbnail lookup, and Binge Watch;
     `pahe.win` link resolution for Skip Wait; and AniList, `relations.yuna.moe`,
-    and the `open-anime-timestamps` dataset for Smart Search and Intro/Outro
-    Skip. New network targets or data sent require explicit discussion and a
-    `PRIVACY.md` update.
+    and the `open-anime-timestamps` dataset for Smart Search, Intro/Outro Skip
+    and the Schedule airing calendar. New network targets or data sent require
+    explicit discussion and a `PRIVACY.md` update.
 *   **Be respectful.** This project adheres to its
     [Code of Conduct](CODE_OF_CONDUCT.md).
 

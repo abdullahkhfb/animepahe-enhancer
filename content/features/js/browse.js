@@ -1,3 +1,4 @@
+import { keepMounted } from "../../helpers/persist.js";
 import { injectStylesheet } from "../../helpers/styles.js";
 import { svg } from "../../helpers/icons.js";
 import {
@@ -75,6 +76,7 @@ const letterOf = (t) => (/^[a-z]/i.test(t) ? t[0].toUpperCase() : "#");
 const SEASON_SHORT = { winter: "Win", spring: "Spr", summer: "Sum", fall: "Fall" };
 const isIndexPath = () => /^\/anime\/?$/i.test(location.pathname);
 const isBrowseRoute = () => isIndexPath() && location.hash.startsWith("#browse");
+const isScheduleRoute = () => isIndexPath() && location.hash.startsWith("#schedule");
 
 export class Browse {
   constructor(storage, settings) {
@@ -92,9 +94,14 @@ export class Browse {
 
   async init() {
     injectStylesheet("ape-browse-styles", "content/features/css/browse.css");
-    this._addNavLink();
+    keepMounted(() => {
+      if (document.getElementById("ape-br-nav")) return;
+      this._addNavLink();
+      this._setNavActive(!!this._app);
+    });
     window.addEventListener("hashchange", () => this._sync());
     window.addEventListener("popstate", () => this._sync());
+    window.addEventListener("ape-route", () => this._sync());
     await this._sync();
     setTimeout(() => gcBrowseCache(this.ttlMs).catch(() => {}), 5000);
   }
@@ -118,7 +125,8 @@ export class Browse {
       this._app.unmount();
       this._app = null;
     }
-    if (!want || !this._app) releaseBoot();
+    // Schedule owns the boot cover on its own route.
+    if ((!want || !this._app) && !isScheduleRoute()) releaseBoot();
     this._setNavActive(!!this._app);
   }
 
@@ -165,8 +173,18 @@ export class Browse {
     clone.id = "ape-br-nav";
     clone.classList.add("ape-br-nav");
     clone.classList.remove("active");
+    for (const n of [clone, ...clone.querySelectorAll("*")]) {
+      delete n.dataset.apeBrBound;
+      delete n.dataset.apeBrWasActive;
+      delete n.dataset.apeScWasActive;
+    }
     const link = clone.tagName === "A" ? clone : clone.querySelector("a");
     if (!link) return;
+    const finish = () => {
+      unit.after(clone);
+      this._nav = clone;
+      this._animeItem = unit;
+    };
 
     const base = new URL(anime.getAttribute("href") || "/anime", location.href);
     link.href = `${base.pathname.replace(/\/$/, "") || "/anime"}#browse`;
@@ -187,18 +205,18 @@ export class Browse {
       if (!isIndexPath() || !plainClick(e)) return;
       e.preventDefault();
       if (!isBrowseRoute()) history.pushState(null, "", `${location.pathname}${location.search}#browse`);
-      this._sync();
+      window.dispatchEvent(new Event("ape-route"));
     });
+    if (anime.dataset.apeBrBound) return void finish();
+    anime.dataset.apeBrBound = "1";
     anime.addEventListener("click", (e) => {
       if (!this._app || !isIndexPath() || !plainClick(e)) return;
       e.preventDefault();
       history.pushState(null, "", `${location.pathname}${location.search}`);
-      this._sync();
+      window.dispatchEvent(new Event("ape-route"));
     });
 
-    unit.after(clone);
-    this._nav = clone;
-    this._animeItem = unit;
+    finish();
   }
 }
 

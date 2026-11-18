@@ -1,5 +1,6 @@
 import { injectStylesheet } from "./styles.js";
 import {
+  bellIcon,
   bingeIcon,
   checkIcon,
   closeIcon,
@@ -12,6 +13,7 @@ const GLYPHS = {
   skip: skipIcon,
   binge: bingeIcon,
   wait: waitIcon,
+  bell: (size) => bellIcon(size),
   check: (size) => checkIcon(size),
   close: (size) => closeIcon(size),
 };
@@ -106,7 +108,7 @@ export function showStatus({ state = "progress", text, percent = null, autohideM
 /**
  * Action pill: leading icon chip, label, optional muted detail and action.
  * @param {object} o
- * @param {"skip"|"binge"|"wait"|"check"|"close"|"spinner"|"dot"} [o.icon]
+ * @param {"skip"|"binge"|"wait"|"bell"|"check"|"close"|"spinner"|"dot"} [o.icon]
  * @param {string} o.text
  * @param {string} [o.detail]
  * @param {{secondsLeft: number, total: number}} [o.countdown] replaces the icon with a ring

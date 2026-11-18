@@ -26,7 +26,7 @@ body:
     attributes:
       label: Extension version
       description: Visible in the popup's header, or in `manifest.json`
-      placeholder: e.g. 0.3.1.20
+      placeholder: e.g. 0.3.1.21
     validations:
       required: true
 
@@ -71,6 +71,7 @@ body:
         - Binge Watch
         - Skip Wait
         - Browse
+        - Schedule
         - Popup / settings UI
         - Something else / not sure
     validations:

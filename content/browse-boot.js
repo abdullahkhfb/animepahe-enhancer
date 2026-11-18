@@ -1,6 +1,8 @@
 (() => {
   try {
-    if (!/^\/anime\/?$/i.test(location.pathname) || !location.hash.startsWith("#browse")) return;
+    const route = /^#(browse|schedule)/.exec(location.hash)?.[1];
+    if (!/^\/anime\/?$/i.test(location.pathname) || !route) return;
+    const settingKey = route === "schedule" ? "scheduleEnabled" : "browseEnabled";
 
     const root = document.documentElement;
     root.classList.add("ape-br-boot");
@@ -14,10 +16,10 @@
       root.classList.remove("ape-br-boot");
       style.remove();
     };
-    // Never leave the page hidden if Browse can't take over.
+    // Never leave the page hidden if Browse or Schedule can't take over.
     setTimeout(release, 6000);
     chrome.storage.local.get("ape_settings").then((r) => {
-      if (r?.ape_settings?.browseEnabled === false) release();
+      if (r?.ape_settings?.[settingKey] === false) release();
     });
   } catch {
     /* ignore */

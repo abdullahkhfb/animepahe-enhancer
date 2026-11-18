@@ -13,20 +13,21 @@ just the human-readable "what changed and why."
 
 ## Contents
 
-- [How to write a release entry](#how-to-write-a-release-entry)
-- [Keeping this file manageable](#keeping-this-file-manageable)
-- [Unreleased](#unreleased)
-- [v0.3.1.20 — 2026-11-13](#v03120--2026-11-13)
-- [v0.3.1.19 — 2026-11-04](#v03119--2026-11-04)
-- [v0.3.1.18 — 2026-11-01](#v03118--2026-11-01)
-- [v0.3.1.17 — 2026-10-21](#v03117--2026-10-21)
-- [v0.3.1.16 — 2026-10-21](#v03116--2026-10-21)
-- [v0.3.1.5 — 2026-10-13](#v0315--2026-10-13)
-- [v0.3.1.2 — 2026-09-13](#v0312--2026-09-13)
-- [v0.3.1.1 — 2026-09-05](#v0311--2026-09-05)
-- [v0.3.1.0 — 2026-08-03](#v0310--2026-08-03)
-- [v0.3.0.0 — 2026-08-02](#v0300--2026-08-02)
-- [v0.2.0.1 — 2026-07-20](#v0201--2026-07-20)
+*   [How to write a release entry](#how-to-write-a-release-entry)
+*   [Keeping this file manageable](#keeping-this-file-manageable)
+*   [Unreleased](#unreleased)
+*   [v0.3.1.21 — 2026-11-18](#v03121--2026-11-18)
+*   [v0.3.1.20 — 2026-11-13](#v03120--2026-11-13)
+*   [v0.3.1.19 — 2026-11-04](#v03119--2026-11-04)
+*   [v0.3.1.18 — 2026-11-01](#v03118--2026-11-01)
+*   [v0.3.1.17 — 2026-10-21](#v03117--2026-10-21)
+*   [v0.3.1.16 — 2026-10-21](#v03116--2026-10-21)
+*   [v0.3.1.5 — 2026-10-13](#v0315--2026-10-13)
+*   [v0.3.1.2 — 2026-09-13](#v0312--2026-09-13)
+*   [v0.3.1.1 — 2026-09-05](#v0311--2026-09-05)
+*   [v0.3.1.0 — 2026-08-03](#v0310--2026-08-03)
+*   [v0.3.0.0 — 2026-08-02](#v0300--2026-08-02)
+*   [v0.2.0.1 — 2026-07-20](#v0201--2026-07-20)
 
 ## How to write a release entry
 
@@ -76,6 +77,40 @@ the template above, that's a lot of releases — but if it ever gets close:
     history regardless of what's mirrored here.
 
 ## Unreleased
+
+## v0.3.1.21 — 2026-11-18
+
+Adds Schedule: a menu tab with this week's airing episodes, limited to what is
+actually on animepahe.
+
+### Added in v0.3.1.21
+
+- **Schedule**: a **schedule** tab in the site menu (`/anime#schedule`) with a
+  Monday-to-Sunday day strip, releases grouped by local air time, a **NEW**
+  badge for premieres and a countdown that turns into **Aired**. Airing times
+  come from AniList.
+- **Animepahe-only list**: shows are matched to animepahe's own anime index, so
+  only anime listed on the site appear, and each card links to its page. There
+  is no "All" view.
+- **Library filter**: **My library only** limits the week to shows saved in the
+  Library shared with Browse; the choice is remembered.
+- **Schedule cache** setting under **Advanced** (60 minutes by default).
+- **New-episode notifications**: a bell on every schedule card follows a show,
+  and a bell in the site menu shows an unread count and a dropdown of new
+  episodes. Open one to play it, or switch to **Following** to unfollow shows.
+  The dropdown never scrolls and clears the unread count when closed.
+  Followed shows are checked on any animepahe page, at most every 30 minutes
+  (**Notification check** under **Advanced**), with one request per followed
+  show and none when nothing is followed. It is part of the Schedule feature,
+  with no separate switch.
+- **Persistent menu items**: the **browse** and **schedule** tabs and the bell are
+  put back automatically if the site re-renders or rebuilds its menu.
+- **Popup**: shorter feature and sub-option descriptions, and tighter spacing
+  so the popup fits without scrolling with any feature open.
+
+[Full changelog][full-changelog]
+
+[full-changelog]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.20...v0.3.1.21
 
 ## v0.3.1.20 — 2026-11-13
 

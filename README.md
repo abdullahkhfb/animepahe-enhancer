@@ -10,15 +10,15 @@ openings/endings for you.
 [![Firefox][badge-firefox]][firefox-add-ons] [![Edge][badge-edge]][edge-add-ons]
 [![Manual install][badge-manual]][github-releases]
 ![Manifest V3][badge-manifest] [![License: MIT][badge-license]](LICENSE)
-[![Version 0.3.1.20][badge-version]][release-tag]
+[![Version 0.3.1.21][badge-version]][release-tag]
 
 [badge-firefox]: https://img.shields.io/badge/Firefox-Get_it_now-FF7139?style=flat-square&logo=firefoxbrowser&logoColor=white
 [badge-edge]: https://img.shields.io/badge/Edge-Get_it_now-0078D7?style=flat-square&logo=microsoftedge&logoColor=white
 [badge-manual]: https://img.shields.io/badge/Manual-Install-181717?style=flat-square&logo=github&logoColor=white
 [badge-manifest]: https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white
 [badge-license]: https://img.shields.io/badge/License-MIT-green
-[badge-version]: https://img.shields.io/badge/version-0.3.1.20-blue
-[release-tag]: https://github.com/abdullahkhfb/animepahe-enhancer/releases/tag/v0.3.1.20
+[badge-version]: https://img.shields.io/badge/version-0.3.1.21-blue
+[release-tag]: https://github.com/abdullahkhfb/animepahe-enhancer/releases/tag/v0.3.1.21
 [firefox-add-ons]: https://addons.mozilla.org/en-US/firefox/addon/animepahe-enhancer/
 [edge-add-ons]: https://microsoftedge.microsoft.com/addons/detail/omdenhapffjpbafkliiedijooomljbgd
 [github-releases]: https://github.com/abdullahkhfb/animepahe-enhancer/releases
@@ -62,11 +62,19 @@ openings/endings for you.
 *   **Browse** — A native-feeling **browse** tab in the site menu that lets you
     combine genres, themes, demographics, types, status and seasons in one
     search, using animepahe's own lists. Remembers your filters and scroll
-    position across reloads. [Details](/docs/FEATURES.md#browse) Each feature
-    can be turned on or off separately from the extension's popup. Settings and
-    watch progress stay in your browser; some features make the network requests
-    they need to work. See the [privacy policy](PRIVACY.md) for exactly what
-    leaves your device and why.
+    position across reloads. [Details](/docs/FEATURES.md#browse)
+
+*   **Schedule** — A **schedule** tab in the site menu showing this week's
+    airing episodes by day and time, in your local timezone, with countdowns.
+    Only shows that are on animepahe are listed, matched against the site's own
+    index, and you can limit the list to your Library. Follow a show with the
+    bell to get a menu notification when a new episode appears on animepahe. [Details](/docs/FEATURES.md#schedule)
+
+Each feature can be turned on or off separately from the extension's popup.
+Settings and
+watch progress stay in your browser; some features make the network requests
+they need to work. See the [privacy policy](PRIVACY.md) for exactly what leaves
+your device and why.
 
 ## Screenshots
 
@@ -74,9 +82,11 @@ openings/endings for you.
 ![Episode list showing the 6 of 9 dubbed summary bar, DUB and SUB ONLY badges, and status toast](screenshots/sc2.png)
 ![Player page showing the inline DUB badge and English audio stream options](screenshots/sc3.png)
 ![animepahe home page with the Continue Watching shelf of episode thumbnails, each with an episode number, progress bar and remove button, aligned above Latest Releases](screenshots/sc4.png)
-![The animepahe Enhancer popup (v0.3.1.20) in its Features, Advanced, and Links tabs: seven features with Continue Watching expanded, a staged DUB Detector setting, and the animepahe, project, and MalSync links](screenshots/sc5.png)
+![The animepahe Enhancer popup (v0.3.1.21) in its Features, Advanced, and Links tabs: eight features with Continue Watching expanded, a staged DUB Detector setting, and the animepahe, project, and MalSync links](screenshots/sc5.png)
 ![Player page with the Skip Intro button and intro/outro progress bar highlights](screenshots/sc6.png)
 ![Browse page filtering anime by Action and Mystery genres in grid view, with search, sorting, filters, and library controls](screenshots/sc7.png)
+![Schedule page showing this week's airing anime by day, grouped by local air time, with bell and Library buttons on each card](screenshots/sc8.png)
+![Schedule page with the menu bell open, listing new episodes of followed shows with a Following link in the footer](screenshots/sc9.png)
 
 ## Install
 

@@ -27,6 +27,7 @@ Derived from [`popup/components/icons/`](/popup/components/icons) and
 | `intro-skip.svg`        | ![Intro / Outro Skip](intro-skip.svg)             | `IntroSkipIcon.js`              | `#ff4d94` on `#2b0012` |
 | `binge-watch.svg`       | ![Binge Watch](binge-watch.svg)                   | `BingeWatchIcon.js`             | `#ff4d94` on `#2b0012` |
 | `skip-wait.svg`         | ![Skip Wait](skip-wait.svg)                       | `SkipWaitIcon.js`               | `#ff4d94` on `#2b0012` |
+| `schedule.svg`          | ![Schedule](schedule.svg)                         | `ScheduleIcon.js`               | `#ff4d94` on `#2b0012` |
 | `advanced-settings.svg` | ![Advanced Settings](advanced-settings.svg)       | Advanced Settings tab           | `#b4b4bf` on `#151518` |
 | `shield.svg`            | ![Cloudflare & Rate-Limit Protection](shield.svg) | `challenge.js` + `throttler.js` | `#ff4d94` on `#2b0012` |
 

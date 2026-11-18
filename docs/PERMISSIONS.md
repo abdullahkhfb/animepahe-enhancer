@@ -15,8 +15,8 @@ The extension requests the minimum permissions necessary:
 *   **Host permissions for `*.pahe.win`**: Skip Wait only: lets the background
     script read the Kwik link out of a `pahe.win` download-link page you clicked
 *   **Host permissions for `graphql.anilist.co`**: Fetch alternative anime
-    titles for Smart Search and resolve IDs for Intro/Outro Skip (no account
-    data exchanged)
+    titles for Smart Search, resolve IDs for Intro/Outro Skip and read the
+    weekly airing calendar for Schedule (no account data exchanged)
 *   **Host permissions for `relations.yuna.moe`**: Resolve AniList/MAL IDs to
     AniDB IDs for the Intro/Outro Skip timestamp database lookup
 *   **Host permissions for `raw.githubusercontent.com`**: Download the
@@ -52,8 +52,8 @@ privacy policy.
 
 *   `pahe.win` — Download-link pages fetched by the background script for Skip
     Wait (one request per Download-menu click)
-*   `graphql.anilist.co` — AniList GraphQL API (Smart Search + Intro Skip ID
-    resolution)
+*   `graphql.anilist.co` — AniList GraphQL API (Smart Search, Intro Skip ID
+    resolution and the Schedule airing calendar)
 *   `relations.yuna.moe` — AniDB ID resolution (Intro Skip)
 *   `raw.githubusercontent.com` (Ellivers/open-anime-timestamps) — Timestamp
     database download (Intro Skip)

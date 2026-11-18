@@ -4,6 +4,7 @@ import {
   getTimestampsCacheInfo,
 } from "../../content/helpers/timestamps-db.js";
 import { getBrowseCacheInfo, clearBrowseCache } from "../../content/helpers/browse-data.js";
+import { getScheduleCacheInfo, clearScheduleCache } from "../../content/helpers/schedule-data.js";
 import { h } from "../components/dom.js";
 import { FEATURES } from "../components/features/feature-config.js";
 import { FeatureRow } from "../components/features/FeatureRow.js";
@@ -42,6 +43,13 @@ const STATS = {
       return { text: `${plural(lists, "list")} · ${plural(posters, "poster")}`, canClear: lists + posters > 0 };
     },
     clear: () => clearBrowseCache(),
+  },
+  sc: {
+    async read() {
+      const { weeks } = await getScheduleCacheInfo();
+      return { text: `${plural(weeks, "week")} cached`, canClear: weeks > 0 };
+    },
+    clear: () => clearScheduleCache(),
   },
   is: {
     async read() {
