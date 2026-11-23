@@ -1,0 +1,49 @@
+name: "🙋 Help wanted"
+description: Offer to test or help maintain the OP/ED timestamps database
+title: "[Help wanted]: "
+labels: ["help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for offering to help! The plan is to build a community-maintained
+        database of opening (OP) and ending (ED) timestamps, using an existing
+        timestamp repository as a source. The database may live on a separate
+        branch or in a separate repository.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you submit
+      options:
+        - label: I checked existing issues and this offer isn't already listed
+          required: true
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: How would you like to help?
+      multiple: true
+      options:
+        - Test the database and report issues
+        - Help maintain or update the database
+        - Help plan its structure or workflow
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: experience
+    attributes:
+      label: What can you help with?
+      description: Share relevant experience, tools, availability, or ideas. No prior experience is required.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else?
+      description: Add questions or details that would help coordinate the work.
+    validations:
+      required: false

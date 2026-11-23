@@ -1,9 +1,9 @@
 # Privacy policy for animepahe Enhancer
 
-**Last Modified:** November 18, 2026
+**Last Modified:** November 23, 2026
 
 This Privacy Policy explains how the **animepahe Enhancer** extension, published
-by **Vixon**, handles data. Transparency and strict digital privacy are core
+by **Mugen**, handles data. Transparency and strict digital privacy are core
 principles of this project.
 
 ## Contents

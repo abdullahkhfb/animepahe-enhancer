@@ -1,5 +1,8 @@
 blank_issues_enabled: true
 contact_links:
+  - name: "🙋 Help with the OP/ED timestamps database"
+    url: https://github.com/abdullahkhfb/animepahe-enhancer/issues/new?template=help_wanted.yml
+    about: Offer to test or help maintain the community database
   - name: 🔒 Report a security vulnerability
     url: https://github.com/abdullahkhfb/animepahe-enhancer/security/advisories/new
     about: Please don't open a public issue for security vulnerabilities. Use this private advisory, or email rynvexa@proton.me — see SECURITY.md for details.

@@ -13,21 +13,22 @@ just the human-readable "what changed and why."
 
 ## Contents
 
-*   [How to write a release entry](#how-to-write-a-release-entry)
-*   [Keeping this file manageable](#keeping-this-file-manageable)
-*   [Unreleased](#unreleased)
-*   [v0.3.1.21 — 2026-11-18](#v03121--2026-11-18)
-*   [v0.3.1.20 — 2026-11-13](#v03120--2026-11-13)
-*   [v0.3.1.19 — 2026-11-04](#v03119--2026-11-04)
-*   [v0.3.1.18 — 2026-11-01](#v03118--2026-11-01)
-*   [v0.3.1.17 — 2026-10-21](#v03117--2026-10-21)
-*   [v0.3.1.16 — 2026-10-21](#v03116--2026-10-21)
-*   [v0.3.1.5 — 2026-10-13](#v0315--2026-10-13)
-*   [v0.3.1.2 — 2026-09-13](#v0312--2026-09-13)
-*   [v0.3.1.1 — 2026-09-05](#v0311--2026-09-05)
-*   [v0.3.1.0 — 2026-08-03](#v0310--2026-08-03)
-*   [v0.3.0.0 — 2026-08-02](#v0300--2026-08-02)
-*   [v0.2.0.1 — 2026-07-20](#v0201--2026-07-20)
+- [How to write a release entry](#how-to-write-a-release-entry)
+- [Keeping this file manageable](#keeping-this-file-manageable)
+- [Unreleased](#unreleased)
+- [v0.3.1.22 — 2026-11-23](#v03122--2026-11-23)
+- [v0.3.1.21 — 2026-11-18](#v03121--2026-11-18)
+- [v0.3.1.20 — 2026-11-13](#v03120--2026-11-13)
+- [v0.3.1.19 — 2026-11-04](#v03119--2026-11-04)
+- [v0.3.1.18 — 2026-11-01](#v03118--2026-11-01)
+- [v0.3.1.17 — 2026-10-21](#v03117--2026-10-21)
+- [v0.3.1.16 — 2026-10-21](#v03116--2026-10-21)
+- [v0.3.1.5 — 2026-10-13](#v0315--2026-10-13)
+- [v0.3.1.2 — 2026-09-13](#v0312--2026-09-13)
+- [v0.3.1.1 — 2026-09-05](#v0311--2026-09-05)
+- [v0.3.1.0 — 2026-08-03](#v0310--2026-08-03)
+- [v0.3.0.0 — 2026-08-02](#v0300--2026-08-02)
+- [v0.2.0.1 — 2026-07-20](#v0201--2026-07-20)
 
 ## How to write a release entry
 
@@ -77,6 +78,28 @@ the template above, that's a lot of releases — but if it ever gets close:
     history regardless of what's mirrored here.
 
 ## Unreleased
+
+## v0.3.1.22 — 2026-11-23
+
+Fits the MalSync logo to its tile in the popup.
+
+### Changed in v0.3.1.22
+
+- **Popup**: the MalSync logo now fills its tile as a full-size circle. The
+  popup screenshot is updated to match.
+
+### Help wanted
+
+- **OP/ED timestamps database**: I’m looking for people to help test and
+  maintain a new community database of opening and ending timestamps, based on
+  a new existing timestamp source that is updated every single day. It may live on a separate branch or in a
+  separate repository; maintaining it alone would be difficult. If you’d like
+  to help, [open a Help wanted issue][timestamp-db-help].
+
+[Full changelog][full-changelog]
+
+[full-changelog]: https://github.com/abdullahkhfb/animepahe-enhancer/compare/v0.3.1.21...v0.3.1.22
+[timestamp-db-help]: https://github.com/abdullahkhfb/animepahe-enhancer/issues/new?template=help_wanted.yml
 
 ## v0.3.1.21 — 2026-11-18
 

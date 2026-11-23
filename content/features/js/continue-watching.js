@@ -54,12 +54,14 @@ export class ContinueWatching {
   _listenForLayoutChange() {
     chrome.storage?.onChanged?.addListener((changes, area) => {
       if (area !== "local" || !changes[KEYS.SETTINGS]) return;
-      const next = changes[KEYS.SETTINGS].newValue?.cwClassicLayout === true;
-      if (next === this._classic) return;
-      this._classic = next;
+      const value = changes[KEYS.SETTINGS].newValue;
+      const nextClassic = value?.cwClassicLayout === true;
       const section = document.getElementById(SECTION_ID);
+
+      if (nextClassic === this._classic) return;
+      this._classic = nextClassic;
       if (!section) return;
-      section.classList.toggle("ape-cw-classic", next);
+      section.classList.toggle("ape-cw-classic", nextClassic);
       section.querySelectorAll(".ape-cw-card").forEach((card) => {
         const img = card.querySelector(".ape-cw-thumb");
         if (img && card._apeEntry) {
@@ -463,10 +465,11 @@ export class ContinueWatching {
     const link = document.createElement("a");
     link.href = entry.playUrl;
     link.className = "ape-cw-link";
-    link.title = `${entry.animeTitle} — Episode ${entry.epNumber}`;
+    const epLabelText = String(entry.epNumber);
+    link.title = `${entry.animeTitle} — Episode ${epLabelText}`;
     link.setAttribute(
       "aria-label",
-      `${entry.animeTitle}, episode ${entry.epNumber}${timeLeft ? `, ${timeLeft}` : ""}`,
+      `${entry.animeTitle}, episode ${epLabelText}${timeLeft ? `, ${timeLeft}` : ""}`,
     );
 
     const thumbWrap = document.createElement("div");
@@ -509,7 +512,7 @@ export class ContinueWatching {
     ep.className = "ape-cw-ep";
     const epLabel = document.createElement("small");
     epLabel.textContent = "EP";
-    ep.append(epLabel, document.createTextNode(String(entry.epNumber)));
+    ep.append(epLabel, document.createTextNode(epLabelText));
 
     thumbWrap.append(title, ep);
 

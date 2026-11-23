@@ -28,7 +28,7 @@ export function initLinksTab({ panel }) {
       href: "https://malsync.moe",
       title: "MalSync",
       desc: "Syncs progress to MAL, AniList and Kitsu",
-      tile: MalSyncLogo({ size: 28 }),
+      tile: MalSyncLogo({ size: 36 }),
       accent: true,
     }),
   );

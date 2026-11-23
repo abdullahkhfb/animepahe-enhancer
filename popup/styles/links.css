@@ -77,6 +77,11 @@
   width: 36px;
 }
 
+.link-row-accent .link-row-tile {
+  background: none;
+  border-radius: 50%;
+}
+
 .link-row-text {
   display: flex;
   flex: 1;
